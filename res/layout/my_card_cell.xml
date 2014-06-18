@@ -37,7 +37,7 @@
         android:textSize="@dimen/cell_subtitle_size"
         android:lineSpacingMultiplier="1.2" />
     
-    <ImageView
+    <Button
         android:layout_marginTop="5dp"
         android:id="@+id/imgCertified"
         android:layout_alignParentRight="true"

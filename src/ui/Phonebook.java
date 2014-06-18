@@ -159,6 +159,10 @@ public class Phonebook extends AppActivity{
 	}
 	
 	private void showPhonebook(PhoneIntroEntity entity) {
+        Logger.i(entity.link);
+        if (StringUtils.empty(entity.link)) {
+            return;
+        }
 		EasyTracker easyTracker = EasyTracker.getInstance(this);
 		easyTracker.send(MapBuilder
 	      .createEvent("ui_action",     // Event category (required)
@@ -278,16 +282,16 @@ public class Phonebook extends AppActivity{
 	}
 	
 	private void handlerSquare(RecommendListEntity entity, int action) {
-		switch (action) {
-		case UIHelper.LISTVIEW_ACTION_INIT:
-		case UIHelper.LISTVIEW_ACTION_REFRESH:
+//		switch (action) {
+//		case UIHelper.LISTVIEW_ACTION_INIT:
+//		case UIHelper.LISTVIEW_ACTION_REFRESH:
 			comQuns.clear();
 			comQuns.addAll(entity.squares);
-			break;
-		case UIHelper.LISTVIEW_ACTION_SCROLL:
-			comQuns.addAll(entity.squares);
-			break;
-		}
+//			break;
+//		case UIHelper.LISTVIEW_ACTION_SCROLL:
+//			comQuns.addAll(entity.squares);
+//			break;
+//		}
 		phoneAdapter.notifyDataSetChanged();
 	}
 	

@@ -2,6 +2,7 @@ package ui.adapter;
 
 import java.util.List;
 
+import android.widget.ImageView;
 import tools.StringUtils;
 import ui.JiaV;
 import ui.MyCard;
@@ -24,7 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MyCardAdapter extends BaseAdapter{
@@ -38,7 +39,7 @@ public class MyCardAdapter extends BaseAdapter{
 		ImageView avatarImageView;
 		TextView titleView;
 		TextView desView;
-		ImageView imgCertified;
+        Button btnCertified;
 	}
 	
 	public MyCardAdapter(Context context, List<CardIntroEntity> cards, ImageLoader imageLoader) {
@@ -88,7 +89,7 @@ public class MyCardAdapter extends BaseAdapter{
 			cell.avatarImageView = (ImageView) convertView.findViewById(R.id.avatarImageView);
 			cell.titleView = (TextView) convertView.findViewById(R.id.title);
 			cell.desView = (TextView) convertView.findViewById(R.id.des);
-			cell.imgCertified = (ImageView) convertView.findViewById(R.id.imgCertified);
+			cell.btnCertified = (Button) convertView.findViewById(R.id.imgCertified);
 			convertView.setTag(cell);
 		}
 		else {
@@ -99,9 +100,10 @@ public class MyCardAdapter extends BaseAdapter{
 		cell.desView.setText(String.format("%s %s", model.department, model.position));
 		this.imageLoader.displayImage(model.avatar, cell.avatarImageView, this.displayOptions);
 		if (StringUtils.notEmpty(model.certified)) {
-			cell.imgCertified.setBackgroundResource(model.certified.equals("0")?R.drawable.mycard_uncertified:R.drawable.mycard_certified);
+			cell.btnCertified.setBackgroundResource(model.certified.equals("0")?R.drawable.mycard_uncertified:R.drawable.mycard_certified);
 		}
-		cell.imgCertified.setOnClickListener(new OnClickListener() {
+        ((MyCard)context).accretionArea(cell.btnCertified);
+		cell.btnCertified.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				if (StringUtils.notEmpty(model.certified)) {
