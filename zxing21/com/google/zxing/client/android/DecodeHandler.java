@@ -33,7 +33,7 @@ import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
-import com.vikaa.baseapp.R;
+import com.vikaa.mycontact.R;
 
 final class DecodeHandler extends Handler {
 
