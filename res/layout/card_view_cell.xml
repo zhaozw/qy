@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white" >
+    <RelativeLayout 
+        android:layout_width="match_parent"
+   		android:layout_height="wrap_content"
+   		android:layout_marginBottom="10dp"
+        >
+        <TextView 
+	        android:id="@+id/title"
+	        android:layout_marginLeft="15dp"
+	        android:layout_width="80dp"
+	        android:layout_height="20dp"
+	        android:layout_marginTop="10dp"
+	        android:textSize="@dimen/cell_title_size"
+	        android:textColor="#088ec1"
+	        android:text="华南区"
+	        android:gravity="right|top"
+	        />
+	    <TextView 
+	        android:layout_toRightOf="@+id/title"
+	        android:id="@+id/des"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="10dp"
+	        android:layout_marginLeft="15dp"
+	        android:layout_marginRight="15dp"
+	        android:gravity="left|top"
+	        android:textSize="@dimen/cell_title_size"
+	        android:textColor="#3b3b3b"
+	        android:text="人数 20   点击数 200asfasdfsdfasdfsadfsadfasdfasdfsadfasdfasdfasdf"
+	        />
+    </RelativeLayout>
+    
+    <TextView 
+        android:layout_marginTop="-5dp"
+        android:background="@drawable/relation_header_bg"
+        android:id="@+id/tip"
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:gravity="center_vertical"
+        android:textSize="12dp"
+        android:paddingLeft="25dp"
+        android:paddingTop="3dp"
+        android:text="您通过以下人脉引荐，联系上TA"
+        android:textColor="@color/black"
+        />
+    
+    <widget.ListViewForScrollView
+        android:id="@+id/xlistview"
+        android:layout_marginLeft="31dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="false"
+        android:fadingEdge="none"
+        android:scrollbars="none"
+        android:divider="@null"
+        android:cacheColorHint="#00000000"
+        android:listSelector="#00000000" />
+    
+    <View 
+        android:layout_marginLeft="21dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e4e4e4"
+        />
+	
+</LinearLayout>

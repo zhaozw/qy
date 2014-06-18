@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DevInfor>
+    <BUSINESS
+        id = "14"
+		label= "商务活动"
+		title= "商务活动"
+		description= ""
+		display="1"
+		sort = "1"/>
+    
+    <DINNER
+        id = "1"
+		label= "饭局聚餐"
+		title= "一起吃个饭"
+		description= "好友相聚，一起吃个饭，聊个天，有空的一起来哦！"
+		display="1"
+		sort = "2"/>
+    
+    <OUTSPORT
+        id = "16"
+		label= "户外运动"
+		title= "一起去运动"
+		description= "请吃饭不如请出汗，在运动中增进感情，在无止尽的工作之余得到了身心的放松，出汗排毒，增强体质，提高效率。"
+		display="1"
+		sort = "3"/>
+    
+    <CARD
+        id = "19"
+		label= "微名片"
+		title= ""
+		description= ""
+		display="1"
+		sort = "4"/>
+    
+    <TOPIC
+        id = "20"
+		label= "文章话题"
+		title= ""
+		description= ""
+		display="1"
+		sort = "5"/>
+    
+    <KARAOKE
+        id = "10"
+		label= "K歌娱乐"
+		title= "一起去K歌"
+		description= "今晚KTV ，唱出你的热情,喊出你的青春。嗨歌到天明，要一起组队去的,来此报个名吧！"
+		display="1"
+		sort = "6"/>
+
+</DevInfor>

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.vikaa.mycontact"
+    android:versionCode="20140519"
+    android:versionName="1.0.0" >
+
+    <uses-sdk android:minSdkVersion="8" />
+
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+  	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+  	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
+    <!-- Don't require camera, as this requires a rear camera. This allows it to work on the Nexus 7 -->
+	<uses-feature android:name="android.hardware.camera" android:required="false"/>
+	<uses-feature android:name="android.hardware.camera.front" android:required="false"/>
+	<uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+	<uses-feature android:name="android.hardware.camera.flash" android:required="false"/>
+	<uses-feature android:name="android.hardware.wifi" android:required="false"/>
+	<uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+  	
+  	<!-- Donut-specific flags which allow us to run on any dpi screens. -->
+  	<supports-screens android:xlargeScreens="true"
+                    android:largeScreens="true"
+                    android:normalScreens="true"
+                    android:smallScreens="true"
+                    android:anyDensity="true"/>
+  	
+    <application
+        android:name="config.MyApplication"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
+       
+        <activity
+            android:name="ui.WeFriendCardSearch"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.PhoneTimeline"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.JiaV"
+            android:screenOrientation="portrait"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.UploadAvatar"
+            android:screenOrientation="portrait"
+             >
+        </activity>
+        
+        <service 
+            android:name="service.QYEnterService"
+			android:enabled="true"
+			android:exported="true"
+            >
+        </service>
+        
+        <activity
+            android:name="im.ui.Chating"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+             >
+        </activity>
+        
+        <service 
+            android:name="service.IPolemoService"
+			android:enabled="true"
+			android:exported="true"
+            >
+        </service>
+        
+        <activity
+            android:name="ui.CreatePhonebook"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.CreateActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.CreateTopic"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.CreateActivityTimeDialog"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.FamilyPhonebook"
+            android:screenOrientation="portrait"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.Welcome"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateAlwaysHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="ui.GuidePage"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateAlwaysHidden" >
+        </activity>
+        
+        <activity
+            android:name="ui.Register"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan" >
+        </activity>
+        
+        <activity
+            android:name="ui.LoginCode1"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateAlwaysVisible" >
+        </activity>
+        
+        <activity
+            android:name="ui.LoginCode2"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateAlwaysVisible" >
+        </activity>
+        
+        <activity
+            android:name="ui.LoginWechat"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateAlwaysVisible" >
+            
+        </activity>
+        
+        <activity
+            android:name="ui.Tabbar"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" 
+            android:windowSoftInputMode="adjustNothing|stateHidden">
+        </activity>
+        
+        <activity
+            android:name="ui.Index"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustNothing"
+            android:launchMode="singleTask" >
+        </activity>
+        
+        <activity
+            android:name="ui.Assistant"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustNothing"
+            android:launchMode="singleTask"
+            android:theme="@style/StyledIndicators" >
+        </activity>
+        
+        <activity
+            android:name="ui.MyTopic"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"
+             >
+        </activity> 
+
+        <activity
+            android:name="ui.Find"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" >
+        </activity>
+        
+        <activity
+            android:name="ui.Phonebook"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" >
+        </activity>
+        
+        <!-- Scaner -->
+		<activity android:name="com.google.zxing.client.android.CaptureActivity" 
+			  android:screenOrientation="portrait"
+              android:clearTaskOnLaunch="true"
+              android:stateNotNeeded="true"
+              android:configChanges="orientation|keyboardHidden"
+              android:windowSoftInputMode="stateAlwaysHidden"/>
+		
+        <activity
+            android:name="ui.PhonebookSMS"
+            android:screenOrientation="portrait"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.PhonebookSMSBody"
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="stateVisible|adjustResize"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.CardView"
+            android:screenOrientation="portrait"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.MobilePhone"
+            android:screenOrientation="portrait"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.MobileVIew"
+            android:screenOrientation="portrait"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.Feedback"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="stateVisible|adjustResize"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.MessageView"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"
+             >
+        </activity>  
+        
+        <activity
+            android:name="ui.Me"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"
+             >
+        </activity>  
+        <activity
+            android:name="ui.MoreDialog"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"
+             >
+        </activity>
+        
+        <activity
+            android:name="ui.MyCard"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"
+             >
+        </activity>  
+        
+        <activity
+            android:name="ui.Setting"
+            android:screenOrientation="portrait"
+             >
+        </activity>  
+        
+        <activity
+            android:name="ui.QYWebView"
+            android:screenOrientation="portrait"
+             >
+        </activity>  
+        
+        <activity
+            android:name="ui.FriendCards"
+            android:screenOrientation="portrait"
+            
+             >
+        </activity>  
+        
+        <activity
+            android:name="ui.WeFriendCard"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustNothing"
+            
+             >
+        </activity> 
+        
+        <activity
+            android:name="ui.Conversation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustNothing"
+             >
+        </activity> 
+        
+        <activity
+		   android:name="cn.sharesdk.framework.ShareSDKUIShell"
+		   android:theme="@android:style/Theme.Translucent.NoTitleBar"
+		   android:configChanges="keyboardHidden|orientation"
+		   android:screenOrientation="portrait"
+		   android:windowSoftInputMode="stateHidden|adjustResize" />
+        
+        <activity
+            android:name="ui.WXEntryActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name="ui.MobileSelect"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustPan" >
+        </activity>
+        
+        
+        <service android:name="service.SendSmsService" ></service>
+        <service android:name="service.MobileSynService" ></service>
+        <service android:name="service.AddMobileService" ></service>
+        <receiver android:name="service.BootBroadcastReceiver">  
+                <intent-filter>  
+                    <action android:name="android.intent.action.BOOT_COMPLETED"></action>  
+                    <category android:name="android.intent.category.LAUNCHER" />  
+                </intent-filter>  
+        </receiver> 
+        <receiver android:name="service.SMSReceiver">
+			<intent-filter>
+			    <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+			</intent-filter>
+		</receiver>
+        
+        
+        <receiver android:name="com.baidu.android.pushservice.PushServiceReceiver"
+            
+            android:process=":bdservice_v1">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.baidu.android.pushservice.action.notification.SHOW" />
+                <action android:name="com.baidu.android.pushservice.action.media.CLICK" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver android:name="baidupush.MyPushMessageReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.MESSAGE" />
+                <action android:name="com.baidu.android.pushservice.action.RECEIVE" />
+                <action android:name="com.baidu.android.pushservice.action.notification.CLICK" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver android:name="com.baidu.android.pushservice.RegistrationReceiver"
+            android:exported="true"
+            android:process=":bdservice_v1">
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.METHOD" />
+                <action android:name="com.baidu.android.pushservice.action.BIND_SYNC" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package" />
+            </intent-filter>                   
+        </receiver>
+        <service
+            android:name="com.baidu.android.pushservice.PushService"
+            android:exported="true"
+            android:process=":bdservice_v1" >
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.PUSH_SERVICE" />
+            </intent-filter>
+        </service>
+      
+        <service android:name="tools.NetworkStateService" >
+            <intent-filter android:priority="1000" >
+                <action android:name="tools.NetworkState.Service" /> 
+            </intent-filter>
+        </service>
+        
+        <meta-data android:name="api_key" android:value="eXvZH3r0oZidynO2gl6l92uR" />
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="d6f3179ac695a7efd4c28c329ce8a5c04f2e0bc7"/>
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="839aa97d0d89257117fd6d5fc3883774" />
+    </application>
+
+</manifest>

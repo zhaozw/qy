@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
+    <RelativeLayout 
+        android:layout_height="44dp"
+        android:layout_width="match_parent"
+        android:background="@color/nav_color"
+        >
+        <TextView 
+            android:id="@+id/titleBarView"
+            android:layout_width="wrap_content"
+      		android:layout_height="wrap_content"
+            android:text="名片"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/navbar_title_size"
+            />
+        
+        <ImageButton 
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/rightBarButton"        
+           	android:layout_width="44dp"      
+          	android:layout_height="44dp"
+          	android:onClick="ButtonClick"
+          	android:layout_marginRight="5dp"
+          	android:src="@drawable/more"
+          	android:background="@null"
+            />
+    </RelativeLayout>
+    
+    <ExpandableListView
+        android:id="@+id/iphone_tree_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
+        android:fadingEdge="none"
+        android:transcriptMode="disabled"
+        />
+
+</LinearLayout>

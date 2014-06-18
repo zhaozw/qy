@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">群友通讯录</string>
+	
+	<string name="wechat_login"><u>使用微信登录</u></string>
+	<string name="register">手机号码注册</string>
+	<string name="mobile_login">手机号码登录</string>
+	<string name="code_retake"><u>重新获取验证码</u></string>
+	
+	<string name="main_home">首页</string>
+    <string name="main_my_card">我的微友</string>
+    <string name="main_message">消息</string>
+    <string name="main_more">更多</string>
+	
+    <string name="friend_search_no">无结果</string>
+    <string name="friend_no">还没有微友哦\n请与你的朋友交换名片</string>
+    
+    <!-- 数据库和文件路径 -->
+	<string name="dir">/qy</string>
+	<string name="app_dir">/app</string>
+	<string name="db_dir">/database</string>
+	<string name="img_dir">/img</string>  
+</resources>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
+    <RelativeLayout 
+        android:id="@+id/navbar"
+        android:background="@color/nav_color"
+	    android:layout_width="match_parent"
+	    android:layout_height="50dp" 
+	    >
+		 
+		    <EditText
+	        android:id="@+id/searchEditView"
+	        android:layout_width="match_parent"
+	        android:layout_height="37dp"
+	        android:layout_centerVertical="true"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:textSize="18dp"
+	        android:background="@drawable/search_edittext_background"
+	        android:textColor="@color/black"
+	        android:singleLine="true"
+	        android:inputType="text"
+	        android:gravity="center_vertical|left"
+	        android:imeOptions="actionSearch"
+	        android:onClick="ButtonClick"
+	        android:hint="请输入姓名查找好友"
+	        android:drawableLeft="@drawable/search_icon"
+	        android:paddingLeft="5dp"
+	        android:paddingTop="1dp"
+	        android:drawablePadding="3dp"
+	        />
+		<Button 
+		    android:layout_alignRight="@+id/searchEditView"
+		    android:id="@+id/searchDeleteButton"
+		    android:layout_width="22dp"
+		    android:layout_height="22dp"
+		    android:layout_centerVertical="true"
+		    android:layout_alignParentRight="true"
+		    android:layout_marginRight="12dp"
+		    android:background="@drawable/search_delete"
+		    android:visibility="invisible"
+		    android:onClick="ButtonClick"
+		    />
+		
+		</RelativeLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_below="@+id/navbar"
+	        android:id="@+id/xrefresh"
+	        android:layout_width="match_parent"
+	   		android:layout_height="match_parent"
+	   		>
+			<ExpandableListView
+		        android:layout_below="@+id/navLayout"
+		        android:id="@+id/xlistview"
+		        android:layout_width="fill_parent"
+		        android:layout_height="fill_parent"
+		        android:footerDividersEnabled="false"
+		        android:headerDividersEnabled="false"
+		        android:divider="@null"
+		        android:groupIndicator="@null"
+		        android:fadingEdge="none"
+		        android:transcriptMode="disabled"
+		        android:cacheColorHint="#00000000"
+		        android:listSelector="#00000000" />
+		</android.support.v4.widget.SwipeRefreshLayout>
+    	<TextView 
+	        android:layout_below="@+id/navbar"
+	        android:layout_width="match_parent"
+	        android:layout_height="150dp"
+	        android:text="无结果"
+	        android:gravity="center"
+	        android:textColor="@color/black"
+	        android:textSize="18dp"
+	        android:id="@+id/noting_view"
+	        android:visibility="gone"
+	        />
+	
+</RelativeLayout>

@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <WebView 
+       	android:id="@+id/webview"
+       	android:layout_width="match_parent"
+      	android:layout_height="match_parent"
+      	/>
+
+    <Button 
+        android:id="@+id/loadAgain"
+        android:layout_width="66dp"
+        android:layout_height="35dp"
+        android:layout_centerInParent="true"
+        android:text="再次访问"
+        android:textColor="@color/white"
+        android:background="@drawable/card_view_btn"
+        android:visibility="invisible"
+        android:onClick="ButtonClick"
+        />
+</RelativeLayout>
