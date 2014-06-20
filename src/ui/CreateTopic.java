@@ -316,7 +316,6 @@ public class CreateTopic extends AppActivity implements OnSizeChangedListener, O
 
 	private String title;
 	private String content;
-	private String begin_at;
 	private BlockingQueue<FunsPhotoEntity> photoQueue = new LinkedBlockingQueue<FunsPhotoEntity>();
 	private void prepareCreateActivity() {
 		closeInput();
@@ -325,11 +324,11 @@ public class CreateTopic extends AppActivity implements OnSizeChangedListener, O
 		String rich = Html.toHtml(spanStr);
 		content = StringEscapeUtils.unescapeHtml4(rich);;
         if (StringUtils.empty(title)) {
-        	UIHelper.ToastMessage(this, R.layout.toastmessage_text, "请填写文章标题", Toast.LENGTH_SHORT);
+        	WarningDialog("请填写文章标题");
 			return;
 		}
         if (StringUtils.empty(content)) {
-        	UIHelper.ToastMessage(this, R.layout.toastmessage_text, "请填写文章内容", Toast.LENGTH_SHORT);
+        	WarningDialog("请填写文章内容");
 			return;
 		}
         if (content.contains("<img src=\"1:")) {

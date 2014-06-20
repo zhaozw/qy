@@ -9,6 +9,7 @@ public class FunsEntity extends Entity{
 	public String description;
 	public String display;
 	public String sort;
+	public String cover;
 	
 	public FunsEntity() {
 		

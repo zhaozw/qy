@@ -254,7 +254,7 @@ public class AppClient {
 		});
 	}
 	
-	public static void setAvatar(String code, String sign, String key) {
+	public static void setAvatar(String code, String sign, String key, final ClientCallback callback) {
 		RequestParams param = new RequestParams();
 		param.put("code", code);
 		param.put("sign", sign);
@@ -264,6 +264,20 @@ public class AppClient {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 				Logger.i(DecodeUtil.decode(new String(responseBody)));
+				try {
+					JSONObject js = new JSONObject(DecodeUtil.decode(new String(responseBody)));
+					Result result = new Result();
+					if (js.getInt("status") == 1) {
+						result.setError_code(Result.RESULT_OK);
+					}
+					else {
+						result.setError_code(10);
+						result.setMessage(js.getString("info"));
+					}
+					callback.onSuccess(result);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
 			
 			@Override
@@ -623,6 +637,7 @@ public class AppClient {
 	//创建活动
 	public static void createActivity(final MyApplication appContext, 
 			String title, 
+			String logo,
 			String content, 
 			String begin_at,
 			String city_code,
@@ -639,6 +654,8 @@ public class AppClient {
 			final ClientCallback callback) {
 		RequestParams params = new RequestParams();
 		params.add("title", title);
+		Logger.i(logo);
+		params.add("logo", logo);
 		params.add("content", content);
 		params.add("begin_at", begin_at);
 		if (StringUtils.notEmpty(city_code)) {

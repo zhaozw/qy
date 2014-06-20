@@ -41,6 +41,7 @@ public class FunsListEntity extends Entity{
 		    				fun.display = xmlParser.getAttributeValue(null, "display");
 		    				fun.sort = xmlParser.getAttributeValue(null, "sort");
 		    				fun.icon = R.drawable.funs_business;
+		    				fun.cover = xmlParser.getAttributeValue(null, "logo");
 		    				data.funs.add(fun);
 		    			}
 		    			else if (tag.equalsIgnoreCase("DINNER")) {
@@ -52,6 +53,7 @@ public class FunsListEntity extends Entity{
 		    				fun.display = xmlParser.getAttributeValue(null, "display");
 		    				fun.sort = xmlParser.getAttributeValue(null, "sort");
 		    				fun.icon = R.drawable.funs_dinner;
+		    				fun.cover = xmlParser.getAttributeValue(null, "logo");
 		    				data.funs.add(fun);
 						}
 		    			else if (tag.equalsIgnoreCase("OUTSPORT")) {
@@ -63,6 +65,7 @@ public class FunsListEntity extends Entity{
 		    				fun.display = xmlParser.getAttributeValue(null, "display");
 		    				fun.sort = xmlParser.getAttributeValue(null, "sort");
 		    				fun.icon = R.drawable.funs_outsport;
+		    				fun.cover = xmlParser.getAttributeValue(null, "logo");
 		    				data.funs.add(fun);
 						}
 		    			else if (tag.equalsIgnoreCase("CARD")) {
@@ -74,6 +77,7 @@ public class FunsListEntity extends Entity{
 		    				fun.display = xmlParser.getAttributeValue(null, "display");
 		    				fun.sort = xmlParser.getAttributeValue(null, "sort");
 		    				fun.icon = R.drawable.funs_card;
+		    				fun.cover = xmlParser.getAttributeValue(null, "logo");
 		    				data.funs.add(fun);
 		    			}
 		    			else if (tag.equalsIgnoreCase("TOPIC")) {
@@ -85,6 +89,7 @@ public class FunsListEntity extends Entity{
 		    				fun.display = xmlParser.getAttributeValue(null, "display");
 		    				fun.sort = xmlParser.getAttributeValue(null, "sort");
 		    				fun.icon = R.drawable.funs_topic;
+		    				fun.cover = xmlParser.getAttributeValue(null, "logo");
 		    				data.funs.add(fun);
 		    			}
 		    			else if (tag.equalsIgnoreCase("KARAOKE")) {
@@ -96,6 +101,7 @@ public class FunsListEntity extends Entity{
 		    				fun.display = xmlParser.getAttributeValue(null, "display");
 		    				fun.sort = xmlParser.getAttributeValue(null, "sort");
 		    				fun.icon = R.drawable.funs_karaoke;
+		    				fun.cover = xmlParser.getAttributeValue(null, "logo");
 		    				data.funs.add(fun);
 		    			}
 		    			break;

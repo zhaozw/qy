@@ -212,6 +212,7 @@ public class JiaV extends AppActivity{
 			public void onFailure(Exception ex) {
 				UIHelper.dismissProgress(loadingPd);
 				//重新上传
+				photoQueue.add(photo);
 				WarningDialog("上传图片失败，请重试", "确定", "取消", new DialogClickListener() {
 					
 					@Override

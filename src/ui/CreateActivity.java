@@ -56,6 +56,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
 import android.text.Html;
@@ -71,11 +72,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 public class CreateActivity extends AppActivity implements OnSizeChangedListener, OnFocusChangeListener, AMapLocationListener {
+	private final static int IMG_COVER = 1;
+	private final static int IMG_CONTENT = 2;
+	private String activityCover;
+	private int imgType;
+	private ImageView imgActivityCover;
 	private EditText richET;
 	private EditText funsNameET;
 	private LinearLayout moreLayout;
@@ -114,7 +121,6 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 	
 	private LocationManagerProxy mAMapLocManager = null;
 	
-
 	
 	@Override
 	protected void onResume() {
@@ -145,9 +151,16 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_activity);
 		fun = (FunsEntity) getIntent().getExtras().getSerializable("fun");
+		activityCover = fun.cover;
 		initUI();
 		mAMapLocManager = LocationManagerProxy.getInstance(this);
-		mAMapLocManager.requestLocationUpdates(LocationProviderProxy.AMapNetwork, 1000, 10, this);
+		Handler jumpHandler = new Handler();
+		jumpHandler.postDelayed(new Runnable() {
+			public void run() {
+				mAMapLocManager.requestLocationUpdates(LocationProviderProxy.AMapNetwork, 1000, 10, CreateActivity.this);
+		 	}
+		}, 1000);
+		
 	}
 
 	private void initUI() {
@@ -162,6 +175,10 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 		date = calendar.get(Calendar.DAY_OF_MONTH);;
 		hour = calendar.get(Calendar.HOUR_OF_DAY);
 		minute = calendar.get(Calendar.MINUTE);
+		imgActivityCover = (ImageView) findViewById(R.id.imgActivityCover);
+		if (StringUtils.notEmpty(activityCover)) {
+			imageLoader.displayImage(activityCover, imgActivityCover, CommonValue.DisplayOptions.default_options);
+		}
 		funsNameET = (EditText) findViewById(R.id.activityName);
 		funsNameET.setOnFocusChangeListener(this);
 		richET = (EditText) findViewById(R.id.richEditText);
@@ -231,6 +248,7 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 	public void ButtonClick(View v) {
 		switch (v.getId()) {
 		case R.id.cameraButton:
+			imgType = IMG_CONTENT;
 			PhotoChooseOption();
 			break;
 		case R.id.leftBarButton:
@@ -255,6 +273,10 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 			moreButton.setVisibility(View.GONE);
 			moreLayout.setVisibility(View.VISIBLE);
 			privacy = 0+"";
+			break;
+		case R.id.btnActivityCover:
+			imgType = IMG_COVER;
+			PhotoChooseOption();
 			break;
 		}
 	}
@@ -352,29 +374,24 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 	}
 	
 	private void displayAtEditText(String path) {
-		if (StringUtils.notEmpty(StringUtils.doEmpty(richET.getEditableText().toString()))) {
-			richET.getEditableText().insert(
-					richET.getSelectionStart(),
-					Html.fromHtml("<br><img src='1:" + path
-							+ "'/><br>\n", imageGetter, null));
+		if (imgType == IMG_COVER) {
+			activityCover = path;
+			imageLoader.displayImage("file://"+path, imgActivityCover);
 		}
 		else {
-			richET.getEditableText().insert(
-					richET.getSelectionStart(),
-					Html.fromHtml("<img src='1:" + path
-							+ "'/><br>\n", imageGetter, null));
+			if (StringUtils.notEmpty(StringUtils.doEmpty(richET.getEditableText().toString()))) {
+				richET.getEditableText().insert(
+						richET.getSelectionStart(),
+						Html.fromHtml("<br><img src='1:" + path
+								+ "'/><br>\n", imageGetter, null));
+			}
+			else {
+				richET.getEditableText().insert(
+						richET.getSelectionStart(),
+						Html.fromHtml("<img src='1:" + path
+								+ "'/><br>\n", imageGetter, null));
+			}
 		}
-//		mainScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-//		SpannableStringBuilder spanStr = (SpannableStringBuilder) richET.getText();
-//		richET.setSelection(Html.toHtml(spanStr).length());
-//		CharSequence text = richET.getText();
-//		if (text instanceof Spannable) {
-//			Logger.i("a" + text.length());
-//			Spannable spanText = (Spannable)text;
-////			Selection.setSelection(spanText, text.length());
-//			Selection.removeSelection(spanText);
-//		}
-		richET.setCursorVisible(false);
 	}
 	
 	private void PhotoChooseOption() {
@@ -474,11 +491,11 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
             e.printStackTrace();  
         }  
         if (StringUtils.empty(title)) {
-        	UIHelper.ToastMessage(this, R.layout.toastmessage_text, "请填写活动标题", Toast.LENGTH_SHORT);
+        	WarningDialog("请填写活动标题");
 			return;
 		}
         if (StringUtils.empty(content)) {
-        	UIHelper.ToastMessage(this, R.layout.toastmessage_text, "请填写活动内容", Toast.LENGTH_SHORT);
+        	WarningDialog("请填写活动内容");
 			return;
 		}
         
@@ -486,12 +503,12 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
         cost = StringUtils.doEmpty(feeET.getText().toString());
         guests = StringUtils.doEmpty(memberET.getText().toString());
         question = StringUtils.doEmpty(questionET.getText().toString());
-        if (content.contains("<img src=\"1:")) {
+        if (content.contains("<img src=\"1:") || !activityCover.contains("http")) {
         	parseHtmlImage(content);
 		}
         else {
         	loadingPd = UIHelper.showProgress(this, null, null, true);
-        	AppClient.createActivity(appContext, title, HTMLUtil.htmlToUbb(content), begin_at, "", address, "", privacy, fun.id, cost, "", "", guests, "", question, clientCallback);
+        	AppClient.createActivity(appContext, title, activityCover, HTMLUtil.htmlToUbb(content), begin_at, "", address, "", privacy, fun.id, cost, "", "", guests, "", question, clientCallback);
         }
 	}
 	
@@ -499,6 +516,11 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 	private void parseHtmlImage(String html) {
 		content = html;
 		photoQueue.clear();
+		try {
+			photoQueue.put(new FunsPhotoEntity(activityCover, "", IMG_COVER));
+		} catch (InterruptedException e) {
+			Crashlytics.logException(e);
+		}
 		Html.fromHtml(html, imagePathGetter, null);
 		getQiniuToken();
 	}
@@ -514,14 +536,34 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 			
 			@Override
 			public void onFailure(String message) {
-				// TODO Auto-generated method stub
-				
+				WarningDialog("上传图片失败，请重试", "确定", "取消", new DialogClickListener() {
+					
+					@Override
+					public void ok() {
+						getQiniuToken();
+					}
+					
+					@Override
+					public void cancel() {
+						
+					}
+				});	
 			}
 			
 			@Override
 			public void onError(Exception e) {
-				// TODO Auto-generated method stub
-				
+				WarningDialog("上传图片失败，请重试", "确定", "取消", new DialogClickListener() {
+					
+					@Override
+					public void ok() {
+						getQiniuToken();
+					}
+					
+					@Override
+					public void cancel() {
+						
+					}
+				});		
 			}
 		});
 	}
@@ -542,13 +584,18 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 				Logger.i(resp.toString());
 				String key = resp.optString("key", "");
 				photo.fileUrl = "http://pbwci.qiniudn.com/"+key;
-				content = content.replace("1:"+photo.filePath, photo.fileUrl);
+				if (photo.type == IMG_COVER) {
+					activityCover = photo.fileUrl;
+				}
+				else {
+					content = content.replace("1:"+photo.filePath, photo.fileUrl);
+				}
 				if (!photoQueue.isEmpty()) {
 					upload(photoQueue.poll());
 				}
 				else {
 					loadingPd = UIHelper.showProgress(CreateActivity.this, null, null, true);
-					AppClient.createActivity(appContext, title, HTMLUtil.htmlToUbb(content), begin_at, "", address, "", privacy, fun.id, cost, "", "", guests, "", question, clientCallback);
+					AppClient.createActivity(appContext, title, activityCover, HTMLUtil.htmlToUbb(content), begin_at, "", address, "", privacy, fun.id, cost, "", "", guests, "", question, clientCallback);
 				}
 			}
 
@@ -582,7 +629,7 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 			String filePath = source.substring(2);
 			if (f.equals("1")) {
 				try {
-					photoQueue.put(new FunsPhotoEntity(filePath, ""));
+					photoQueue.put(new FunsPhotoEntity(filePath, "", IMG_CONTENT));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				};
@@ -612,7 +659,7 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 				@Override
 				public void ok() {
 					loadingPd = UIHelper.showProgress(CreateActivity.this, null, null, true);
-					AppClient.createActivity(appContext, title, HTMLUtil.htmlToUbb(content), begin_at, "", address, "", "", fun.id, cost, "", "", guests, "", question, clientCallback);
+					AppClient.createActivity(appContext, title, activityCover, HTMLUtil.htmlToUbb(content), begin_at, "", address, "", "", fun.id, cost, "", "", guests, "", question, clientCallback);
 				}
 				
 				@Override

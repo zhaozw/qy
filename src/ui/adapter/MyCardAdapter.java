@@ -41,7 +41,7 @@ public class MyCardAdapter extends BaseAdapter{
 		TextView desView;
         Button btnCertified;
 	}
-	
+
 	public MyCardAdapter(Context context, List<CardIntroEntity> cards, ImageLoader imageLoader) {
 		this.context = context;
 		this.inflater = LayoutInflater.from(context);

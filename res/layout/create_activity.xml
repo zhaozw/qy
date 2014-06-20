@@ -2,7 +2,7 @@
 <widget.ResizeLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="#ffffff"
     android:id="@+id/resizeLayout"
     android:orientation="vertical" >
     
@@ -106,6 +106,41 @@
 		        android:drawablePadding="4dp"
 	        	>
 	    	</EditText>
+	    	
+            <TextView 
+                android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp"
+                android:textSize="@dimen/cell_subtitle_size"
+                android:textColor="@color/black"
+                android:text="活动图片"
+	            />
+            
+            <ImageView 
+                android:layout_width="match_parent"
+		        android:layout_height="210dp"
+	            android:layout_marginTop="5dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:id="@+id/imgActivityCover"
+                android:scaleType="centerCrop"
+                />
+            
+            <Button 
+                android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:layout_marginTop="5dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:id="@+id/btnActivityCover"
+                android:background="@drawable/topic_mine_button"
+                android:text="更换图片"
+                android:textColor="@color/white"
+                android:textSize="@dimen/cell_title_size"
+                android:onClick="ButtonClick"
+                />
 	    	
             <TextView 
                 android:layout_width="match_parent"

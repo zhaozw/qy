@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
@@ -17,6 +19,10 @@ import tools.ImageUtils;
 import tools.Logger;
 import tools.StringUtils;
 import tools.UIHelper;
+import ui.AppActivity.DialogClickListener;
+import bean.Entity;
+import bean.FunsPhotoEntity;
+import bean.Result;
 
 import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -25,6 +31,8 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;
+import config.AppClient.ClientCallback;
+import config.AppClient.FileCallback;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +59,8 @@ public class UploadAvatar extends AppActivity{
 	
 	private String theLarge;
 	
+	private BlockingQueue<FunsPhotoEntity> photoQueue = new LinkedBlockingQueue<FunsPhotoEntity>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,7 +82,6 @@ public class UploadAvatar extends AppActivity{
 			Logger.i(avatar);
 			this.imageLoader.displayImage(avatar, avatarIV, avatar_options);
 		}
-		
 	}
 	
 	public void ButtonClick(View v) {
@@ -89,15 +98,15 @@ public class UploadAvatar extends AppActivity{
 		}
 	}
 	
-	private void submit() {
-		if (StringUtils.empty(hash)) {
-			UIHelper.ToastMessage(this, "请上传新的头像", Toast.LENGTH_SHORT);
-			return;
-		}
-		AppClient.setAvatar(code, sign, hash);
-		setResult(RESULT_OK);
-		AppManager.getAppManager().finishActivity(this);
-	}
+//	private void submit() {
+//		if (StringUtils.empty(hash)) {
+//			UIHelper.ToastMessage(this, "请上传新的头像", Toast.LENGTH_SHORT);
+//			return;
+//		}
+//		AppClient.setAvatar(code, sign, hash);
+//		setResult(RESULT_OK);
+//		AppManager.getAppManager().finishActivity(this);
+//	}
 	
 	private void PhotoChooseOption() {
 		CharSequence[] item = {"相册", "拍照"};
@@ -218,35 +227,182 @@ public class UploadAvatar extends AppActivity{
 	.build();
 	
 	private void upload(String path) {
+//		String key = IO.UNDEFINED_KEY; 
+//		PutExtra extra = new PutExtra();
+//		avatarTV.setVisibility(View.VISIBLE);
+//		avatarTV.setText("0%");
+		this.imageLoader.displayImage("file://"+path, avatarIV, avatar_options);
+		theLarge = path;
+//		extra.params = new HashMap<String, String>();
+//		IO.putFile(uploadToken, key, new File(path), extra, new JSONObjectRet() {
+//			@Override
+//			public void onProcess(long current, long total) {
+//				
+//				float percent = (float) (current*1.0/total)*100;
+//				if ((int)percent < 100) {
+//					avatarTV.setText((int)percent+"%");
+//				}
+//				else if ((int)percent == 100) {
+//					avatarTV.setText("处理中...");
+//				}
+//			}
+//
+//			@Override
+//			public void onSuccess(JSONObject resp) {
+//				hash = resp.optString("key", "");
+//				avatarTV.setVisibility(View.INVISIBLE);
+//			}
+//
+//			@Override
+//			public void onFailure(Exception ex) {
+//				Logger.i(ex.toString());
+//			}
+//		});
+	}
+
+	private void submit() {
+		if (StringUtils.empty(hash)) {
+			try {
+				uploadToQiniu();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			return;
+		}
+		else {
+			loadingPd = UIHelper.showProgress(this, null, null, true);
+			AppClient.setAvatar(code, sign, hash, clientCallback);
+		}
+	}
+	
+	private void uploadToQiniu() throws InterruptedException {
+		photoQueue.clear();
+		photoQueue.put(new FunsPhotoEntity(theLarge, "1"));
+		if (StringUtils.empty(uploadToken)) {
+			loadingPd = UIHelper.showProgress(this, null, null, true);
+			getQiniuToken();
+		}
+		else {
+			upload(photoQueue.poll());
+		}
+	}
+	private void getQiniuToken() {
+		AppClient.getQiniuToken(new FileCallback() {
+			
+			@Override
+			public void onSuccess(String filePath) {
+				UIHelper.dismissProgress(loadingPd);
+				uploadToken = filePath;
+				upload(photoQueue.poll());
+			}
+			
+			@Override
+			public void onFailure(String message) {
+				// TODO Auto-generated method stub
+				UIHelper.dismissProgress(loadingPd);
+			}
+			
+			@Override
+			public void onError(Exception e) {
+				// TODO Auto-generated method stub
+				UIHelper.dismissProgress(loadingPd);
+			}
+		});
+	}
+	private void upload(final FunsPhotoEntity photo) {
+		loadingPd = UIHelper.showProgress(this, null, null, true);
 		String key = IO.UNDEFINED_KEY; 
 		PutExtra extra = new PutExtra();
-		avatarTV.setVisibility(View.VISIBLE);
-		avatarTV.setText("0%");
-		this.imageLoader.displayImage("file://"+path, avatarIV, avatar_options);
 		extra.params = new HashMap<String, String>();
-		IO.putFile(uploadToken, key, new File(path), extra, new JSONObjectRet() {
+		IO.putFile(uploadToken, key, new File(photo.filePath), extra, new JSONObjectRet() {
 			@Override
 			public void onProcess(long current, long total) {
-				
-				float percent = (float) (current*1.0/total)*100;
-				if ((int)percent < 100) {
-					avatarTV.setText((int)percent+"%");
-				}
-				else if ((int)percent == 100) {
-					avatarTV.setText("处理中...");
-				}
 			}
 
 			@Override
 			public void onSuccess(JSONObject resp) {
+				UIHelper.dismissProgress(loadingPd);
 				hash = resp.optString("key", "");
-				avatarTV.setVisibility(View.INVISIBLE);
+				if (!photoQueue.isEmpty()) {
+					upload(photoQueue.poll());
+				}
+				else {
+					loadingPd = UIHelper.showProgress(UploadAvatar.this, null, null, true);
+					AppClient.cardVIP(code, sign, hash, clientCallback);
+				}
 			}
 
 			@Override
 			public void onFailure(Exception ex) {
-				Logger.i(ex.toString());
+				UIHelper.dismissProgress(loadingPd);
+				//重新上传
+				photoQueue.add(photo);
+				WarningDialog("上传图片失败，请重试", "确定", "取消", new DialogClickListener() {
+					
+					@Override
+					public void ok() {
+						if (!photoQueue.isEmpty()) {
+							upload(photoQueue.poll());
+						}
+					}
+					
+					@Override
+					public void cancel() {
+						
+					}
+				});
 			}
 		});
 	}
+	
+	private ClientCallback clientCallback = new ClientCallback() {
+		
+		@Override
+		public void onSuccess(Entity data) {
+			UIHelper.dismissProgress(loadingPd);
+			Result result = (Result) data;
+			switch (result.getError_code()) {
+			case Result.RESULT_OK:
+				UIHelper.ToastMessage(UploadAvatar.this, R.layout.toastmessage_text, "头像提交成功", Toast.LENGTH_SHORT);
+				setResult(RESULT_OK);
+				AppManager.getAppManager().finishActivity(UploadAvatar.this);
+				break;
+
+			default:
+				UIHelper.ToastMessage(UploadAvatar.this, R.layout.toastmessage_text, result.getMessage(), Toast.LENGTH_SHORT);
+				break;
+			}
+			
+//			KeyValue entity = (KeyValue) data;
+			
+//			Intent intent = new Intent(CreateTopic.this, QYWebView.class);
+//			intent.putExtra(CommonValue.IndexIntentKeyValue.CreateView, entity.value);
+//			startActivityForResult(intent, CommonValue.PhonebookViewUrlRequest.editPhoneview);
+		}
+		
+		@Override
+		public void onFailure(String message) {
+			UIHelper.dismissProgress(loadingPd);
+			WarningDialog("资料上传失败，请重试", "确定", "取消", new DialogClickListener() {
+				
+				@Override
+				public void ok() {
+					loadingPd = UIHelper.showProgress(UploadAvatar.this, null, null, true);
+					AppClient.cardVIP(code, sign, hash, clientCallback);
+				}
+				
+				@Override
+				public void cancel() {
+					
+				}
+			});
+		}
+		
+		@Override
+		public void onError(Exception e) {
+			UIHelper.dismissProgress(loadingPd);
+			WarningDialogAndOpenWechat("bibi100", "资料上传失败，请联系微信客服bibi100");
+		}
+	};
+
 }
