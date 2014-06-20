@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tools.AppManager;
+import tools.Logger;
 import tools.UIHelper;
 import ui.adapter.MyCardAdapter;
 import bean.CardIntroEntity;
@@ -19,7 +20,10 @@ import com.vikaa.mycontact.R;
 import config.AppClient;
 import config.CommonValue;
 import config.AppClient.ClientCallback;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -37,9 +41,19 @@ public class MyCard extends AppActivity implements OnRefreshListener{
 	private TextView emptyTV;
 	  
 	@Override
+	protected void onDestroy() {
+		unregisterReceiver(receiver);
+		super.onDestroy();
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mycard);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(CommonValue.CARD_CREATE_ACTION);
+		filter.addAction(CommonValue.CARD_DELETE_ACTION);
+		registerReceiver(receiver, filter);
 		initUI();
 		getCardListFromCache();
 	}
@@ -104,9 +118,11 @@ public class MyCard extends AppActivity implements OnRefreshListener{
     		swipeLayout.setRefreshing(false);
     		return;
     	}
+		loadingPd = UIHelper.showProgress(this, null, null, true);
 		AppClient.getCardList(appContext, new ClientCallback() {
 			@Override
 			public void onSuccess(Entity data) {
+				UIHelper.dismissProgress(loadingPd);
 				CardListEntity entity = (CardListEntity)data;
 				switch (entity.getError_code()) {
 				case Result.RESULT_OK:
@@ -133,12 +149,14 @@ public class MyCard extends AppActivity implements OnRefreshListener{
 			
 			@Override
 			public void onFailure(String message) {
+				UIHelper.dismissProgress(loadingPd);
 				UIHelper.ToastMessage(getApplicationContext(), message, Toast.LENGTH_SHORT);
 				lvDataState = UIHelper.LISTVIEW_DATA_MORE;
 				swipeLayout.setRefreshing(false);
 			}
 			@Override
 			public void onError(Exception e) {
+				UIHelper.dismissProgress(loadingPd);
 				Crashlytics.logException(e);
 				lvDataState = UIHelper.LISTVIEW_DATA_MORE;
 				swipeLayout.setRefreshing(false);
@@ -156,4 +174,34 @@ public class MyCard extends AppActivity implements OnRefreshListener{
 			swipeLayout.setRefreshing(false);
 		}
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Logger.i(resultCode+"");
+		if (resultCode != RESULT_OK) {
+			return;
+		}
+		if (requestCode == 10) {
+			String code = data.getExtras().getString("code");
+			for (CardIntroEntity card : cards) {
+				if (card.code.equals(code)) {
+					card.certified_state = "1";
+				}
+			}
+			xAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (CommonValue.CARD_CREATE_ACTION.equals(action) 
+					|| CommonValue.CARD_DELETE_ACTION.equals(action)) {
+				getCardList();
+			}
+		}
+
+	};
 }

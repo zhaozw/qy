@@ -13,6 +13,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.vikaa.mycontact.R;
 
@@ -55,14 +56,8 @@ public class MyCardAdapter extends BaseAdapter{
 		.showImageOnFail(R.drawable.avatar_placeholder)
 		.cacheInMemory(true)
 		.cacheOnDisc(true)
-		.imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) 
-		.displayer(new BitmapDisplayer() {
-			@Override
-			public void display(Bitmap bitmap, ImageAware imageAware,
-					LoadedFrom loadedFrom) {
-				imageAware.setImageBitmap(bitmap);
-			}
-		})
+		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) 
+		.displayer(new RoundedBitmapDisplayer(10))
 		.build();
 	}
 	
@@ -100,9 +95,16 @@ public class MyCardAdapter extends BaseAdapter{
 		cell.titleView.setText(model.realname);
 		cell.desView.setText(String.format("%s %s", model.department, model.position));
 		this.imageLoader.displayImage(model.avatar, cell.avatarImageView, this.displayOptions);
-		Logger.i(model.certified);
+		Logger.i(model.certified_state);
 		if (StringUtils.notEmpty(model.certified)) {
 			cell.btnCertified.setBackgroundResource(model.certified.equals("0")?R.drawable.mycard_uncertified:R.drawable.mycard_certified);
+			if ((model.certified.equals("0"))) {
+				if (StringUtils.notEmpty(model.certified_state)) {
+					if (model.certified_state.equals("1")) {
+						cell.btnCertified.setBackgroundResource(R.drawable.mycard_certifying);
+					}
+				}
+			}
 		}
         ((MyCard)context).accretionArea(cell.btnCertified);
 		cell.btnCertified.setOnClickListener(new OnClickListener() {
@@ -110,7 +112,15 @@ public class MyCardAdapter extends BaseAdapter{
 			public void onClick(View arg0) {
 				if (StringUtils.notEmpty(model.certified)) {
 					if ((model.certified.equals("0"))) {
-						context.startActivity(new Intent(context, JiaV.class).putExtra("code", model.code).putExtra("token", ""));
+						if (StringUtils.notEmpty(model.certified_state)) {
+							if (model.certified_state.equals("1")) {
+								return;
+							}
+							((MyCard)context).startActivityForResult(new Intent(context, JiaV.class).putExtra("code", model.code).putExtra("token", ""), 10);
+						}
+						else {
+							((MyCard)context).startActivityForResult(new Intent(context, JiaV.class).putExtra("code", model.code).putExtra("token", ""), 10);
+						}
 					}
 				}
 			}

@@ -5,7 +5,10 @@ import java.util.List;
 import tools.StringUtils;
 import ui.adapter.PhonebookAdapter.CellHolder;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.vikaa.mycontact.R;
 
 import config.CommonValue;
@@ -13,6 +16,7 @@ import config.MyApplication;
 import bean.PhoneIntroEntity;
 import bean.TopicEntity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +30,7 @@ public class TopicListAdapter extends BaseAdapter{
 	private Context context;
 	private List<TopicEntity> datas;
 	private LayoutInflater inflater;
+	private DisplayImageOptions displayImageOptions;
 	
 	static class CellHolder {
 		ImageView avatarView;
@@ -39,6 +44,16 @@ public class TopicListAdapter extends BaseAdapter{
 		this.context = context;
 		this.datas = datas;
 		this.inflater = LayoutInflater.from(context);
+		this.displayImageOptions = new DisplayImageOptions.Builder()
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.showImageOnLoading(R.drawable.content_image_loading)
+		.showImageForEmptyUri(R.drawable.logo_120)
+		.showImageOnFail(R.drawable.logo_120)
+		.cacheInMemory(true)
+		.cacheOnDisc(true)
+		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) 
+		.displayer(new RoundedBitmapDisplayer(10))
+		.build();
 	}
 
 	@Override
@@ -73,7 +88,7 @@ public class TopicListAdapter extends BaseAdapter{
 		}
 		TopicEntity model = datas.get(position);
 		cell.titleView.setText(model.title);
-		ImageLoader.getInstance().displayImage(StringUtils.notEmpty(model.thumb)?model.thumb:MyApplication.getInstance().getUserAvatar(), cell.avatarView, CommonValue.DisplayOptions.default_options);
+		ImageLoader.getInstance().displayImage(StringUtils.notEmpty(model.thumb)?model.thumb:MyApplication.getInstance().getUserAvatar(), cell.avatarView, displayImageOptions);
 		cell.creatorView.setText(model.pubdate + "  "+ model.from);
 		return convertView;
 	}

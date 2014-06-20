@@ -4,6 +4,7 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import tools.StringUtils;
 import ui.adapter.FindAdFragmentAdapter;
 import ui.adapter.FunsGridViewAdapter;
 import ui.adapter.QunGridViewAdapter;
@@ -16,6 +17,9 @@ import bean.QunsEntity;
 import bean.QunsListEntity;
 import bean.TopicOptionListEntity;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;
@@ -23,6 +27,7 @@ import config.CommonValue;
 import config.AppClient.ClientCallback;
 import config.CommonValue.CreateViewUrlAndRequest;
 import config.CommonValue.FunsType;
+import android.R.string;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +40,7 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
 public class Find extends AppActivity implements OnItemClickListener{
 	private List<AdsEntity> ads = new ArrayList<AdsEntity>();
@@ -48,6 +54,7 @@ public class Find extends AppActivity implements OnItemClickListener{
 	private List<FunsEntity> funs = new ArrayList<FunsEntity>();
 	private FunsGridViewAdapter funsAdapter;
 	
+	private TextView tvMessage;
 	@Override
 	protected void onPause() {
 		unregisterReceiver(receiver);
@@ -92,6 +99,45 @@ public class Find extends AppActivity implements OnItemClickListener{
 		funsGridView.setOnItemClickListener(this);
 		getAdsFromCache();
 		
+		tvMessage = (TextView) findViewById(R.id.messageView);
+		if (StringUtils.notEmpty(appContext.getNews())) {
+			try {
+				if (Integer.valueOf(appContext.getNews()) > 0) {
+					tvMessage.setVisibility(View.VISIBLE);
+					tvMessage.setText(Integer.valueOf(appContext.getNews())<99?appContext.getNews():"99+");
+				}
+			}
+			catch (Exception e) {
+				Crashlytics.logException(e);
+			}
+		}
+	}
+	
+	public void ButtonClick(View v) {
+		switch (v.getId()) {
+		case R.id.leftBarButton:
+			showNotification();
+			tvMessage.setVisibility(View.INVISIBLE);
+			break;
+
+		default:
+			break;
+		}
+	}
+	
+	public void showNotification() {
+		EasyTracker easyTracker = EasyTracker.getInstance(this);
+		easyTracker.send(MapBuilder
+	      .createEvent("ui_action",     // Event category (required)
+	                   "button_press",  // Event action (required)
+	                   "查看通知："+String.format("%s/message/index", CommonValue.BASE_URL),   // Event label
+	                   null)            // Event value
+	      .build()
+		);
+		Intent intent = new Intent(this, QYWebView.class);
+		intent.putExtra(CommonValue.IndexIntentKeyValue.CreateView, String.format("%s/message/index", CommonValue.BASE_URL));
+		startActivity(intent);
+		AppClient.setMessageRead(appContext);
 	}
 	
 	@Override
@@ -115,6 +161,8 @@ public class Find extends AppActivity implements OnItemClickListener{
 	}
 	
 	private void getAdsFromCache() {
+		ads.add(new AdsEntity(CommonValue.ADS_TITLE, CommonValue.AD_THUMB+R.drawable.ad_default, CommonValue.AD_LINK));
+		adsAdapter.notifyDataSetChanged();
 		String key = String.format("%s-%s", CommonValue.CacheKey.ADS, appContext.getLoginUid());
 		AdsListEntity entity = (AdsListEntity) appContext.readObject(key);
 		if(entity != null){
@@ -137,12 +185,12 @@ public class Find extends AppActivity implements OnItemClickListener{
 			
 			@Override
 			public void onFailure(String message) {
-				
+				getAds();
 			}
 			
 			@Override
 			public void onError(Exception e) {
-				
+				getAds();
 			}
 		});
 	}

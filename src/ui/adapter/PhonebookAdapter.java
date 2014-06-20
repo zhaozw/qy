@@ -13,6 +13,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.vikaa.mycontact.R;
 
@@ -61,14 +62,8 @@ public class PhonebookAdapter extends BaseExpandableListAdapter{
 		.showImageOnFail(R.drawable.logo_120)
 		.cacheInMemory(true)
 		.cacheOnDisc(true)
-		.imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) 
-		.displayer(new BitmapDisplayer() {
-			@Override
-			public void display(Bitmap bitmap, ImageAware imageAware,
-					LoadedFrom loadedFrom) {
-				imageAware.setImageBitmap(bitmap);
-			}
-		})
+		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) 
+		.displayer(new RoundedBitmapDisplayer(10))
 		.build();
 	}
 	

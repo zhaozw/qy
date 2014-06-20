@@ -113,20 +113,7 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 	private void initUI() {
 		overlay = (TextView) findViewById(R.id.fast_position);
 		letterListView = (MyLetterListView) findViewById(R.id.ContactLetterListView);
-//		messageView = (TextView) findViewById(R.id.messageView);
-//		searchHeaderView = getLayoutInflater().inflate(R.layout.search_headview, null);
-//		searchHeaderView.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View arg0) {
-//				letterListView.setVisibility(View.INVISIBLE);
-//				Intent intent = new Intent(WeFriendCard.this, WeFriendCardSearch.class);
-//	            startActivityForResult(intent, 12);
-//			}
-//		});
-//		editText = (EditText) searchHeaderView.findViewById(R.id.searchEditView);
-//		editText.setFocusable(false);
-//		searchDeleteButton = (Button) searchHeaderView.findViewById(R.id.searchDeleteButton);
-		
+		((TextView)findViewById(R.id.titleBarView)).setText("手机通讯录");
 		nobilateralView = (TextView) findViewById(R.id.noting_view);
 		indicatorImageView = (ImageView) findViewById(R.id.xindicator);
 		indicatorAnimation = AnimationUtils.loadAnimation(this, R.anim.refresh_button_rotation);

@@ -520,14 +520,14 @@ public class AppClient {
 	
 	public static void getPhoneSquareList(final MyApplication appContext, final String page, final String keyword, final ClientCallback callback) {
 		RequestParams params = new RequestParams();
-		if (StringUtils.notEmpty(page)) {
-			params.add("page", page);
-		}
-		if (StringUtils.notEmpty(keyword)) {
-			params.add("keyword", keyword);
-		}
+//		if (StringUtils.notEmpty(page)) {
+//			params.add("page", page);
+//		}
+//		if (StringUtils.notEmpty(keyword)) {
+//			params.add("keyword", keyword);
+//		}
 		params.add("count", "5");
-		QYRestClient.post("phonebook/square"+"?_sign="+appContext.getLoginSign(), null, new AsyncHttpResponseHandler() {
+		QYRestClient.post("phonebook/random"+"?_sign="+appContext.getLoginSign(), null, new AsyncHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, byte[] content) {
 				handleSquarelist(content, callback, appContext, page, keyword);

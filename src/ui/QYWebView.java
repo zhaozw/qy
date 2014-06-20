@@ -206,6 +206,9 @@ public class QYWebView extends AppActivity  {
 					}
 				}
 				else {
+					if (url.contains("")) {
+						
+					}
 					indicatorImageView.setVisibility(View.VISIBLE);
 			    	indicatorImageView.startAnimation(indicatorAnimation);
 			    	if (StringUtils.notEmpty(url) && !QYWebView.this.isFinishing()) {
@@ -520,40 +523,111 @@ public class QYWebView extends AppActivity  {
 	    	msg.what = CommonValue.CreateViewJSType.showUploadAvatar;
 	    	mJSHandler.sendMessage(msg);
 	    }
+	    
+	    public void phonebookRemove(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goPhonebookView;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void phonebookExit(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goPhonebookView;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void phonebookJoin(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goPhonebookView;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void phonebookCreate(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goPhonebookView;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void phonebookSave(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goPhonebookView;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void cardRemove(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goCardView;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void cardSave(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goCardView;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void activityCreate(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goActivityList;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void activitySave(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goActivityList;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void activityExit(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goActivityList;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void activityJoin(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goActivityList;
+	    	mJSHandler.sendMessage(msg);
+	    }
+	    public void activityRemove(String code){
+	    	Logger.i("d");
+	    	Message msg = new Message();
+	    	msg.what = CommonValue.CreateViewJSType.goActivityList;
+	    	mJSHandler.sendMessage(msg);
+	    }
     }
 	
 	Handler mJSHandler = new Handler(){
 		public void handleMessage(Message msg) {
+			Logger.i(msg.what+"");
 			Intent intent = new Intent();
 			String code ;
 			switch (msg.what) {
 			case CommonValue.CreateViewJSType.goPhonebookView:
-				code = (String) msg.obj;
-				intent.putExtra("resultcode", CommonValue.CreateViewJSType.goPhonebookView);
-				intent.putExtra("resultdata", code);
-				setResult(RESULT_OK, intent);
-				AppManager.getAppManager().finishActivity(QYWebView.this);
+				intent.setAction(CommonValue.PHONEBOOK_CREATE_ACTION);
+				intent.setAction(CommonValue.PHONEBOOK_DELETE_ACTION);
+				sendBroadcast(intent);
 				break;
 			case CommonValue.CreateViewJSType.goPhonebookList:
-				intent.putExtra("resultcode", CommonValue.CreateViewJSType.goPhonebookList);
-				setResult(RESULT_OK, intent);
-				AppManager.getAppManager().finishActivity(QYWebView.this);
+				intent.setAction(CommonValue.PHONEBOOK_CREATE_ACTION);
+				intent.setAction(CommonValue.PHONEBOOK_DELETE_ACTION);
+				sendBroadcast(intent);
 				break;
 			case CommonValue.CreateViewJSType.goActivityView:
-				code = (String) msg.obj;
-				intent.putExtra("resultcode", CommonValue.CreateViewJSType.goPhonebookView);
-				intent.putExtra("resultdata", code);
-				setResult(RESULT_OK, intent);
-				AppManager.getAppManager().finishActivity(QYWebView.this);
+				intent.setAction(CommonValue.ACTIVITY_CREATE_ACTION);
+				intent.setAction(CommonValue.ACTIVITY_DELETE_ACTION);
+				sendBroadcast(intent);
 				break;
 			case CommonValue.CreateViewJSType.goActivityList:
-				intent.putExtra("resultcode", CommonValue.CreateViewJSType.goPhonebookList);
-				setResult(RESULT_OK, intent);
-				AppManager.getAppManager().finishActivity(QYWebView.this);
+				intent.setAction(CommonValue.ACTIVITY_CREATE_ACTION);
+				intent.setAction(CommonValue.ACTIVITY_DELETE_ACTION);
+				sendBroadcast(intent);
 				break;
 			case CommonValue.CreateViewJSType.goCardView:
-				setResult(RESULT_OK, intent);
-				AppManager.getAppManager().finishActivity(QYWebView.this);
+				intent.setAction(CommonValue.CARD_CREATE_ACTION);
+				intent.setAction(CommonValue.CARD_DELETE_ACTION);
+				sendBroadcast(intent);
 				break;
 			case CommonValue.CreateViewJSType.share:
 				code = (String) msg.obj;

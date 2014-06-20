@@ -36,6 +36,7 @@ public class LoginCode1 extends AppActivity{
 	private ProgressDialog loadingPd;
 	private TextView barTitle;
 	private TextView regTV;
+	private TextView textView1;
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -62,6 +63,7 @@ public class LoginCode1 extends AppActivity{
 	}
 	
 	private void initUI() {
+		textView1 = (TextView) findViewById(R.id.textView1);
 		barTitle = (TextView) findViewById(R.id.barTitle);
 		regTV = (TextView) findViewById(R.id.textView2);
 		regTV.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -141,7 +143,7 @@ public class LoginCode1 extends AppActivity{
 			}
 		}
 		else {
-			UIHelper.ToastMessage(getApplicationContext(), R.layout.toastmessage_text, "请输入正确的手机号码", Toast.LENGTH_SHORT);
+			WarningDialog("请输入正确的手机号码");
 		}
 	}
 	
@@ -161,10 +163,12 @@ public class LoginCode1 extends AppActivity{
 		if (regTV.getText().toString().equals(getResources().getString(R.string.register))) {
 			regTV.setText(getResources().getString(R.string.mobile_login));
 			barTitle.setText("手机号码注册");
+			textView1.setVisibility(View.INVISIBLE);
 		}
 		else {
 			regTV.setText(getResources().getString(R.string.register));
 			barTitle.setText("手机号码登录");
+			textView1.setVisibility(View.VISIBLE);
 		}
 	}
 	

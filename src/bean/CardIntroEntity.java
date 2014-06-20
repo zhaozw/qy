@@ -79,6 +79,8 @@ public class CardIntroEntity extends Entity implements Comparable<CardIntroEntit
 	
 	public String phone_display;
 	
+	public String certified_state;
+	
 	//card list
 	public static CardIntroEntity parse(JSONObject info, String sectionType) throws IOException, AppException {
 		CardIntroEntity data = new CardIntroEntity();
@@ -110,6 +112,9 @@ public class CardIntroEntity extends Entity implements Comparable<CardIntroEntit
 			}
 			if (!info.isNull("phone_display")) {
 				data.phone_display = info.getString("phone_display");
+			}
+			if (!info.isNull("certified_state")) {
+				data.certified_state = info.getString("certified_state");
 			}
 			data.cardSectionType = sectionType;
 			data.willRefresh = false;

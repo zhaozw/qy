@@ -45,7 +45,7 @@
         android:layout_height="20dp"
         android:layout_marginRight="10dp"
         android:layout_alignTop="@+id/title"
-        android:background="@drawable/mycard_uncertified"
+        android:background="@drawable/mycard_certified"
          />
     
     <View

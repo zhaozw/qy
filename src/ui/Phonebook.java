@@ -27,8 +27,11 @@ import config.CommonValue;
 import config.AppClient.ClientCallback;
 import config.CommonValue.LianXiRenType;
 import android.content.AsyncQueryHandler;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -59,9 +62,19 @@ public class Phonebook extends AppActivity{
 	private int mobileNum = 0;
 	
 	@Override
+	protected void onDestroy() {
+		unregisterReceiver(receiver);
+		super.onDestroy();
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.phonebook);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(CommonValue.PHONEBOOK_CREATE_ACTION);
+		filter.addAction(CommonValue.PHONEBOOK_DELETE_ACTION);
+		registerReceiver(receiver, filter);
 		asyncQuery = new MyAsyncQueryHandler(getContentResolver());
 		uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 		initUI();
@@ -217,9 +230,13 @@ public class Phonebook extends AppActivity{
 	}
 	
 	private void getPhoneList() {
+//		if (myQuns.isEmpty()) {
+			loadingPd = UIHelper.showProgress(this, null, null, true);
+//		}
 		AppClient.getPhoneList(appContext, new ClientCallback() {
 			@Override
 			public void onSuccess(Entity data) {
+				UIHelper.dismissProgress(loadingPd);
 				PhoneListEntity entity = (PhoneListEntity)data;
 				switch (entity.getError_code()) {
 				case Result.RESULT_OK:
@@ -236,11 +253,13 @@ public class Phonebook extends AppActivity{
 			
 			@Override
 			public void onFailure(String message) {
+				UIHelper.dismissProgress(loadingPd);
 				UIHelper.ToastMessage(getApplicationContext(), message, Toast.LENGTH_SHORT);
 			}
 			@Override
 			public void onError(Exception e) {
-				Logger.i(e);
+				UIHelper.dismissProgress(loadingPd);
+				Crashlytics.logException(e);
 			}
 		});
 	}
@@ -321,4 +340,16 @@ public class Phonebook extends AppActivity{
 		}
 	}
 	
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (CommonValue.PHONEBOOK_CREATE_ACTION.equals(action) 
+					|| CommonValue.PHONEBOOK_DELETE_ACTION.equals(action)) {
+				getPhoneList();
+			}
+		}
+
+	};
 }

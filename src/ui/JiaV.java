@@ -128,7 +128,7 @@ public class JiaV extends AppActivity{
 	
 	private void submit() {
 		if (StringUtils.empty(mingpianPath) || StringUtils.empty(idPath)) {
-			WarningDialog("请选择名片和身份证图片");
+			WarningDialog("请先上传完名片和身份证图片");
 			return;
 		}
 		if (StringUtils.empty(mingpianFile) || StringUtils.empty(idFile)) {
@@ -425,6 +425,7 @@ public class JiaV extends AppActivity{
 			switch (result.getError_code()) {
 			case Result.RESULT_OK:
 				UIHelper.ToastMessage(JiaV.this, R.layout.toastmessage_text, "资料提交成功，等待验证", Toast.LENGTH_SHORT);
+				setResult(RESULT_OK, new Intent().putExtra("code", code));
 				AppManager.getAppManager().finishActivity(JiaV.this);
 				break;
 

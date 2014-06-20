@@ -51,7 +51,7 @@ public class RecommendListEntity extends Entity {
 					PhoneIntroEntity phone = PhoneIntroEntity.parsePhonebookAndActivity(ownedArr.getJSONObject(i), CommonValue.PhoneSectionType.RecommendSectionType);
 					data.squares.add(phone);
 				}
-				data.next = js.getInt("next");
+//				data.next = js.getInt("next");
 //			}
 //			else {
 //				if (!js.isNull("error_code")) {

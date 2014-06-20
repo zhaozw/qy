@@ -164,10 +164,12 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
 		if(entity != null){
 			handleTopicTypes(entity);
 		}
+		activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
 		AppClient.getTopicTypes(activity.appContext, new ClientCallback() {
 			
 			@Override
 			public void onSuccess(Entity data) {
+				UIHelper.dismissProgress(activity.loadingPd);
 				TopicOptionListEntity entity = (TopicOptionListEntity)data;
 				switch (entity.getError_code()) {
 				case Result.RESULT_OK:
@@ -180,12 +182,13 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
 			
 			@Override
 			public void onFailure(String message) {
-				
+				UIHelper.dismissProgress(activity.loadingPd);
 			}
 			
 			@Override
 			public void onError(Exception e) {
-				
+				UIHelper.dismissProgress(activity.loadingPd);
+				Crashlytics.logException(e);
 			}
 		});
 	}
@@ -232,10 +235,14 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
 	}
 	
 	private void getTopicList(String id, String page, final int action) {
+//		if (topicList.isEmpty()) {
+			activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
+//		}
 		AppClient.getTopicList(activity.appContext, id, page, new ClientCallback() {
 			
 			@Override
 			public void onSuccess(Entity data) {
+				UIHelper.dismissProgress(activity.loadingPd);
 				TopicListEntity entity = (TopicListEntity) data;
 				switch (entity.getError_code()) {
 				case Result.RESULT_OK:
@@ -250,12 +257,13 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
 			
 			@Override
 			public void onFailure(String message) {
-				
+				UIHelper.dismissProgress(activity.loadingPd);
 			}
 			
 			@Override
 			public void onError(Exception e) {
-				
+				UIHelper.dismissProgress(activity.loadingPd);
+				Crashlytics.logException(e);
 			}
 		});
 	}

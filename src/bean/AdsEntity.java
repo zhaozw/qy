@@ -12,6 +12,18 @@ public class AdsEntity extends Entity{
 	public String thumb;
 	public String link;
 
+	public AdsEntity() {
+		super();
+	}
+	
+	public AdsEntity(String title, String thumb, String link) {
+		super();
+		this.title = title;
+		this.thumb = thumb;
+		this.link = link;
+	}
+
+
 	public static AdsEntity parse(JSONObject info) throws AppException {
 		AdsEntity data = new AdsEntity();
 		try {

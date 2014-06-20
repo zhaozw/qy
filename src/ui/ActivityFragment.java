@@ -22,7 +22,10 @@ import config.AppClient;
 import config.CommonValue;
 import config.AppClient.ClientCallback;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -48,8 +51,18 @@ public class ActivityFragment extends Fragment {
     }
 	
 	@Override
+	public void onDestroy() {
+		activity.unregisterReceiver(receiver);
+		super.onDestroy();
+	}
+	
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        IntentFilter filter = new IntentFilter();
+		filter.addAction(CommonValue.ACTIVITY_CREATE_ACTION);
+		filter.addAction(CommonValue.ACTIVITY_DELETE_ACTION);
+		activity.registerReceiver(receiver, filter);
         quns.add(myQuns);
         quns.add(comQuns);
 		phoneAdapter = new PhonebookAdapter(activity.context, quns);
@@ -58,7 +71,6 @@ public class ActivityFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    	Logger.i("b");
     	View view = inflater.inflate(R.layout.activity_fragment, container, false);
     	ExpandableListView xlistView = (ExpandableListView) view.findViewById(R.id.xlistview);
         xlistView.setDividerHeight(0);
@@ -122,13 +134,13 @@ public class ActivityFragment extends Fragment {
 	}
 	
 	private void getActivityList() {
-//		indicatorImageView.setVisibility(View.VISIBLE);
-//    	indicatorImageView.startAnimation(indicatorAnimation);
+//		if (myQuns.isEmpty()) {
+			activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
+//		}
 		AppClient.getActivityList(activity.appContext, new ClientCallback() {
 			@Override
 			public void onSuccess(Entity data) {
-//				indicatorImageView.clearAnimation();
-//				indicatorImageView.setVisibility(View.INVISIBLE);
+				UIHelper.dismissProgress(activity.loadingPd);
 				ActivityListEntity entity = (ActivityListEntity)data;
 				switch (entity.getError_code()) {
 				case Result.RESULT_OK:
@@ -142,14 +154,12 @@ public class ActivityFragment extends Fragment {
 
 			@Override
 			public void onFailure(String message) {
-//				indicatorImageView.clearAnimation();
-//				indicatorImageView.setVisibility(View.INVISIBLE);
+				UIHelper.dismissProgress(activity.loadingPd);
 				UIHelper.ToastMessage(activity, message, Toast.LENGTH_SHORT);
 			}
 			@Override
 			public void onError(Exception e) {
-//				indicatorImageView.clearAnimation();
-//				indicatorImageView.setVisibility(View.INVISIBLE);
+				UIHelper.dismissProgress(activity.loadingPd);
 				Crashlytics.logException(e);
 			}
 		});
@@ -161,4 +171,17 @@ public class ActivityFragment extends Fragment {
 		myQuns.addAll(entity.joined);
 		phoneAdapter.notifyDataSetChanged();
 	}
+	
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (CommonValue.ACTIVITY_CREATE_ACTION.equals(action) 
+					|| CommonValue.ACTIVITY_DELETE_ACTION.equals(action)) {
+				getActivityList();
+			}
+		}
+
+	};
 }

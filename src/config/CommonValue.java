@@ -266,4 +266,21 @@ public class CommonValue {
 	public static final String UPDATE_MESSAGE_ACTION = "chat.updatemessage";
 	//im reconnect
 	public static final String RECONNECT_ACTION = "chat.reconnect";
+	
+	//phonebook
+	public static final String PHONEBOOK_CREATE_ACTION = "PHONEBOOK_CREATE_ACTION";
+	public static final String PHONEBOOK_DELETE_ACTION = "PHONEBOOK_DELETE_ACTION";
+	
+	//ACTIVITY
+	public static final String ACTIVITY_CREATE_ACTION = "ACTIVITY_CREATE_ACTION";
+	public static final String ACTIVITY_DELETE_ACTION = "ACTIVITY_DELETE_ACTION";
+	
+	//CARD
+	public static final String CARD_CREATE_ACTION = "CARD_CREATE_ACTION";
+	public static final String CARD_DELETE_ACTION = "CARD_DELETE_ACTION";
+	
+	//AD
+	public static final String ADS_TITLE = "【官方】为1000个组织俱乐部，免费建在线微信站，给有需要的朋友";
+	public static final String AD_LINK = "http://mp.weixin.qq.com/s?__biz=MzA4NzA4NzcxMw==&mid=200725411&idx=1&sn=32bc170189696378ec86b2b035bb8db4#rd";
+	public static final String AD_THUMB = "drawable://";
 }
