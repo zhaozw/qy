@@ -261,6 +261,10 @@ public class UploadAvatar extends AppActivity{
 	}
 
 	private void submit() {
+		if (StringUtils.empty(theLarge)) {
+			WarningDialog("请选择头像名片");
+			return;
+		}
 		if (StringUtils.empty(hash)) {
 			try {
 				uploadToQiniu();

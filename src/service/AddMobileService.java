@@ -432,9 +432,13 @@ public class AddMobileService extends IntentService{
 				}
 	        	return;
 			}
-	        long rawContactId = ContentUris.parseId(rawContactUri);
-	        long contactId = getContactId(this, rawContactId);
-	        
+	        long rawContactId = -1l;
+	        try {
+	        	rawContactId = ContentUris.parseId(rawContactUri);
+	        } catch (Exception e ) {
+	        	rawContactId = -1l;
+	        	Crashlytics.logException(e);
+	        }
 	        values.clear();
 	        values.put(Data.RAW_CONTACT_ID, rawContactId);
 	        values.put(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE);

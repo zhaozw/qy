@@ -2,8 +2,8 @@
 <DevInfor>
     <BUSINESS
         id = "14"
-		label= "商务活动"
-		title= "商务活动"
+		label= "组织活动"
+		title= "组织活动"
 		description= ""
 		display="1"
 		sort = "1"

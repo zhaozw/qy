@@ -127,6 +127,10 @@ public class JiaV extends AppActivity{
 	}
 	
 	private void submit() {
+		if (StringUtils.empty(mingpianPath) || StringUtils.empty(idPath)) {
+			WarningDialog("请选择名片和身份证图片");
+			return;
+		}
 		if (StringUtils.empty(mingpianFile) || StringUtils.empty(idFile)) {
 			try {
 				uploadToQiniu();
