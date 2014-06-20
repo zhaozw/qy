@@ -380,7 +380,7 @@
 			        android:textSize="@dimen/cell_title_size"
 			        android:textColor="@color/black"
 			        android:singleLine="true"
-			        android:inputType="number"
+			        android:inputType="text"
 	      		    android:gravity="center_vertical|left"
 			        android:hint="自定义成员问题"
 			        android:maxLines="1"

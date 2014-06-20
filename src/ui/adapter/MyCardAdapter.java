@@ -3,6 +3,7 @@ package ui.adapter;
 import java.util.List;
 
 import android.widget.ImageView;
+import tools.Logger;
 import tools.StringUtils;
 import ui.JiaV;
 import ui.MyCard;
@@ -99,6 +100,7 @@ public class MyCardAdapter extends BaseAdapter{
 		cell.titleView.setText(model.realname);
 		cell.desView.setText(String.format("%s %s", model.department, model.position));
 		this.imageLoader.displayImage(model.avatar, cell.avatarImageView, this.displayOptions);
+		Logger.i(model.certified);
 		if (StringUtils.notEmpty(model.certified)) {
 			cell.btnCertified.setBackgroundResource(model.certified.equals("0")?R.drawable.mycard_uncertified:R.drawable.mycard_certified);
 		}

@@ -62,7 +62,7 @@
             <TextView 
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="12dp"
-                android:text="群通讯录整理"
+                android:text="群体通讯录整理"
                 android:textSize="@dimen/cell_title_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

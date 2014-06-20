@@ -157,7 +157,12 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 		Handler jumpHandler = new Handler();
 		jumpHandler.postDelayed(new Runnable() {
 			public void run() {
-				mAMapLocManager.requestLocationUpdates(LocationProviderProxy.AMapNetwork, 1000, 10, CreateActivity.this);
+				try {
+					mAMapLocManager.requestLocationUpdates(LocationProviderProxy.AMapNetwork, 1000, 10, CreateActivity.this);
+				} 
+				catch (Exception e) {
+					Crashlytics.logException(e);
+				}
 		 	}
 		}, 1000);
 		
@@ -498,7 +503,6 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
         	WarningDialog("请填写活动内容");
 			return;
 		}
-        
         address = StringUtils.doEmpty(locationET.getText().toString());
         cost = StringUtils.doEmpty(feeET.getText().toString());
         guests = StringUtils.doEmpty(memberET.getText().toString());
