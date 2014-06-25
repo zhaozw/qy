@@ -129,6 +129,14 @@
         </activity>
         
         <activity
+            android:name="ui.PCTIP"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+             >
+        </activity>
+        
+        <activity
             android:name="ui.CreateActivityTimeDialog"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"

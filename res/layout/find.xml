@@ -89,7 +89,7 @@
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent" />
             </RelativeLayout>
-            <TextView 
+            <!-- <TextView 
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="12dp"
                 android:text="群体通讯录整理"
@@ -138,7 +138,223 @@
             <TextView 
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                />
+                /> -->
+                <RelativeLayout 
+                    android:id="@+id/btnQun"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:layout_marginLeft="-8dp"
+                    android:layout_marginRight="-8dp"
+                    android:background="@drawable/find_button_shape"
+                    android:onClick="ButtonClick"
+                    >
+                    <ImageView 
+                        android:layout_width="31dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/find_phonebook"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        />
+                    
+                    <TextView 
+                        android:layout_marginLeft="64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="整理群通讯录"
+                        android:textColor="#3a3a3a"
+                        android:textSize="@dimen/cell_subtitle_size"
+                        android:layout_marginTop="12dp"
+                        />
+                    <TextView 
+                        android:layout_marginLeft="64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="发起 群友 同学/事 协会 会议通讯录等…"
+                        android:textColor="#575757"
+                        android:textSize="12dp"
+                        android:layout_marginTop="32dp"
+                        />
+                    <ImageView 
+                        android:layout_width="9dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/btn_next_pressed"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        />
+                </RelativeLayout>
+                
+                <RelativeLayout 
+                    android:id="@+id/btnActivity"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:layout_marginLeft="-8dp"
+                    android:layout_marginRight="-8dp"
+                    android:background="@drawable/find_button_shape"
+                    android:onClick="ButtonClick"
+                    >
+                    <ImageView 
+                        android:layout_width="31dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/find_activity"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        />
+                    
+                    <TextView 
+                        android:layout_marginLeft="64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="发起活动"
+                        android:textColor="#3a3a3a"
+                        android:textSize="@dimen/cell_subtitle_size"
+                        android:layout_marginTop="12dp"
+                        />
+                    <TextView 
+                        android:layout_marginLeft="64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="组织聚会 沙龙 会议 饭局 K歌 出游…"
+                        android:textColor="#575757"
+                        android:textSize="12dp"
+                        android:layout_marginTop="32dp"
+                        />
+                    <ImageView 
+                        android:layout_width="9dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/btn_next_pressed"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        />
+                </RelativeLayout>
+                
+                <RelativeLayout 
+                    android:id="@+id/btnTopic"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:layout_marginLeft="-8dp"
+                    android:layout_marginRight="-8dp"
+                    android:background="@drawable/find_button_shape"
+                    android:onClick="ButtonClick"
+                    >
+                    <ImageView 
+                        android:layout_width="31dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/find_topic"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        />
+                    
+                    <TextView 
+                        android:layout_marginLeft="64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="发表文章话题"
+                        android:textColor="#3a3a3a"
+                        android:textSize="@dimen/cell_subtitle_size"
+                        android:layout_marginTop="12dp"
+                        />
+                    <TextView 
+                        android:layout_marginLeft="64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="发表资讯 经验 群话题 引导活跃群气氛…"
+                        android:textColor="#575757"
+                        android:textSize="12dp"
+                        android:layout_marginTop="32dp"
+                        />
+                    <ImageView 
+                        android:layout_width="9dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/btn_next_pressed"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        />
+                </RelativeLayout>
+                
+                <RelativeLayout 
+                    android:id="@+id/btnCard"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:layout_marginLeft="-8dp"
+                    android:layout_marginRight="-8dp"
+                    android:background="@drawable/find_button_shape"
+                    android:onClick="ButtonClick"
+                    >
+                    <ImageView 
+                        android:layout_width="31dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/find_card"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        />
+                    
+                    <TextView 
+                        android:layout_marginLeft="64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="创建微名片"
+                        android:textColor="#3a3a3a"
+                        android:textSize="@dimen/cell_subtitle_size"
+                        android:layout_marginTop="12dp"
+                        />
+                    <TextView 
+                        android:layout_marginLeft="64dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="便于网络传播 公司介绍 云端管理…"
+                        android:textColor="#575757"
+                        android:textSize="12dp"
+                        android:layout_marginTop="32dp"
+                        />
+                    <ImageView 
+                        android:layout_width="9dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/btn_next_pressed"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        />
+                </RelativeLayout>
+                
+                <RelativeLayout 
+                    android:id="@+id/btnPC"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:layout_marginLeft="-8dp"
+                    android:layout_marginRight="-8dp"
+                    android:onClick="ButtonClick"
+                    >
+                    
+                    <LinearLayout 
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="15dp"
+                        >
+                        <TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="手机操作不方便？ 点这里"
+	                        android:textColor="#3a3a3a"
+	                        android:textSize="@dimen/cell_subtitle_size"
+	                        />
+                        <TextView 
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:text="@string/pc_host"
+	                        android:textColor="#088ec1"
+	                        android:textSize="@dimen/cell_subtitle_size"
+	                        />
+                    </LinearLayout>
+                </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

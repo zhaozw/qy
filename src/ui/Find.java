@@ -4,17 +4,21 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import tools.Logger;
 import tools.StringUtils;
+import tools.UIHelper;
 import ui.adapter.FindAdFragmentAdapter;
 import ui.adapter.FunsGridViewAdapter;
 import ui.adapter.QunGridViewAdapter;
 import bean.AdsEntity;
 import bean.AdsListEntity;
+import bean.CardListEntity;
 import bean.Entity;
 import bean.FunsEntity;
 import bean.FunsListEntity;
 import bean.QunsEntity;
 import bean.QunsListEntity;
+import bean.Result;
 import bean.TopicOptionListEntity;
 
 import com.crashlytics.android.Crashlytics;
@@ -41,18 +45,19 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Find extends AppActivity implements OnItemClickListener{
 	private List<AdsEntity> ads = new ArrayList<AdsEntity>();
 	private FindAdFragmentAdapter adsAdapter;
 	
-	private GridView qunGridView;
-	private List<QunsEntity> quns = new ArrayList<QunsEntity>();
-	private QunGridViewAdapter qunAdapter;
-	
-	private GridView funsGridView;
-	private List<FunsEntity> funs = new ArrayList<FunsEntity>();
-	private FunsGridViewAdapter funsAdapter;
+//	private GridView qunGridView;
+//	private List<QunsEntity> quns = new ArrayList<QunsEntity>();
+//	private QunGridViewAdapter qunAdapter;
+//	
+//	private GridView funsGridView;
+//	private List<FunsEntity> funs = new ArrayList<FunsEntity>();
+//	private FunsGridViewAdapter funsAdapter;
 	
 	private TextView tvMessage;
 	@Override
@@ -81,22 +86,22 @@ public class Find extends AppActivity implements OnItemClickListener{
 		adsAdapter = new FindAdFragmentAdapter(getSupportFragmentManager(), ads);
 		adsViewPager.setAdapter(adsAdapter);
 		
-		qunGridView = (GridView) findViewById(R.id.qunGridView);
-		quns.add(new QunsEntity(R.drawable.qun_normal, "1", "群友微友"));
-		quns.add(new QunsEntity(R.drawable.qun_school, "3", "同学校友"));
-		quns.add(new QunsEntity(R.drawable.qun_business, "5", "行业联盟"));
-		quns.add(new QunsEntity(R.drawable.qun_economy, "7", "商业协会"));
-		quns.add(new QunsEntity(R.drawable.qun_meeting, "17", "活动会议"));
-		quns.add(new QunsEntity(R.drawable.qun_collegue, "14", "公司同事"));
-		qunAdapter = new QunGridViewAdapter(this, quns);
-		qunGridView.setAdapter(qunAdapter);
-		qunGridView.setOnItemClickListener(this);
-		
-		funsGridView = (GridView) findViewById(R.id.funsGridView);
-		funs.addAll(FunsListEntity.parse(this).funs);
-		funsAdapter = new FunsGridViewAdapter(this, funs);
-		funsGridView.setAdapter(funsAdapter);
-		funsGridView.setOnItemClickListener(this);
+//		qunGridView = (GridView) findViewById(R.id.qunGridView);
+//		quns.add(new QunsEntity(R.drawable.qun_normal, "1", "群友微友"));
+//		quns.add(new QunsEntity(R.drawable.qun_school, "3", "同学校友"));
+//		quns.add(new QunsEntity(R.drawable.qun_business, "5", "行业联盟"));
+//		quns.add(new QunsEntity(R.drawable.qun_economy, "7", "商业协会"));
+//		quns.add(new QunsEntity(R.drawable.qun_meeting, "17", "活动会议"));
+//		quns.add(new QunsEntity(R.drawable.qun_collegue, "14", "公司同事"));
+//		qunAdapter = new QunGridViewAdapter(this, quns);
+//		qunGridView.setAdapter(qunAdapter);
+//		qunGridView.setOnItemClickListener(this);
+//		
+//		funsGridView = (GridView) findViewById(R.id.funsGridView);
+//		funs.addAll(FunsListEntity.parse(this).funs);
+//		funsAdapter = new FunsGridViewAdapter(this, funs);
+//		funsGridView.setAdapter(funsAdapter);
+//		funsGridView.setOnItemClickListener(this);
 		getAdsFromCache();
 		
 		tvMessage = (TextView) findViewById(R.id.messageView);
@@ -120,6 +125,23 @@ public class Find extends AppActivity implements OnItemClickListener{
 			tvMessage.setVisibility(View.INVISIBLE);
 			break;
 
+		case R.id.btnQun:
+			startActivity(new Intent(this, QYWebView.class)
+			.putExtra(CommonValue.IndexIntentKeyValue.CreateView, CreateViewUrlAndRequest.ContactCreateUrl));
+			break;
+		case R.id.btnActivity:
+			startActivity(new Intent(this, CreateActivity.class).putExtra("fun", FunsListEntity.parse(this).funs.get(0)));
+			break;
+		case R.id.btnTopic:
+			startActivity(new Intent(this, CreateTopic.class));
+			break;
+		case R.id.btnCard:
+			startActivity(new Intent(this, QYWebView.class)
+			.putExtra(CommonValue.IndexIntentKeyValue.CreateView, CreateViewUrlAndRequest.CardCreateUrl1));
+			break;
+		case R.id.btnPC:
+			startActivity(new Intent(this, PCTIP.class));
+			break;
 		default:
 			break;
 		}
@@ -142,22 +164,22 @@ public class Find extends AppActivity implements OnItemClickListener{
 	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
-		if (parent.getAdapter() == qunAdapter) {
-			startActivity(new Intent(this, QYWebView.class)
-			.putExtra(CommonValue.IndexIntentKeyValue.CreateView, CreateViewUrlAndRequest.ContactCreateUrl+"/id/"+quns.get(position).id));
-		}
-		if (parent.getAdapter() == funsAdapter) {
-			if (funs.get(position).id.equals("20")) {
-				startActivity(new Intent(this, CreateTopic.class).putExtra("fun", funs.get(position)));
-			}
-			else if (funs.get(position).id.equals("19")) {
-				startActivity(new Intent(this, QYWebView.class)
-				.putExtra(CommonValue.IndexIntentKeyValue.CreateView, CreateViewUrlAndRequest.CardCreateUrl1));
-			}
-			else {
-				startActivity(new Intent(this, CreateActivity.class).putExtra("fun", funs.get(position)));
-			}
-		}
+//		if (parent.getAdapter() == qunAdapter) {
+//			startActivity(new Intent(this, QYWebView.class)
+//			.putExtra(CommonValue.IndexIntentKeyValue.CreateView, CreateViewUrlAndRequest.ContactCreateUrl+"/id/"+quns.get(position).id));
+//		}
+//		if (parent.getAdapter() == funsAdapter) {
+//			if (funs.get(position).id.equals("20")) {
+//				startActivity(new Intent(this, CreateTopic.class).putExtra("fun", funs.get(position)));
+//			}
+//			else if (funs.get(position).id.equals("19")) {
+//				startActivity(new Intent(this, QYWebView.class)
+//				.putExtra(CommonValue.IndexIntentKeyValue.CreateView, CreateViewUrlAndRequest.CardCreateUrl1));
+//			}
+//			else {
+//				startActivity(new Intent(this, CreateActivity.class).putExtra("fun", funs.get(position)));
+//			}
+//		}
 	}
 	
 	private void getAdsFromCache() {
@@ -215,6 +237,35 @@ public class Find extends AppActivity implements OnItemClickListener{
 				view.loadUrl(url);
 				return true;
 			};
+		});
+		getCardList();
+	}
+	
+	private void getCardList() {
+		AppClient.getCardList(appContext, new ClientCallback() {
+			@Override
+			public void onSuccess(Entity data) {
+				UIHelper.dismissProgress(loadingPd);
+				CardListEntity entity = (CardListEntity)data;
+				switch (entity.getError_code()) {
+				case Result.RESULT_OK:
+					if (entity.owned.size()>0) {
+						appContext.setUserAvatar(entity.owned.get(0).avatar);
+						appContext.setUserAvatarCode(entity.owned.get(0).code);
+						Logger.i(entity.owned.get(0).code);
+					}
+					break;
+				default:
+					break;
+				}
+			}
+			
+			@Override
+			public void onFailure(String message) {
+			}
+			@Override
+			public void onError(Exception e) {
+			}
 		});
 	}
 }

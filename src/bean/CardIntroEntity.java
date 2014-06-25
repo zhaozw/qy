@@ -114,7 +114,10 @@ public class CardIntroEntity extends Entity implements Comparable<CardIntroEntit
 				data.phone_display = info.getString("phone_display");
 			}
 			if (!info.isNull("certified_state")) {
-				data.certified_state = info.getString("certified_state");
+				if (StringUtils.notEmpty(info.getString("certified_state"))) {
+					JSONObject d = new JSONObject(info.getString("certified_state"));
+					data.certified_state = d.getString("state");
+				}
 			}
 			data.cardSectionType = sectionType;
 			data.willRefresh = false;

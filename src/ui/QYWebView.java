@@ -279,6 +279,7 @@ public class QYWebView extends AppActivity  {
 		indicatorImageView.setVisibility(View.VISIBLE);
     	indicatorImageView.startAnimation(indicatorAnimation);
     	urls.add(QYurl);
+    	
     	loadURLScheme(QYurl);
 	}
 	
@@ -796,6 +797,7 @@ public class QYWebView extends AppActivity  {
 	
 	private void showShare(final boolean silent, final String platform, final String desc, final String title, final String link, String TLImg, String MsgImg) {
 		String storageState = Environment.getExternalStorageState();	
+		Logger.i(TLImg);
 		if(storageState.equals(Environment.MEDIA_MOUNTED)){
 			String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/qy/" + MD5Util.getMD5String(TLImg) + ".png";
 			File file = new File(savePath);
@@ -838,6 +840,7 @@ public class QYWebView extends AppActivity  {
 				oks.setImagePath(filePath);
 			}
 			else {
+				Logger.i("default logo");
 				String cachePath = cn.sharesdk.framework.utils.R.getCachePath(this, null);
 				oks.setImagePath(cachePath + "logo.png");
 			}

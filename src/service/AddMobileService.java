@@ -499,7 +499,7 @@ public class AddMobileService extends IntentService{
 	
 	private void updateMobiles(boolean authority, MobileSynListBean model) {
 		try {
-			appContext.saveObject(model, "mobile");
+//			appContext.saveObject(model, "mobile");
 		} catch(Exception e) {
 			Crashlytics.logException(e);
 		}

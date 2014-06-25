@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -518,6 +521,7 @@ public class AppClient {
 		});
 	}
 	
+	//公开通讯录
 	public static void getPhoneSquareList(final MyApplication appContext, final String page, final String keyword, final ClientCallback callback) {
 		RequestParams params = new RequestParams();
 //		if (StringUtils.notEmpty(page)) {
@@ -691,6 +695,7 @@ public class AppClient {
 		if (StringUtils.notEmpty(custom)) {
 			params.add("custom", custom);
 			params.add("custom_display", "1");
+			Logger.i(custom);
 		}
 		QYRestClient.post("activity/save"+"?_sign="+appContext.getLoginSign(), params, new AsyncHttpResponseHandler() {
 			@Override
@@ -1459,26 +1464,31 @@ public class AppClient {
         abstract void onError(Exception e);
     }
 	public static void downFile(Context context, final MyApplication appContext, final String url, final String format, final FileCallback callback) {
-		QYRestClient.downImage(appContext, url, null, new BinaryHttpResponseHandler() {
-			
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
-				handleDownloadFile(binaryData, callback, appContext, url, format);
-			}
-			
-			@Override
-			public void onFailure(int statusCode, Header[] headers, byte[] binaryData,
-					Throwable error) {
-				callback.onFailure("网络不给力，请重新尝试");
-			}
-			
-			@Override
-			public void onProgress(int bytesWritten, int totalSize) {
-				Logger.i(String.format("Progress %d from %d (%d%%)", bytesWritten, totalSize, (totalSize > 0) ? (bytesWritten / totalSize) * 100 : -1));
-			}
-		});
+		
+		
+		
+//		QYRestClient.downImage(appContext, url, null, new BinaryHttpResponseHandler() {
+//			
+//			@Override
+//			public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
+				handleDownloadFile(callback, appContext, url, format);
+//			}
+//			
+//			@Override
+//			public void onFailure(int statusCode, Header[] headers, byte[] binaryData,
+//					Throwable error) {
+//				callback.onFailure("网络不给力，请重新尝试");
+//				Logger.i(statusCode+"");
+//				Logger.i(error.toString());
+//			}
+//			
+//			@Override
+//			public void onProgress(int bytesWritten, int totalSize) {
+//				Logger.i(String.format("Progress %d from %d (%d%%)", bytesWritten, totalSize, (totalSize > 0) ? (bytesWritten / totalSize) * 100 : -1));
+//			}
+//		});
 	}
-	public static void handleDownloadFile(final byte[] binaryData, final FileCallback callback, final MyApplication appContext, final String url, final String format) {
+	public static void handleDownloadFile(final FileCallback callback, final MyApplication appContext, final String url, final String format) {
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -1513,17 +1523,55 @@ public class AppClient {
 					ApkFile.delete();
 				}
 				File tmpFile = new File(md5FilePath);
+//				try {
+//					FileOutputStream fos = new FileOutputStream(tmpFile);
+//					fos.write(binaryData);
+//					fos.close();
+//					msg.what = 1;
+//					msg.obj = md5FilePath;
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					msg.what = -1;
+//					msg.obj = e;
+//					Logger.i(e);
+//				} 
+//				handler.sendMessage(msg);
 				try {
-					FileOutputStream fos = new FileOutputStream(tmpFile);
-					fos.write(binaryData);
-					fos.close();
+					System.setProperty("http.keepAlive", "false");// 解决经常报此异常问题，at
+																	// java.util.zip.GZIPInputStream.readFully(GZIPInputStream.java:214)
+					URL Url = new URL(url);
+					URLConnection conn = Url.openConnection();
+					conn.connect();
+					InputStream is = conn.getInputStream();
+					// this.fileSize = conn.getContentLength();// 根据响应获取文件大小
+					// if (this.fileSize <= 0) { // 获取内容长度为0
+					// throw new RuntimeException("无法获知文件大小 ");
+					// }
+					if (is == null) { // 没有下载流
+						
+					}
+					FileOutputStream FOS = new FileOutputStream(tmpFile); // 创建写入文件内存流，通过此流向目标写文件
+
+					byte buf[] = new byte[1024];
+					// downLoadFilePosition = 0;
+					int numread;
+					while ((numread = is.read(buf)) != -1) {
+						FOS.write(buf, 0, numread);
+						// downLoadFilePosition += numread
+					}
+					is.close();
+					FOS.flush();
+					if (FOS != null) {
+						FOS.close();
+					}
 					msg.what = 1;
 					msg.obj = md5FilePath;
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					msg.what = -1;
 					msg.obj = e;
-				} 
+				}
 				handler.sendMessage(msg);
 			}
 		});

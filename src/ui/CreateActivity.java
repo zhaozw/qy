@@ -649,6 +649,10 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 			UIHelper.dismissProgress(loadingPd);
 			UIHelper.ToastMessage(CreateActivity.this, R.layout.toastmessage_text, "发起活动成功，正在跳转", Toast.LENGTH_SHORT);
 			ActivityCreateEntity entity = (ActivityCreateEntity) data;
+			Intent intent0 = new Intent();
+			intent0.setAction(CommonValue.ACTIVITY_CREATE_ACTION);
+			intent0.setAction(CommonValue.ACTIVITY_DELETE_ACTION);
+			sendBroadcast(intent0);
 			AppManager.getAppManager().finishActivity(CreateActivity.this);
 			Intent intent = new Intent(CreateActivity.this, QYWebView.class);
 			intent.putExtra(CommonValue.IndexIntentKeyValue.CreateView, entity.link);

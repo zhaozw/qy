@@ -65,7 +65,7 @@ public class ActivityFragment extends Fragment {
 		activity.registerReceiver(receiver, filter);
         quns.add(myQuns);
         quns.add(comQuns);
-		phoneAdapter = new PhonebookAdapter(activity.context, quns);
+		phoneAdapter = new PhonebookAdapter(activity, quns);
         getActivityListFromCache();
     }
 

@@ -56,6 +56,7 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 	private ImageView avatarImageView;
 	private TextView titleView;
 	private TextView nameView;
+	private ImageView imgV;
 //	private List<RelationshipEntity> relationships = new ArrayList<RelationshipEntity>();
 	private List<KeyValue> summarys = new ArrayList<KeyValue>();
 	private ListView mListView;
@@ -110,6 +111,7 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 		avatarImageView = (ImageView) header.findViewById(R.id.avatarImageView);
 		nameView = (TextView) header.findViewById(R.id.name);
 		titleView = (TextView) header.findViewById(R.id.title);
+		imgV = (ImageView) header.findViewById(R.id.imgV);
 		View footer = inflater.inflate(R.layout.card_view_footer, null);
 		callMobileButton = (Button) footer.findViewById(R.id.callContactButton);
 		saveMobileButton = (Button) footer.findViewById(R.id.saveContactButton);

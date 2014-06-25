@@ -191,6 +191,26 @@ public class MyApplication extends AppContext {
 		return (getProperty("user.face"));
 	}
 	
+	public void setUserAvatar(final String avatar) {		
+		setProperties(new Properties(){
+			{
+				setProperty("user.face", avatar);
+			}
+		});
+	}
+	
+	public String getUserAvatarCode() {		
+		return (getProperty("user.facecode"));
+	}
+	
+	public void setUserAvatarCode(final String code) {		
+		setProperties(new Properties(){
+			{
+				setProperty("user.facecode", code);
+			}
+		});
+	}
+	
 	/**
 	 * 退出登录
 	 */

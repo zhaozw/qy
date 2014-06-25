@@ -329,13 +329,13 @@ public class Phonebook extends AppActivity{
 
 		@Override
 		protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-			myQuns.get(0).subtitle = "共"+cursor.getCount()+"位好友";
 			try {
+				myQuns.get(0).subtitle = "共"+cursor.getCount()+"位好友";
 				mobileNum = cursor.getCount();
 				editText.setHint("您共有"+(Integer.valueOf(appContext.getDeg2()) + cursor.getCount())+"位二度人脉可搜索");
 			}
 			catch (Exception e) {
-				Logger.i(e);
+				Crashlytics.logException(e);
 			}
 		}
 	}

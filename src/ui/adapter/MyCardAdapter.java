@@ -95,7 +95,7 @@ public class MyCardAdapter extends BaseAdapter{
 		cell.titleView.setText(model.realname);
 		cell.desView.setText(String.format("%s %s", model.department, model.position));
 		this.imageLoader.displayImage(model.avatar, cell.avatarImageView, this.displayOptions);
-		Logger.i(model.certified_state);
+//		Logger.i(model.certified_state);
 		if (StringUtils.notEmpty(model.certified)) {
 			cell.btnCertified.setBackgroundResource(model.certified.equals("0")?R.drawable.mycard_uncertified:R.drawable.mycard_certified);
 			if ((model.certified.equals("0"))) {
@@ -131,13 +131,13 @@ public class MyCardAdapter extends BaseAdapter{
 				((MyCard)context).showCardViewWeb(model);
 			}
 		});
-		convertView.setOnLongClickListener(new OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View arg0) {
-				((MyCard)context).cardSharePre(false, null, model);
-				return false;
-			}
-		});
+//		convertView.setOnLongClickListener(new OnLongClickListener() {
+//			@Override
+//			public boolean onLongClick(View arg0) {
+//				((MyCard)context).cardSharePre(false, null, model);
+//				return false;
+//			}
+//		});
 		return convertView;
 	}
 

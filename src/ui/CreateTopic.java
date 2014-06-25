@@ -86,7 +86,7 @@ public class CreateTopic extends AppActivity implements OnSizeChangedListener, O
 
 	private String theLarge;
 	
-	private FunsEntity fun;
+//	private FunsEntity fun;
 	
 	@Override
 	protected void onResume() {
@@ -98,7 +98,7 @@ public class CreateTopic extends AppActivity implements OnSizeChangedListener, O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_topic);
-		fun = (FunsEntity) getIntent().getExtras().getSerializable("fun");
+//		fun = (FunsEntity) getIntent().getExtras().getSerializable("fun");
 		initUI();
 	}
 
@@ -116,8 +116,8 @@ public class CreateTopic extends AppActivity implements OnSizeChangedListener, O
 				richET.setCursorVisible(true);
 			}
 		});
-		funsNameET.setText(fun.title);
-		richET.setText(fun.description);
+//		funsNameET.setText(fun.title);
+//		richET.setText(fun.description);
 	}
 
 	public void ButtonClick(View v) {

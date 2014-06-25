@@ -327,6 +327,7 @@ public class UploadAvatar extends AppActivity{
 			public void onSuccess(JSONObject resp) {
 				UIHelper.dismissProgress(loadingPd);
 				hash = resp.optString("key", "");
+				avatar = "http://pbwci.qiniudn.com/"+hash;
 				if (!photoQueue.isEmpty()) {
 					upload(photoQueue.poll());
 				}
@@ -367,8 +368,9 @@ public class UploadAvatar extends AppActivity{
 			Result result = (Result) data;
 			switch (result.getError_code()) {
 			case Result.RESULT_OK:
+				
 				UIHelper.ToastMessage(UploadAvatar.this, R.layout.toastmessage_text, "头像提交成功", Toast.LENGTH_SHORT);
-				setResult(RESULT_OK);
+				setResult(RESULT_OK, new Intent().putExtra("avatar", avatar));
 				AppManager.getAppManager().finishActivity(UploadAvatar.this);
 				break;
 

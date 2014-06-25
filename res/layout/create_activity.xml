@@ -382,7 +382,7 @@
 			        android:singleLine="true"
 			        android:inputType="text"
 	      		    android:gravity="center_vertical|left"
-			        android:hint="自定义成员问题"
+			        android:hint="如：第几届毕业，身份证号码等"
 			        android:maxLines="1"
 			        android:lines="1"
 			        android:imeOptions="actionDone"

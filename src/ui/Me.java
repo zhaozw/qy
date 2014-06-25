@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tools.Logger;
+import tools.StringUtils;
 import tools.UIHelper;
 import tools.UpdateManager;
 import ui.adapter.MeCardAdapter;
@@ -11,6 +12,7 @@ import bean.CardIntroEntity;
 import bean.CardListEntity;
 import bean.Entity;
 import bean.Result;
+
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.zxing.client.android.CaptureActivity;
@@ -28,6 +30,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -82,8 +85,22 @@ public class Me extends AppActivity{
 		nameTV = (TextView) header.findViewById(R.id.title);
 		creditTV = (TextView) header.findViewById(R.id.jifen);
 		nameTV.setText(appContext.getNickname());
-		creditTV.setText("我的积分: "+appContext.getCredits());
+		creditTV.setText("点击修改头像");
 		iphoneTreeView.addHeaderView(header);
+		header.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if (StringUtils.notEmpty(appContext.getUserAvatarCode())) {
+					Intent intent = new Intent(Me.this, UploadAvatar.class);
+					intent.putExtra("code", appContext.getUserAvatarCode());
+					intent.putExtra("token", "");
+					intent.putExtra("avatar", appContext.getUserAvatar());
+					intent.putExtra("sign", appContext.getLoginSign());
+					startActivityForResult(intent, CommonValue.CreateViewJSType.showUploadAvatar);
+				}
+			}
+		});
 		cards = new ArrayList<List<CardIntroEntity>>();
 		mCardAdapter = new MeCardAdapter(iphoneTreeView, this, cards);
 		iphoneTreeView.setAdapter(mCardAdapter);
@@ -277,17 +294,27 @@ public class Me extends AppActivity{
 		if (resultCode != RESULT_OK) {
 			return;
 		}
-		int position = data.getExtras().getInt("position");
-		switch (position) {
-		case 0:
-			showSetting();
+		switch (requestCode) {
+		case CommonValue.CreateViewJSType.showUploadAvatar:
+			String avatar = data.getExtras().getString("avatar");
+			appContext.setUserAvatar(avatar);
+			this.imageLoader.displayImage(avatar, avatarView, avatar_options);
 			break;
 
-		case 1:
-			showFeedback();
-			break;
-		case 2:
-			showUpdate();
+		default:
+			int position = data.getExtras().getInt("position");
+			switch (position) {
+			case 0:
+				showSetting();
+				break;
+
+			case 1:
+				showFeedback();
+				break;
+			case 2:
+				showUpdate();
+				break;
+			}
 			break;
 		}
 	}
