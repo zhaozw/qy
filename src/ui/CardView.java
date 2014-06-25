@@ -156,6 +156,12 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 		imageLoader.displayImage(entity.avatar, avatarImageView, CommonValue.DisplayOptions.avatar_options);
 		nameView.setText(entity.realname);
 		titleView.setText(entity.department +" " +entity.position);
+		if (entity.certified.equals("1")) {
+			imgV.setVisibility(View.VISIBLE);
+		}
+		else {
+			imgV.setVisibility(View.INVISIBLE);
+		}
 		summarys.clear();
 		if (StringUtils.notEmpty(entity.wechat)) {
 			KeyValue value = new KeyValue();

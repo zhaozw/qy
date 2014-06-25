@@ -37,10 +37,15 @@ public class TopicListEntity extends Entity{
 					entity.link = ownedArr.getJSONObject(i).getString("link");
 					entity.rss_id = ownedArr.getJSONObject(i).getString("rss_id");
 					entity.url = ownedArr.getJSONObject(i).getString("url");
+					entity.from = "";
 					if (!ownedArr.getJSONObject(i).isNull("rss")) {
-						JSONObject rss =  ownedArr.getJSONObject(i).getJSONObject("rss");
-						if (rss.isNull("title")) {
-							entity.from = rss.getString("title");
+						if (StringUtils.notEmpty(ownedArr.getJSONObject(i).getString("rss"))) {
+							JSONObject rss =  ownedArr.getJSONObject(i).getJSONObject("rss");
+							if (rss.isNull("title")) {
+								if (StringUtils.notEmpty(rss.getString("title"))) {
+									entity.from = rss.getString("title");
+								}
+							}
 						}
 					}
 					data.datas.add(entity);

@@ -1464,29 +1464,7 @@ public class AppClient {
         abstract void onError(Exception e);
     }
 	public static void downFile(Context context, final MyApplication appContext, final String url, final String format, final FileCallback callback) {
-		
-		
-		
-//		QYRestClient.downImage(appContext, url, null, new BinaryHttpResponseHandler() {
-//			
-//			@Override
-//			public void onSuccess(int statusCode, Header[] headers, byte[] binaryData) {
-				handleDownloadFile(callback, appContext, url, format);
-//			}
-//			
-//			@Override
-//			public void onFailure(int statusCode, Header[] headers, byte[] binaryData,
-//					Throwable error) {
-//				callback.onFailure("网络不给力，请重新尝试");
-//				Logger.i(statusCode+"");
-//				Logger.i(error.toString());
-//			}
-//			
-//			@Override
-//			public void onProgress(int bytesWritten, int totalSize) {
-//				Logger.i(String.format("Progress %d from %d (%d%%)", bytesWritten, totalSize, (totalSize > 0) ? (bytesWritten / totalSize) * 100 : -1));
-//			}
-//		});
+		handleDownloadFile(callback, appContext, url, format);
 	}
 	public static void handleDownloadFile(final FileCallback callback, final MyApplication appContext, final String url, final String format) {
 		final Handler handler = new Handler() {

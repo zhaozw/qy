@@ -416,6 +416,9 @@ public class QYWebView extends AppActivity  {
 		case R.id.closeBarButton:
 			AppManager.getAppManager().finishActivity(this);
 			break;
+		case R.id.btnShare:
+			webView.loadUrl("javascript:appShare()");
+			break;
 		}
 	}
 	
