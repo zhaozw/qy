@@ -46,6 +46,19 @@
 			android:layout_toRightOf="@+id/leftBarButton"
             />
         
+        <Button
+            android:id="@+id/btnMore"
+            android:layout_width="60dp"
+            android:layout_height="44dp"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:text="更多"
+            android:textColor="@color/white"
+            android:textSize="@dimen/navbar_button_text_size"
+			android:onClick="ButtonClick"
+			android:layout_toLeftOf="@+id/btnShare"
+            />
+        
         <ImageView
             android:layout_centerVertical="true"
             android:id="@+id/xindicator"

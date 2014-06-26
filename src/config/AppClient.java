@@ -1340,30 +1340,31 @@ public class AppClient {
 		QYRestClient.getWeb(context, url+"?_sign="+appContext.getLoginSign(), null, new AsyncHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, byte[] content) {
-//				try{
-//					String data = new String(content);
-//					String md5 = MD5Util.getMD5String(content);
-//					String key = String.format("%s-%s", MD5Util.getMD5String(url), appContext.getLoginUid());
-//					WebContent dc = (WebContent) appContext.readObject(key);
-//					WebContent con = new WebContent();
-//					con.text = data;
-//					con.md5 = md5;
-//					saveCache(appContext, MD5Util.getMD5String(url), con);
-//					if(dc == null){
-//						callback.onSuccess(0, con, MD5Util.getMD5String(url));
-//					}
-//					else {
-//						if (dc.md5.equals(con.md5)) {
-//							callback.onSuccess(2, con, MD5Util.getMD5String(url));
-//						}
-//						else {
-//							callback.onSuccess(1, con, MD5Util.getMD5String(url));
-//						}
-//					}
-//				}catch (Exception e) {
-//					callback.onError(e);
-//				}
-				handleLoadURL(content, callback, appContext, url);
+				try{
+					String data = new String(content);
+					String md5 = MD5Util.getMD5String(content);
+					String key = String.format("%s-%s", MD5Util.getMD5String(url), appContext.getLoginUid());
+					WebContent dc = (WebContent) appContext.readObject(key);
+					WebContent con = new WebContent();
+					con.text = data;
+					con.md5 = md5;
+					Logger.i(url);
+					saveCache(appContext, MD5Util.getMD5String(url), con);
+					if(dc == null){
+						callback.onSuccess(0, con, MD5Util.getMD5String(url));
+					}
+					else {
+						if (dc.md5.equals(con.md5)) {
+							callback.onSuccess(2, con, MD5Util.getMD5String(url));
+						}
+						else {
+							callback.onSuccess(1, con, MD5Util.getMD5String(url));
+						}
+					}
+				}catch (Exception e) {
+					callback.onError(e);
+				}
+//				handleLoadURL(content, callback, appContext, url);
 			}
 			@Override
 			public void onFailure(int statusCode, Header[] headers, byte[] content, Throwable e) {

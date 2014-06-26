@@ -331,6 +331,7 @@ public class Phonebook extends AppActivity{
 		protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 			try {
 				myQuns.get(0).subtitle = "共"+cursor.getCount()+"位好友";
+				phoneAdapter.notifyDataSetChanged();
 				mobileNum = cursor.getCount();
 				editText.setHint("您共有"+(Integer.valueOf(appContext.getDeg2()) + cursor.getCount())+"位二度人脉可搜索");
 			}

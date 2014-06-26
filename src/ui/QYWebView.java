@@ -71,12 +71,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class QYWebView extends AppActivity  {
+	private String codeForUrl;
+	private Button btnShare;
+	private Button btnMore;
 	private ImageView indicatorImageView;
 	private Animation indicatorAnimation;
 	private WebView webView;
 	private Button loadAgainButton;
 	private ProgressDialog loadingPd;
-	private Button rightBarButton;
+//	private Button rightBarButton;
 	private Button closeBarButton;
 	private String keyCode;
 	private int keyType;
@@ -128,7 +131,9 @@ public class QYWebView extends AppActivity  {
 		        return (float)Math.floor(input*frameCount)/frameCount;
 		    }
 		});
-		rightBarButton = (Button) findViewById(R.id.rightBarButton);
+		btnMore = (Button) findViewById(R.id.btnMore);
+		btnShare = (Button) findViewById(R.id.btnShare);
+//		rightBarButton = (Button) findViewById(R.id.rightBarButton);
 		closeBarButton = (Button) findViewById(R.id.closeBarButton);
 		webView = (WebView) findViewById(R.id.webview);
 		loadAgainButton = (Button) findViewById(R.id.loadAgain);
@@ -145,6 +150,14 @@ public class QYWebView extends AppActivity  {
 	private void initData() {
 		pbwc mJS = new pbwc();  
 		QYurl = getIntent().getStringExtra(CommonValue.IndexIntentKeyValue.CreateView);
+		if (QYurl.contains(CommonValue.BASE_URL+"/b")) {
+			String regex = ".*\\/b\\/([0-9a-z]+)$";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher ma = pattern.matcher(QYurl);
+			if (ma.find()) {
+				codeForUrl = ma.group(1);
+			}
+		}
 		webseting = webView.getSettings();  
 		webseting.setJavaScriptEnabled(true);
 		webseting.setLightTouchEnabled(true);
@@ -160,9 +173,10 @@ public class QYWebView extends AppActivity  {
         webView.addJavascriptInterface(mJS, "pbwc");
 		webView.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				rightBarButton.setVisibility(View.GONE);
+//				rightBarButton.setVisibility(View.GONE);
 				if (!appContext.isNetworkConnected()) {
-		    		UIHelper.ToastMessage(getApplicationContext(), "当前网络不可用,请检查你的网络设置", Toast.LENGTH_SHORT);
+					Logger.i("aaaaa");
+		    		WarningDialog("当前网络不可用,请检查你的网络设置");
 		    		return true;
 		    	}
 				else if (url.startsWith("tel:")) { 
@@ -245,12 +259,19 @@ public class QYWebView extends AppActivity  {
 		});
 		webView.setWebChromeClient(new WebChromeClient() {
 		    public void onProgressChanged(WebView view, int progress) {
+		    	btnShare.setVisibility(View.INVISIBLE);
+		    	btnMore.setVisibility(View.INVISIBLE);
+		    	indicatorImageView.setVisibility(View.VISIBLE);
+		    	indicatorImageView.startAnimation(indicatorAnimation);
 		    	if (progress >= 50) {
 		    		UIHelper.dismissProgress(loadingPd);
+		    		
 		    	}
 		        if (progress == 100) {
 		        	indicatorImageView.setVisibility(View.INVISIBLE);
 		        	indicatorImageView.clearAnimation();
+		        	btnShare.setVisibility(View.VISIBLE);
+		        	btnMore.setVisibility(View.VISIBLE);
 		        }
 		    }
 		    
@@ -279,7 +300,6 @@ public class QYWebView extends AppActivity  {
 		indicatorImageView.setVisibility(View.VISIBLE);
     	indicatorImageView.startAnimation(indicatorAnimation);
     	urls.add(QYurl);
-    	
     	loadURLScheme(QYurl);
 	}
 	
@@ -295,7 +315,7 @@ public class QYWebView extends AppActivity  {
 				if(dc == null){
 					if (!appContext.isNetworkConnected()) {
 		            	webView.loadUrl(url);
-		            	UIHelper.ToastMessage(getApplicationContext(), "当前网络不可用,请检查你的网络设置", Toast.LENGTH_SHORT);
+		            	WarningDialog("当前网络不可用,请检查你的网络设置");
 					}
 					else {
 						loadURL(url, true, true);
@@ -314,7 +334,7 @@ public class QYWebView extends AppActivity  {
 			if(dc == null){
 				if (!appContext.isNetworkConnected()) {
 	            	webView.loadUrl(url);
-	            	UIHelper.ToastMessage(getApplicationContext(), "当前网络不可用,请检查你的网络设置", Toast.LENGTH_SHORT);
+	            	WarningDialog("当前网络不可用,请检查你的网络设置");
 				}
 				else {
 					loadURL(url, true, true);
@@ -325,6 +345,19 @@ public class QYWebView extends AppActivity  {
 				loadURL(url, false, true);
 			}
 			break;
+		default:
+			Logger.i("a");
+			String key1 = String.format("%s-%s", MD5Util.getMD5String(url), appContext.getLoginUid());
+			WebContent dc1 = (WebContent) appContext.readObject(key1);
+			if(dc1 == null){
+				if (!appContext.isNetworkConnected()) {
+	            	WarningDialog("当前网络不可用,请检查你的网络设置");
+				}
+			}
+			else {
+				webView.loadDataWithBaseURL(CommonValue.BASE_URL, dc1.text, "text/html", "utf-8", url);
+			}
+			break;
 		}
 	}
 	
@@ -333,7 +366,7 @@ public class QYWebView extends AppActivity  {
 		newtv.setVisibility(View.INVISIBLE);
     	webView.loadUrl(url);
     	if (!appContext.isNetworkConnected()) {
-    		UIHelper.ToastMessage(context, "当前网络不可用,请检查你的网络设置", Toast.LENGTH_SHORT);
+    		WarningDialog("当前网络不可用,请检查你的网络设置");
     	}
 	}
 	
@@ -341,10 +374,14 @@ public class QYWebView extends AppActivity  {
 		if (this.isFinishing()) {
 			return;
 		}
+		indicatorImageView.setVisibility(View.VISIBLE);
+    	indicatorImageView.startAnimation(indicatorAnimation);
 		AppClient.loadURL(context, appContext, url, new WebCallback() {
 			
 			@Override
 			public void onFailure(String message) {
+				indicatorImageView.setVisibility(View.INVISIBLE);
+		    	indicatorImageView.clearAnimation();
 				if (isLoad && StringUtils.notEmpty(message) && appContext.isNetworkConnected() && !QYWebView.this.isFinishing()) {
 					UIHelper.ToastMessage(getApplicationContext(), "正在努力帮你加载内容，请稍等", Toast.LENGTH_SHORT);
 					if (webView != null) {
@@ -357,11 +394,14 @@ public class QYWebView extends AppActivity  {
 			
 			@Override
 			public void onError(Exception e) {
-				
+				indicatorImageView.setVisibility(View.INVISIBLE);
+		    	indicatorImageView.clearAnimation();
 			}
 
 			@Override
 			public void onSuccess(int type, Entity data, String key) {
+				indicatorImageView.setVisibility(View.INVISIBLE);
+		    	indicatorImageView.clearAnimation();
 				if (QYWebView.this.isFinishing()) {
 					return;
 				}
@@ -418,6 +458,9 @@ public class QYWebView extends AppActivity  {
 			break;
 		case R.id.btnShare:
 			webView.loadUrl("javascript:appShare()");
+			break;
+		case R.id.btnMore:
+			startActivityForResult(new Intent(this, QYWebViewMore.class), 1001);
 			break;
 		}
 	}
@@ -647,13 +690,13 @@ public class QYWebView extends AppActivity  {
 				code = (String) msg.obj;
 				keyCode = code;
 				keyType = 1;
-				rightBarButton.setVisibility(View.VISIBLE);
+//				rightBarButton.setVisibility(View.VISIBLE);
 				break;
 			case CommonValue.CreateViewJSType.showActivitySmsButton:
 				code = (String) msg.obj;
 				keyCode = code;
 				keyType = 2;
-				rightBarButton.setVisibility(View.VISIBLE);
+//				rightBarButton.setVisibility(View.VISIBLE);
 				break;
 			case CommonValue.CreateViewJSType.webNotSign:
 				reLogin();
@@ -1039,6 +1082,28 @@ public class QYWebView extends AppActivity  {
 		case CommonValue.CreateViewJSType.showUploadAvatar:
 			webView.loadUrl(urls.get(urls.size()-1));
 			loadingPd = UIHelper.showProgress(QYWebView.this, "", "", true);
+			break;
+		case 1001:
+			int position = intent.getExtras().getInt("position");
+			switch (position) {
+			case 0:
+				if (StringUtils.notEmpty(keyCode)) {
+					SMSDialog(keyType);
+				}
+				else {
+					WarningDialog("请打开具体的通讯录");
+				}
+				break;
+
+			case 1:
+				if (StringUtils.notEmpty(codeForUrl)) {
+					webView.loadUrl("http://qun.hk/index/assist/code/"+codeForUrl);
+				}
+				else {
+					WarningDialog("请打开具体的通讯录");
+				}
+				break;
+			}
 			break;
 		}
 	}

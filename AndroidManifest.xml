@@ -320,6 +320,13 @@
         </activity>  
         
         <activity
+            android:name="ui.QYWebViewMore"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"
+             >
+        </activity>  
+        
+        <activity
             android:name="ui.FriendCards"
             android:screenOrientation="portrait"
             
