@@ -129,7 +129,7 @@ public class Find extends AppActivity implements OnItemClickListener{
 			startActivity(new Intent(this, CreatePhonebook.class));
 			break;
 		case R.id.btnActivity:
-			startActivity(new Intent(this, CreateActivity.class).putExtra("fun", FunsListEntity.parse(this).funs.get(0)));
+			startActivity(new Intent(this, CreateActivity.class));
 			break;
 		case R.id.btnTopic:
 			startActivity(new Intent(this, QunTopic.class));

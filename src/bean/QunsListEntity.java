@@ -33,7 +33,15 @@ public class QunsListEntity extends Entity{
 				String tag = xmlParser.getName(); 
 				switch(evtType){ 
 		    		case XmlPullParser.START_TAG:
-		    			if (tag.equalsIgnoreCase("SCHOOL")) {
+		    			if (tag.equalsIgnoreCase("QY")) {
+		    				qun = new QunsEntity();
+		    				qun.id = xmlParser.getAttributeValue(null, "id");
+		    				qun.label = xmlParser.getAttributeValue(null, "label");
+		    				qun.title = xmlParser.getAttributeValue(null, "title");
+		    				qun.icon = R.drawable.qun_school;
+		    				qun.logo = xmlParser.getAttributeValue(null, "logo"); 
+		    			}
+		    			else if (tag.equalsIgnoreCase("SCHOOL")) {
 		    				qun = new QunsEntity();
 		    				qun.id = xmlParser.getAttributeValue(null, "id");
 		    				qun.label = xmlParser.getAttributeValue(null, "label");
@@ -57,6 +65,14 @@ public class QunsListEntity extends Entity{
 		    				qun.icon = R.drawable.qun_economy;
 		    				qun.logo = xmlParser.getAttributeValue(null, "logo"); 
 		    			}
+		    			else if (tag.equalsIgnoreCase("MEETING")) {
+		    				qun = new QunsEntity();
+		    				qun.id = xmlParser.getAttributeValue(null, "id");
+		    				qun.label = xmlParser.getAttributeValue(null, "label");
+		    				qun.title = xmlParser.getAttributeValue(null, "title");
+		    				qun.icon = R.drawable.qun_school;
+		    				qun.logo = xmlParser.getAttributeValue(null, "logo"); 
+		    			}
 		    			else if (tag.equalsIgnoreCase("COLLEGUE")) {
 		    				qun = new QunsEntity();
 		    				qun.id = xmlParser.getAttributeValue(null, "id");
@@ -67,13 +83,15 @@ public class QunsListEntity extends Entity{
 		    			}
 		    			else if (tag.equalsIgnoreCase("descriptions")) {
 		    				descriptions = new ArrayList<String>();
+		    				qun.descriptions = descriptions;
 		    			}
 		    			else if (tag.equalsIgnoreCase("description")) {
-		    				String description = xmlParser.getAttributeValue(null, "description");
+		    				String description = xmlParser.getAttributeValue(null, "label");
 		    				descriptions.add(description);
 		    			}
 		    			else if (tag.equalsIgnoreCase("requires")) {
 		    				requires = new ArrayList<RequireEntity>();
+		    				qun.requires = requires;
 		    			}
 		    			else if (tag.equalsIgnoreCase("require")) {
 		    				RequireEntity requireEntity = new RequireEntity();
@@ -83,7 +101,7 @@ public class QunsListEntity extends Entity{
 		    			}
 		    			break;
 		    		case XmlPullParser.END_TAG:
-		    			if (tag.equalsIgnoreCase("SCHOOL") || tag.equalsIgnoreCase("BUSINESS") || tag.equalsIgnoreCase("ECONOMY") || tag.equalsIgnoreCase("COLLEGUE")) {
+		    			if (tag.equalsIgnoreCase("QY") || tag.equalsIgnoreCase("MEETING") || tag.equalsIgnoreCase("SCHOOL") || tag.equalsIgnoreCase("BUSINESS") || tag.equalsIgnoreCase("ECONOMY") || tag.equalsIgnoreCase("COLLEGUE")) {
 		    				data.quns.add(qun);
 		    			}
 		    			break;

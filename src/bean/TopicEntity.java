@@ -11,7 +11,7 @@ public class TopicEntity extends Entity {
 	public String category_id;
 	public String rss_id;
 	public String url;
-	
+	public String description;
 	public String from;
 	
 }

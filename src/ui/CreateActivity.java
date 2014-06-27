@@ -20,8 +20,10 @@ import qiniu.io.PutExtra;
 import bean.ActivityCreateEntity;
 import bean.Entity;
 import bean.FunsEntity;
+import bean.FunsListEntity;
 import bean.FunsPhotoEntity;
 import bean.KeyValue;
+import bean.QunsEntity;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
@@ -41,7 +43,9 @@ import tools.Logger;
 import tools.StringUtils;
 import tools.UIHelper;
 import ui.adapter.FieldAdapter;
+import ui.adapter.FunTypeAdapter;
 import ui.adapter.PrivacyAdapter;
+import ui.adapter.QunTypeAdapter;
 import widget.GridViewForScrollView;
 import widget.ResizeLinearLayout;
 import widget.ResizeLinearLayout.OnSizeChangedListener;
@@ -77,7 +81,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class CreateActivity extends AppActivity implements OnSizeChangedListener, OnFocusChangeListener, AMapLocationListener {
+public class CreateActivity extends AppActivity implements OnSizeChangedListener, OnFocusChangeListener, AMapLocationListener, OnItemClickListener {
 	private final static int IMG_COVER = 1;
 	private final static int IMG_CONTENT = 2;
 	private String activityCover;
@@ -121,6 +125,9 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 	
 	private LocationManagerProxy mAMapLocManager = null;
 	
+	private List<FunsEntity> funs = new ArrayList<FunsEntity>();
+	private FunTypeAdapter adapterType;
+	private GridViewForScrollView gvQun;
 	
 	@Override
 	protected void onResume() {
@@ -150,7 +157,9 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_activity);
-		fun = (FunsEntity) getIntent().getExtras().getSerializable("fun");
+		funs.addAll(FunsListEntity.parse(this).funs);
+		funs.get(0).isSelected = true;
+		fun = funs.get(0);
 		activityCover = fun.cover;
 		initUI();
 		mAMapLocManager = LocationManagerProxy.getInstance(this);
@@ -169,6 +178,10 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 	}
 
 	private void initUI() {
+		gvQun = (GridViewForScrollView) findViewById(R.id.typeGridView);
+		adapterType = new FunTypeAdapter(this, funs);
+		gvQun.setAdapter(adapterType);
+		gvQun.setOnItemClickListener(this);
 		ResizeLinearLayout resizeLayout = (ResizeLinearLayout) findViewById(R.id.resizeLayout);
 		resizeLayout.setOnSizeChangedListener(this);
 		moreButton = (Button) findViewById(R.id.more);
@@ -711,6 +724,25 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 			location.getLongitude();
 			locationET.setText(location.getProvince() +""+location.getCity()+""+ location.getDistrict());
 			mAMapLocManager.removeUpdates(this);
+		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		for (FunsEntity temp : funs) {
+			temp.isSelected = false;
+		}
+		fun = funs.get(position);
+		funs.get(position).isSelected = true;
+		adapterType.notifyDataSetChanged();
+		changeType();
+	}
+	
+	private void changeType() {
+		funsNameET.setText(fun.title);
+		richET.setText(fun.description);
+		if (StringUtils.notEmpty(fun.cover)) {
+			imageLoader.displayImage(fun.cover, imgActivityCover, CommonValue.DisplayOptions.default_options);
 		}
 	}
 	

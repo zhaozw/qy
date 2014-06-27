@@ -28,6 +28,7 @@ public class TopicListEntity extends Entity{
 				JSONArray ownedArr = info.getJSONArray("list");
 				for (int i=0;i<ownedArr.length();i++) {
 					TopicEntity entity = new TopicEntity();
+					Logger.i(ownedArr.getJSONObject(i).toString());
 					entity.category_id = ownedArr.getJSONObject(i).getString("category_id");
 					entity.title = ownedArr.getJSONObject(i).getString("title");
 					entity.thumb = ownedArr.getJSONObject(i).getString("thumb");
@@ -37,6 +38,9 @@ public class TopicListEntity extends Entity{
 					entity.link = ownedArr.getJSONObject(i).getString("link");
 					entity.rss_id = ownedArr.getJSONObject(i).getString("rss_id");
 					entity.url = ownedArr.getJSONObject(i).getString("url");
+					if (!ownedArr.getJSONObject(i).isNull("description")) {
+						entity.description = ownedArr.getJSONObject(i).getString("description");
+					}
 					entity.from = "";
 					if (!ownedArr.getJSONObject(i).isNull("rss")) {
 						if (StringUtils.notEmpty(ownedArr.getJSONObject(i).getString("rss"))) {
@@ -48,6 +52,7 @@ public class TopicListEntity extends Entity{
 							}
 						}
 					}
+					
 					data.datas.add(entity);
 				}
 				data.next = info.getInt("next");

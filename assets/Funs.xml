@@ -30,26 +30,6 @@
 		logo= "http://qun.hk/Public/image/activity-type/banner/16.jpg"
 		/>
     
-    <CARD
-        id = "19"
-		label= "微名片"
-		title= ""
-		description= ""
-		display="1"
-		sort = "4"
-		logo=""
-		/>
-    
-    <TOPIC
-        id = "20"
-		label= "文章话题"
-		title= ""
-		description= ""
-		display="1"
-		sort = "5"
-		logo=""
-		/>
-    
     <KARAOKE
         id = "10"
 		label= "K歌娱乐"

@@ -6,6 +6,7 @@ import java.util.List;
 
 import tools.AppManager;
 import tools.Logger;
+import tools.StringUtils;
 import ui.adapter.FieldAdapter;
 import ui.adapter.PrivacyAdapter;
 import ui.adapter.QunTypeAdapter;
@@ -13,9 +14,11 @@ import widget.GridViewForScrollView;
 import bean.FunsEntity;
 import bean.KeyValue;
 import bean.QunsEntity;
+import bean.QunsListEntity;
 
 import com.vikaa.mycontact.R;
 
+import config.CommonValue;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,29 +45,28 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 	private List<QunsEntity> quns = new ArrayList<QunsEntity>();
 	private QunTypeAdapter adapterType;
 	private GridViewForScrollView gvQun;
+	
+	private QunsEntity qunOfChoosing ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.create_phonebook);
 		initUI();
+		changeType();
 	}
 	
 	private void initUI() {
-		
 		gvQun = (GridViewForScrollView) findViewById(R.id.typeGridView);
-		quns.add(new QunsEntity(R.drawable.qun_normal, "1", "群友微友", true));
-		quns.add(new QunsEntity(R.drawable.qun_school, "3", "同学校友", false));
-		quns.add(new QunsEntity(R.drawable.qun_business, "5", "行业联盟", false));
-		quns.add(new QunsEntity(R.drawable.qun_economy, "7", "商业协会", false));
-		quns.add(new QunsEntity(R.drawable.qun_meeting, "17", "活动会议", false ));
-		quns.add(new QunsEntity(R.drawable.qun_collegue, "14", "公司同事", false));
+		quns.addAll(QunsListEntity.parse(this).quns);
+		qunOfChoosing = quns.get(0);
+		quns.get(0).isSelected = true;
 		adapterType = new QunTypeAdapter(this, quns);
 		gvQun.setAdapter(adapterType);
 		gvQun.setOnItemClickListener(this);
 		
 		moreButton = (Button) findViewById(R.id.more);
 		moreLayout = (LinearLayout) findViewById(R.id.moreLayout);
-		qunNameET = (EditText) findViewById(R.id.activityName);
+		qunNameET = (EditText) findViewById(R.id.qunName);
 		richET = (EditText) findViewById(R.id.richEditText);
 		
 		privacySP = (Spinner) findViewById(R.id.privacySP);
@@ -110,11 +112,17 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View convertView, int position, long arg3) {
-			Logger.i("a");
-			for (QunsEntity qun : quns) {
-				qun.isSelected = false;
-			}
-			quns.get(position).isSelected = true;
-			adapterType.notifyDataSetChanged();
+		for (QunsEntity qun : quns) {
+			qun.isSelected = false;
+		}
+		qunOfChoosing = quns.get(position);
+		quns.get(position).isSelected = true;
+		adapterType.notifyDataSetChanged();
+		changeType();
+	}
+	
+	private void changeType() {
+		qunNameET.setText(qunOfChoosing.label);
+		richET.setText(qunOfChoosing.descriptions.get(0));
 	}
 }

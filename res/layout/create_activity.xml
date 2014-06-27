@@ -75,6 +75,31 @@
             android:orientation="vertical"
             android:paddingBottom="100dp"
             >
+            <TextView
+	    		    android:layout_marginTop="14dp"
+	                android:layout_marginLeft="12dp"
+	                android:layout_marginRight="10dp"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:text="选择活动类型"
+			        android:textSize="@dimen/cell_subtitle_size"
+                	android:textColor="@color/black"
+		        	/>
+    		<widget.GridViewForScrollView 
+    		    android:id="@+id/typeGridView"
+    		    android:layout_marginTop="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:background="@color/transparent"
+		        android:fadingEdge="none"
+    			android:cacheColorHint="@color/transparent"
+    			android:horizontalSpacing="7dp"
+    			android:verticalSpacing="7dp"
+    			android:numColumns="2"
+    			android:listSelector="@null"
+    		    ></widget.GridViewForScrollView>
             <TextView 
                 android:layout_width="match_parent"
 		        android:layout_height="wrap_content"

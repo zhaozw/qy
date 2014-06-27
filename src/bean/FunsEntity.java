@@ -11,6 +11,8 @@ public class FunsEntity extends Entity{
 	public String sort;
 	public String cover;
 	
+	public boolean isSelected;
+	
 	public FunsEntity() {
 		
 	}

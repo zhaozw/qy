@@ -7,6 +7,7 @@ import java.util.List;
 import tools.AppContext;
 import tools.Logger;
 import tools.UIHelper;
+import ui.adapter.HotTopicAdapter;
 import ui.adapter.TopicListAdapter;
 import ui.adapter.TopicOptionAdapter;
 import ui.adapter.TopicOptionAdapter.ViewHolder;
@@ -62,7 +63,7 @@ public class HotTopicFragment extends Fragment implements OnItemClickListener, O
 	private int lvDataState;
 	private int currentPage;
 	private List<TopicEntity> topicList = new ArrayList<TopicEntity>();
-	private TopicListAdapter topicListAdapter;
+	private HotTopicAdapter topicListAdapter;
 	private String ids;
 	
 	public static HotTopicFragment newInstance() {
@@ -80,7 +81,7 @@ public class HotTopicFragment extends Fragment implements OnItemClickListener, O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         topicOptionAdapter = new TopicOptionAdapter(activity, topicTypes);
-        topicListAdapter = new TopicListAdapter(activity, topicList);
+        topicListAdapter = new HotTopicAdapter(activity, topicList);
         String key = String.format("%s-%s", CommonValue.CacheKey.UserTopicOptions, activity.appContext.getLoginUid());
 		TopicOptionListEntity entity = (TopicOptionListEntity) activity.appContext.readObject(key);
 		if(entity != null){
@@ -131,8 +132,9 @@ public class HotTopicFragment extends Fragment implements OnItemClickListener, O
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 					long arg3) {
+				Logger.i("aaa");
 				if (position > 0) {
-					TopicEntity model = topicList.get(position-1);
+					TopicEntity model = topicList.get(position);
 					showTopic(model);
 				}
 			}

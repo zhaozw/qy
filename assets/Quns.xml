@@ -1,7 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <QUN>
+    <QY
+		id = "1"
+		label= "群友微友"
+		title= "群友微友"
+		logo="http://pbwc.qiniudn.com/qun-logo/school.png"
+		display="1"
+		sort = "1"
+		>
+		<descriptions>
+		    <description
+		        label = "梳理群友信息，加深群友认识，促进合作，欢迎邀请更多好友加入">
+		    </description>
+		    <description
+		        label="为朋友搭建人脉，互相认识，携手合作，实现更伟大的梦想，欢迎邀请更多好友加入">
+		        
+		    </description>
+		    <description
+		        label="信息互通，资源共享，促进群友合作交流，欢迎邀请更多好友加入">
+		        
+		    </description>
+		    <description
+		        label="群友聊那么久却不知道彼此是做什么的，也不知道彼此是怎么称呼的？群友信息互通，高效拓展人脉，促进交流">
+		        
+		    </description>
+		    <description
+		        label="微友聊那么久却不知道彼此是做什么的？一起来信息互通，拓展人脉，促进合作">
+		        
+		    </description>
+		</descriptions>
+		<requires>
+		    <require
+				label= "院系"
+				filed= "college"
+		        />
+		    <require
+				label= "入学年份"
+				filed= "school_year"
+		        />
+		    <require
+				label= "公司"
+				filed= "department"
+		        />
+		    <require
+				label= "部门职位"
+				filed= "position"
+		        />
+		    <require
+				label= "微信号"
+				filed= "wechat"
+		        />
+		    <require
+				label= "邮箱"
+				filed= "email"
+		        />
+		    <require
+				label= "通讯地址"
+				filed= "address"
+		        />
+		    <require
+				label= "家乡"
+				filed= "hometown"
+		        />
+		    <require
+				label= "当前业务"
+				filed= "business"
+		        />
+		</requires>
+	</QY>
+	
     <SCHOOL
-		id = "14"
+		id = "3"
 		label= "同学校友"
 		title= "校友"
 		logo="http://pbwc.qiniudn.com/qun-logo/school.png"
@@ -9,20 +78,25 @@
 		sort = "1"
 		>
 		<descriptions>
-		    <description>
-		        校友是学校建设发展中丰富的、宝贵的社会资源，高效的凝聚起来，抱团发展
+		    <description
+		        label="校友是学校建设发展中丰富的、宝贵的社会资源，高效的凝聚起来，抱团发展">
+		        
 		    </description>
-		    <description>
-		        让我们一起建立一份不断更新的校友交流平台，分享更多的乐趣
+		    <description
+		        label="让我们一起建立一份不断更新的校友交流平台，分享更多的乐趣">
+		        
 		    </description>
-		    <description>
-		        梳理校友资源，诚信交友，互惠互利，合作共赢
+		    <description
+		        label="梳理校友资源，诚信交友，互惠互利，合作共赢">
+		        
 		    </description>
-		    <description>
-		        加强校友的交流与联系，拉近你我的距离，想念时打个电话吧
+		    <description
+		        label="加强校友的交流与联系，拉近你我的距离，想念时打个电话吧">
+		        
 		    </description>
-		    <description>
-		        校友通讯录，留下你的号码，你的城市，在时空交梭中寻找相聚那一刻
+		    <description
+		        label="校友通讯录，留下你的号码，你的城市，在时空交梭中寻找相聚那一刻">
+		        
 		    </description>
 		</descriptions>
 		<requires>
@@ -66,7 +140,7 @@
 	</SCHOOL>
     
     <BUSINESS
-		id = "17"
+		id = "5"
 		label= "行业联盟"
 		title= "行业"
 		logo="http://pbwc.qiniudn.com/qun-logo/industry.png"
@@ -74,20 +148,25 @@
 		sort = "2"
 		>
 		<descriptions>
-		    <description>
-		        行业整合交流，抱团成长，拓展潜在的人脉
+		    <description
+		        label="行业整合交流，抱团成长，拓展潜在的人脉">
+		        
 		    </description>
-		    <description>
-		        信息互通，拓展潜在的人脉，小名片撬动大市场！
+		    <description
+		        label="信息互通，拓展潜在的人脉，小名片撬动大市场！">
+		        
 		    </description>
-		    <description>
-		        行业交流与业务合作，抱团发展，合作共赢
+		    <description
+		        label="行业交流与业务合作，抱团发展，合作共赢">
+		        
 		    </description>
-		    <description>
-		        让交流更顺畅，让沟通无障碍，让行业发展更精彩
+		    <description
+		        label="让交流更顺畅，让沟通无障碍，让行业发展更精彩">
+		        
 		    </description>
-		    <description>
-		        行业发展需要你我的力量，每个潜在的人脉，也许就是未来的一笔合作
+		    <description
+		        label="行业发展需要你我的力量，每个潜在的人脉，也许就是未来的一笔合作">
+		        
 		    </description>
 		</descriptions>
 		<requires>
@@ -135,28 +214,33 @@
 	</BUSINESS>
 
     <ECONOMY
-		id = "1"
-		label= "协会商圈"
+		id = "7"
+		label= "商业协会"
 		title= "协会"
 		logo="http://pbwc.qiniudn.com/qun-logo/association.png"
 		display="1"
 		sort = "3"
 		>
 		<descriptions>
-		    <description>
-		        促进协会成员之间联系，传递内部信息交流，方便协会各项活动的开展
+		    <description
+		        label="促进协会成员之间联系，传递内部信息交流，方便协会各项活动的开展">
+		        
 		    </description>
-		    <description>
-		        促进协会成员之间联系，传递内部信息交流，方便协会各项活动的开展
+		    <description
+		        label="促进协会成员之间联系，传递内部信息交流，方便协会各项活动的开展">
+		        
 		    </description>
-		    <description>
-		       	快速的打通成员消息，拓展人脉，找到你要找的人
+		    <description
+		        label="快速的打通成员消息，拓展人脉，找到你要找的人">
+		       	
 		    </description>
-		    <description>
-		        促进各个协会成员之间的联系，拓展人脉，加强彼此的合作
+		    <description
+		        label="促进各个协会成员之间的联系，拓展人脉，加强彼此的合作">
+		        
 		    </description>
-		    <description>
-		        认识协会圈内的好友，增长人脉，加速交流
+		    <description
+		        label="认识协会圈内的好友，增长人脉，加速交流">
+		        
 		    </description>
 		</descriptions>
 		<requires>
@@ -195,8 +279,82 @@
 		</requires>
 	</ECONOMY>
 	
+    <MEETING
+		id = "17"
+		label= "活动会议"
+		title= "活动会议"
+		logo="http://pbwc.qiniudn.com/qun-logo/company.png"
+		display="1"
+		sort = "4"
+		>
+		<descriptions>
+		    <description
+		        label="观点分享，快速交流">
+		        
+		    </description>
+		</descriptions>
+		<requires>
+		    <require
+				label= "工作经验"
+				filed= "exp"
+		        />
+		    <require
+				label= "擅长技能"
+				filed= "skill"
+		        />
+		    <require
+				label= "最高学历"
+				filed= "education"
+		        />
+		    <require
+				label= "毕业院校"
+				filed= "school"
+		        />
+		    <require
+				label= "待遇要求"
+				filed= "salary"
+		        />
+		    <require
+				label= "前公司名称"
+				filed= "prev_position"
+		        />
+		    <require
+				label= "部门职位"
+				filed= "position"
+		        />
+		    <require
+				label= "生日"
+				filed= "birthday"
+		        />
+		    <require
+				label= "分机号/短号"
+				filed= "short_num"
+		        />
+		    <require
+				label= "兴趣爱好"
+				filed= "interest"
+		        />
+		    <require
+				label= "单身否"
+				filed= "single"
+		        />
+		    <require
+				label= "微信号"
+				filed= "wechat"
+		        />
+		    <require
+				label= "邮箱"
+				filed= "email"
+		        />
+		    <require
+				label= "通讯地址"
+				filed= "address"
+		        />
+		</requires>
+	</MEETING>
+	
     <COLLEGUE
-		id = "16"
+		id = "14"
 		label= "公司同事"
 		title= "公司"
 		logo="http://pbwc.qiniudn.com/qun-logo/company.png"
@@ -204,11 +362,13 @@
 		sort = "4"
 		>
 		<descriptions>
-		    <description>
-		        方便公司员工联系，促进高效沟通
+		    <description
+		        label="方便公司员工联系，促进高效沟通">
+		        
 		    </description>
-		    <description>
-		        方便公司工作进行，增进同事之间和睦相处
+		    <description
+		        label="方便公司工作进行，增进同事之间和睦相处">
+		        
 		    </description>
 		</descriptions>
 		<requires>

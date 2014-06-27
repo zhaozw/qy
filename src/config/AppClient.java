@@ -402,6 +402,92 @@ public class AppClient {
 		});
 	}
 	
+	//创建通讯录
+	//创建活动
+		public static void createPhonebook(final MyApplication appContext, 
+				String title, 
+				String category,
+				String logo,
+				String content, 
+				String privacy,
+				String custom,
+				String custom_display,
+				String required,
+				String addfriend,
+				final ClientCallback callback) {
+			RequestParams params = new RequestParams();
+			params.add("title", title);
+			params.add("category", category);
+			params.add("logo", logo);
+			params.add("content", content);
+			if (StringUtils.notEmpty(privacy)) {
+				params.add("privacy", privacy);
+			}
+			if (StringUtils.notEmpty(custom)) {
+				params.add("custom", custom);
+			}
+			if (StringUtils.notEmpty(custom_display)) {
+				params.add("custom_display", custom_display);
+			}
+			if (StringUtils.notEmpty(required)) {
+				params.add("required", required);
+			}
+			if (StringUtils.notEmpty(addfriend)) {
+				params.add("addfriend", addfriend);
+			}
+			QYRestClient.post("phonebook/create"+"?_sign="+appContext.getLoginSign(), params, new AsyncHttpResponseHandler() {
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, byte[] content) {
+					handlePhonebookCreated(content, callback, appContext);
+				}
+				@Override
+				public void onFailure(int statusCode, Header[] headers, byte[] content, Throwable e) {
+					if (appContext.isNetworkConnected()) {
+						callback.onFailure(e.getMessage());
+					}
+				}
+			});
+		}
+		public static void handlePhonebookCreated(final byte[] content, final ClientCallback callback, final MyApplication appContext) {
+			final Handler handler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					switch (msg.what) {
+					case 1:
+						callback.onSuccess((ActivityCreateEntity)msg.obj);
+						break;
+
+					default:
+						callback.onError((Exception)msg.obj);
+						break;
+					}
+				}
+			};
+			ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+			singleThreadExecutor.execute(new Runnable() {
+				@Override
+				public void run() {
+					Message msg = new Message();
+					try {
+						String target = new String(content);
+						String decode = DecodeUtil.decode(target);
+						target = null;
+						ActivityCreateEntity data = ActivityCreateEntity.parse(decode);
+						decode = null;
+						msg.what = 1;
+						msg.obj = data;
+					} catch (Exception e) {
+						e.printStackTrace();
+						Crashlytics.logException(e);
+						msg.what = -1;
+						msg.obj = e;
+					}
+					handler.sendMessage(msg);
+				}
+			});
+		}
+		
+	//通讯录列表
 	public static void getPhoneList(final MyApplication appContext, final ClientCallback callback) {
 		QYRestClient.post("phonebook/lists"+"?_sign="+appContext.getLoginSign(), null, new AsyncHttpResponseHandler() {
 			@Override
@@ -1516,20 +1602,15 @@ public class AppClient {
 //				} 
 //				handler.sendMessage(msg);
 				try {
-					System.setProperty("http.keepAlive", "false");// 解决经常报此异常问题，at
-																	// java.util.zip.GZIPInputStream.readFully(GZIPInputStream.java:214)
+					System.setProperty("http.keepAlive", "false");
 					URL Url = new URL(url);
 					URLConnection conn = Url.openConnection();
 					conn.connect();
 					InputStream is = conn.getInputStream();
-					// this.fileSize = conn.getContentLength();// 根据响应获取文件大小
-					// if (this.fileSize <= 0) { // 获取内容长度为0
-					// throw new RuntimeException("无法获知文件大小 ");
-					// }
 					if (is == null) { // 没有下载流
 						
 					}
-					FileOutputStream FOS = new FileOutputStream(tmpFile); // 创建写入文件内存流，通过此流向目标写文件
+					FileOutputStream FOS = new FileOutputStream(tmpFile); 
 
 					byte buf[] = new byte[1024];
 					// downLoadFilePosition = 0;
