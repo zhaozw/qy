@@ -126,14 +126,13 @@ public class Find extends AppActivity implements OnItemClickListener{
 			break;
 
 		case R.id.btnQun:
-			startActivity(new Intent(this, QYWebView.class)
-			.putExtra(CommonValue.IndexIntentKeyValue.CreateView, CreateViewUrlAndRequest.ContactCreateUrl));
+			startActivity(new Intent(this, CreatePhonebook.class));
 			break;
 		case R.id.btnActivity:
 			startActivity(new Intent(this, CreateActivity.class).putExtra("fun", FunsListEntity.parse(this).funs.get(0)));
 			break;
 		case R.id.btnTopic:
-			startActivity(new Intent(this, CreateTopic.class));
+			startActivity(new Intent(this, QunTopic.class));
 			break;
 		case R.id.btnCard:
 			startActivity(new Intent(this, QYWebView.class)

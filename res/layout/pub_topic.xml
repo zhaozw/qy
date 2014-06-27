@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget.ResizeLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:id="@+id/resizeLayout"
+    android:orientation="vertical" >
+    
+    <ScrollView
+        android:id="@+id/mainScrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:fadingEdge="none"
+        android:orientation="vertical" >
+        <LinearLayout 
+            android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="100dp"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="标题"
+                android:textColor="@color/black"
+                android:textSize="@dimen/cell_subtitle_size" />
+
+            <EditText
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+		        android:layout_width="match_parent"
+		        android:layout_height="36dp"
+		        android:textSize="@dimen/cell_title_size"
+		        android:textColor="@color/black"
+		        android:singleLine="true"
+		        android:inputType="text"
+      		    android:gravity="center_vertical|left"
+		        android:hint="标题"
+		        android:maxLines="1"
+		        android:lines="1"
+		        android:imeOptions="actionNext"
+		        android:id="@+id/activityName"
+		        android:background="@drawable/edittext_frame"
+		        android:paddingLeft="5dp"
+		        android:drawablePadding="4dp"
+	        	>
+	    	</EditText>
+	    	
+            <TextView 
+                android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+	            android:layout_marginTop="10dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp"
+                android:textSize="@dimen/cell_subtitle_size"
+                android:textColor="@color/black"
+                android:text="内容"
+	            />
+	        <EditText
+		        android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+		        android:id="@+id/richEditText"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:inputType="textMultiLine"
+		        android:textSize="@dimen/cell_title_size"
+		        android:textColor="@color/black"
+		        android:minLines="5"
+		        android:background="@drawable/edittext_frame"
+		        android:gravity="left|top"
+		        android:paddingLeft="5dp"
+		        android:paddingTop="5dp"
+		        android:paddingRight="5dp"
+		        android:paddingBottom="5dp"
+		        android:hint="为朋友搭建人脉，互相认识，携手合作，实现更伟大的 梦想，欢迎邀请更多好友加入~"
+                android:cursorVisible="true"
+	       		>
+	    	</EditText>
+		    <LinearLayout 
+		        android:layout_width="match_parent"
+		        android:layout_height="33dp"
+		        android:orientation="horizontal"
+		        android:background="@drawable/create_more"
+		        android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="-8dp"
+		        >
+		        <Button 
+		            android:layout_marginLeft="5dp"
+			        android:id="@+id/cameraButton"
+			        android:layout_below="@+id/menuView"
+			        android:layout_width="32dp"
+			        android:layout_height="25dp"
+			        android:background="@drawable/photo_tag"
+			        android:layout_gravity="center_vertical"
+	       	 		/>
+		    </LinearLayout>
+		    
+		    <TextView 
+		        android:layout_marginTop="10dp"
+		        android:layout_width="match_parent"
+		        android:layout_height="44dp"
+		        android:layout_marginLeft="10dp"
+		        android:layout_marginRight="10dp"
+		        android:text=" 注：话题发布后将无法修改！"
+		        android:textSize="@dimen/cell_title_size"
+		        android:textColor="#515050"
+		        android:background="#ffffcf"
+		        android:gravity="center"
+		        />
+		    
+		    <Button 
+		        android:layout_marginTop="10dp"
+		        android:id="@+id/pubTopicButton"
+		        android:layout_width="match_parent"
+		        android:layout_height="44dp"
+		        android:layout_marginLeft="10dp"
+		        android:layout_marginRight="10dp"
+		        android:text="发表"
+		        android:textColor="@color/white"
+		        android:textSize="@dimen/cell_title_size"
+		        android:background="@drawable/topic_pub_button"
+		        />
+        </LinearLayout>
+        
+    </ScrollView>
+</widget.ResizeLinearLayout>

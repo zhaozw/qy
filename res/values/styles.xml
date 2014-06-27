@@ -34,6 +34,7 @@
     
     <style name="StyledIndicators" parent="@android:style/Theme.Light">
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
     
     <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">

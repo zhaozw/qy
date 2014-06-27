@@ -5,22 +5,27 @@ import java.util.Calendar;
 import java.util.List;
 
 import tools.AppManager;
+import tools.Logger;
 import ui.adapter.FieldAdapter;
 import ui.adapter.PrivacyAdapter;
+import ui.adapter.QunTypeAdapter;
 import widget.GridViewForScrollView;
 import bean.FunsEntity;
 import bean.KeyValue;
+import bean.QunsEntity;
 
 import com.vikaa.mycontact.R;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-public class CreatePhonebook extends AppActivity {
+public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 	
 	private EditText richET;
 	private EditText qunNameET;
@@ -34,8 +39,9 @@ public class CreatePhonebook extends AppActivity {
 	private GridViewForScrollView fieldGridView;
 	private FieldAdapter fieldAdapter;
 	private List<String> fields = new ArrayList<String>();
-	private FunsEntity fun;
-	
+	private List<QunsEntity> quns = new ArrayList<QunsEntity>();
+	private QunTypeAdapter adapterType;
+	private GridViewForScrollView gvQun;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,6 +50,18 @@ public class CreatePhonebook extends AppActivity {
 	}
 	
 	private void initUI() {
+		
+		gvQun = (GridViewForScrollView) findViewById(R.id.typeGridView);
+		quns.add(new QunsEntity(R.drawable.qun_normal, "1", "群友微友", true));
+		quns.add(new QunsEntity(R.drawable.qun_school, "3", "同学校友", false));
+		quns.add(new QunsEntity(R.drawable.qun_business, "5", "行业联盟", false));
+		quns.add(new QunsEntity(R.drawable.qun_economy, "7", "商业协会", false));
+		quns.add(new QunsEntity(R.drawable.qun_meeting, "17", "活动会议", false ));
+		quns.add(new QunsEntity(R.drawable.qun_collegue, "14", "公司同事", false));
+		adapterType = new QunTypeAdapter(this, quns);
+		gvQun.setAdapter(adapterType);
+		gvQun.setOnItemClickListener(this);
+		
 		moreButton = (Button) findViewById(R.id.more);
 		moreLayout = (LinearLayout) findViewById(R.id.moreLayout);
 		qunNameET = (EditText) findViewById(R.id.activityName);
@@ -88,5 +106,15 @@ public class CreatePhonebook extends AppActivity {
 			moreLayout.setVisibility(View.VISIBLE);
 			break;
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View convertView, int position, long arg3) {
+			Logger.i("a");
+			for (QunsEntity qun : quns) {
+				qun.isSelected = false;
+			}
+			quns.get(position).isSelected = true;
+			adapterType.notifyDataSetChanged();
 	}
 }

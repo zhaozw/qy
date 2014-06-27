@@ -129,6 +129,14 @@
         </activity>
         
         <activity
+            android:name="ui.QunTopic"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/StyledIndicators"
+             >
+        </activity>
+        
+        <activity
             android:name="ui.PCTIP"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"

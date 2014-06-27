@@ -15,13 +15,15 @@ public class QunsEntity extends Entity{
 	public List<String> descriptions = new ArrayList<String>();
 	public List<RequireEntity> requires = new ArrayList<RequireEntity>();
 	
+	public boolean isSelected;
 	public QunsEntity() {
 		
 	}
 	
-	public QunsEntity(int icon, String id, String label) {
+	public QunsEntity(int icon, String id, String label, boolean isSelected) {
 		this.icon = icon;
 		this.id = id;
 		this.label = label;
+		this.isSelected = isSelected;
 	}
 }
