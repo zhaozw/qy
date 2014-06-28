@@ -1,16 +1,25 @@
 package ui;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import tools.AppManager;
+import tools.HTMLUtil;
 import tools.Logger;
 import tools.StringUtils;
+import tools.UIHelper;
+import ui.AppActivity.DialogClickListener;
 import ui.adapter.FieldAdapter;
 import ui.adapter.PrivacyAdapter;
 import ui.adapter.QunTypeAdapter;
 import widget.GridViewForScrollView;
+import bean.ActivityCreateEntity;
+import bean.Entity;
 import bean.FunsEntity;
 import bean.KeyValue;
 import bean.QunsEntity;
@@ -18,15 +27,22 @@ import bean.QunsListEntity;
 
 import com.vikaa.mycontact.R;
 
+import config.AppClient;
 import config.CommonValue;
+import config.AppClient.ClientCallback;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 	
@@ -47,6 +63,13 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 	private GridViewForScrollView gvQun;
 	
 	private QunsEntity qunOfChoosing ;
+	
+	private String title;
+	private String content;
+	private String privacy;
+	private String custome;
+	private String customeDisplay;
+	private String exchangeSetting;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,6 +100,19 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 		privacys.add(new KeyValue("申通通过后才能进群","3"));
 		PrivacyAdapter pAdapter = new PrivacyAdapter(this, privacys);
 		privacySP.setAdapter(pAdapter);
+		privacySP.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				privacy = position+"";
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
+			}
+		});
 		
 		questionSP = (Spinner) findViewById(R.id.questionSP);
 		List<KeyValue> questions = new ArrayList<KeyValue>();
@@ -84,6 +120,19 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 		questions.add(new KeyValue("答案仅管理员可见","1"));
 		PrivacyAdapter qAdapter = new PrivacyAdapter(this, questions);
 		questionSP.setAdapter(qAdapter);
+		questionSP.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				customeDisplay = position+"";
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
+			}
+		});
 		
 		exchangeSP = (Spinner) findViewById(R.id.exchangeSP);
 		List<KeyValue> exchanges = new ArrayList<KeyValue>();
@@ -91,6 +140,23 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 		exchanges.add(new KeyValue("群主引见","1"));
 		PrivacyAdapter eAdapter = new PrivacyAdapter(this, exchanges);
 		exchangeSP.setAdapter(eAdapter);
+		exchangeSP.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				exchangeSetting = position+"";
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
+			}
+		});
+		
+		privacy = "0";
+		customeDisplay = "0";
+		exchangeSetting = "0";
 	}
 	
 	public void ButtonClick(View v) {
@@ -101,6 +167,7 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 			break;
 
 		case R.id.rightBarButton:
+			prepareCreatePhonebook();
 			break;
 			
 		case R.id.more:
@@ -125,4 +192,61 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 		qunNameET.setText(qunOfChoosing.label);
 		richET.setText(qunOfChoosing.descriptions.get(0));
 	}
+	
+	private void prepareCreatePhonebook() {
+		title = qunNameET.getEditableText().toString();
+		content = richET.getText().toString();
+        if (StringUtils.empty(title)) {
+        	WarningDialog("请填写活动标题");
+			return;
+		}
+        if (StringUtils.empty(content)) {
+        	WarningDialog("请填写活动内容");
+			return;
+		}
+    	loadingPd = UIHelper.showProgress(this, null, null, true);
+    	AppClient.createPhonebook(appContext, title, qunOfChoosing.id, qunOfChoosing.logo, content, privacy, "", customeDisplay, "", "", clientCallback);
+	}
+	
+	private ClientCallback clientCallback = new ClientCallback() {
+		
+		@Override
+		public void onSuccess(Entity data) {
+			UIHelper.dismissProgress(loadingPd);
+			UIHelper.ToastMessage(CreatePhonebook.this, R.layout.toastmessage_text, "发起通讯录成功，正在跳转", Toast.LENGTH_SHORT);
+			ActivityCreateEntity entity = (ActivityCreateEntity) data;
+			Intent intent0 = new Intent();
+			intent0.setAction(CommonValue.PHONEBOOK_CREATE_ACTION);
+			intent0.setAction(CommonValue.PHONEBOOK_DELETE_ACTION);
+			sendBroadcast(intent0);
+			AppManager.getAppManager().finishActivity(CreatePhonebook.this);
+			Intent intent = new Intent(CreatePhonebook.this, QYWebView.class);
+			intent.putExtra(CommonValue.IndexIntentKeyValue.CreateView, entity.link);
+//			startActivityForResult(intent, CommonValue.PhonebookViewUrlRequest.editPhoneview);
+		}
+		
+		@Override
+		public void onFailure(String message) {
+			UIHelper.dismissProgress(loadingPd);
+			WarningDialog("发起通讯录失败，请重试", "确定", "取消", new DialogClickListener() {
+				
+				@Override
+				public void ok() {
+//					loadingPd = UIHelper.showProgress(CreateActivity.this, null, null, true);
+//					AppClient.createActivity(appContext, title, activityCover, HTMLUtil.htmlToUbb(content), begin_at, "", address, "", "", fun.id, cost, "", "", guests, "", question, clientCallback);
+				}
+				
+				@Override
+				public void cancel() {
+					
+				}
+			});
+		}
+		
+		@Override
+		public void onError(Exception e) {
+			UIHelper.dismissProgress(loadingPd);
+			WarningDialogAndOpenWechat("bibi100", "发起通讯录失败，请联系微信客服bibi100");
+		}
+	};
 }

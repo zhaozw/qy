@@ -472,6 +472,7 @@ public class AppClient {
 						String target = new String(content);
 						String decode = DecodeUtil.decode(target);
 						target = null;
+						Logger.i(decode);
 						ActivityCreateEntity data = ActivityCreateEntity.parse(decode);
 						decode = null;
 						msg.what = 1;
