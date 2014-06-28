@@ -4,7 +4,7 @@
 		id = "1"
 		label= "群友微友"
 		title= "群友微友"
-		logo="http://pbwc.qiniudn.com/qun-logo/school.png"
+		logo="http://pbwc.qiniudn.com/templates/friend.jpg"
 		display="1"
 		sort = "1"
 		>
@@ -283,7 +283,7 @@
 		id = "17"
 		label= "活动会议"
 		title= "活动会议"
-		logo="http://pbwc.qiniudn.com/qun-logo/company.png"
+		logo="http://pbwc.qiniudn.com/qun-logo/forum.png"
 		display="1"
 		sort = "4"
 		>

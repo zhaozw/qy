@@ -729,6 +729,7 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+        closeInput();
 		for (FunsEntity temp : funs) {
 			temp.isSelected = false;
 		}

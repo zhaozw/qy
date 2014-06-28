@@ -17,7 +17,7 @@
 	        android:layout_height="37dp"
 	        android:layout_centerVertical="true"
 	        android:layout_marginLeft="10dp"
-	        android:layout_marginRight="10dp"
+	        android:layout_marginRight="40dp"
 	        android:textSize="18dp"
 	        android:background="@drawable/search_edittext_background"
 	        android:textColor="@color/black"
@@ -39,11 +39,25 @@
 		    android:layout_height="22dp"
 		    android:layout_centerVertical="true"
 		    android:layout_alignParentRight="true"
-		    android:layout_marginRight="12dp"
+		    android:layout_marginRight="42dp"
 		    android:background="@drawable/search_delete"
 		    android:visibility="invisible"
 		    android:onClick="ButtonClick"
 		    />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:background="@null"
+            android:onClick="ButtonClick"
+            android:text="取消"
+            android:textColor="@color/white"
+            android:textSize="@dimen/cell_subtitle_size"
+            />
 		
 		</RelativeLayout>
 

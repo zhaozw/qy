@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import bean.*;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import tools.AppManager;
@@ -18,12 +19,6 @@ import ui.adapter.FieldAdapter;
 import ui.adapter.PrivacyAdapter;
 import ui.adapter.QunTypeAdapter;
 import widget.GridViewForScrollView;
-import bean.ActivityCreateEntity;
-import bean.Entity;
-import bean.FunsEntity;
-import bean.KeyValue;
-import bean.QunsEntity;
-import bean.QunsListEntity;
 
 import com.vikaa.mycontact.R;
 
@@ -50,6 +45,7 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 	private EditText qunNameET;
 	private LinearLayout moreLayout;
 	private Button moreButton;
+    private EditText edtCustome;
 
 	private Spinner privacySP;
 	private Spinner questionSP;
@@ -91,7 +87,7 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 		moreLayout = (LinearLayout) findViewById(R.id.moreLayout);
 		qunNameET = (EditText) findViewById(R.id.qunName);
 		richET = (EditText) findViewById(R.id.richEditText);
-		
+        edtCustome = (EditText) findViewById(R.id.qunQuestion);
 		privacySP = (Spinner) findViewById(R.id.privacySP);
 		List<KeyValue> privacys = new ArrayList<KeyValue>();
 		privacys.add(new KeyValue("对群友可见","0"));
@@ -179,6 +175,7 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View convertView, int position, long arg3) {
+        closeInput();
 		for (QunsEntity qun : quns) {
 			qun.isSelected = false;
 		}
@@ -195,17 +192,18 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 	
 	private void prepareCreatePhonebook() {
 		title = qunNameET.getEditableText().toString();
-		content = richET.getText().toString();
+		content = richET.getEditableText().toString();
+        custome = edtCustome.getEditableText().toString();
         if (StringUtils.empty(title)) {
-        	WarningDialog("请填写活动标题");
+        	WarningDialog("请填写通讯录标题");
 			return;
 		}
         if (StringUtils.empty(content)) {
-        	WarningDialog("请填写活动内容");
+        	WarningDialog("请填写通讯录内容");
 			return;
 		}
     	loadingPd = UIHelper.showProgress(this, null, null, true);
-    	AppClient.createPhonebook(appContext, title, qunOfChoosing.id, qunOfChoosing.logo, content, privacy, "", customeDisplay, "", "", clientCallback);
+    	AppClient.createPhonebook(appContext, title, qunOfChoosing.id, qunOfChoosing.logo, content, privacy, custome, customeDisplay, "", "", clientCallback);
 	}
 	
 	private ClientCallback clientCallback = new ClientCallback() {
@@ -214,7 +212,7 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 		public void onSuccess(Entity data) {
 			UIHelper.dismissProgress(loadingPd);
 			UIHelper.ToastMessage(CreatePhonebook.this, R.layout.toastmessage_text, "发起通讯录成功，正在跳转", Toast.LENGTH_SHORT);
-			ActivityCreateEntity entity = (ActivityCreateEntity) data;
+            PhonebookCreateEntity entity = (PhonebookCreateEntity) data;
 			Intent intent0 = new Intent();
 			intent0.setAction(CommonValue.PHONEBOOK_CREATE_ACTION);
 			intent0.setAction(CommonValue.PHONEBOOK_DELETE_ACTION);
@@ -222,7 +220,7 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 			AppManager.getAppManager().finishActivity(CreatePhonebook.this);
 			Intent intent = new Intent(CreatePhonebook.this, QYWebView.class);
 			intent.putExtra(CommonValue.IndexIntentKeyValue.CreateView, entity.link);
-//			startActivityForResult(intent, CommonValue.PhonebookViewUrlRequest.editPhoneview);
+			startActivityForResult(intent, CommonValue.PhonebookViewUrlRequest.editPhoneview);
 		}
 		
 		@Override
@@ -232,8 +230,8 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 				
 				@Override
 				public void ok() {
-//					loadingPd = UIHelper.showProgress(CreateActivity.this, null, null, true);
-//					AppClient.createActivity(appContext, title, activityCover, HTMLUtil.htmlToUbb(content), begin_at, "", address, "", "", fun.id, cost, "", "", guests, "", question, clientCallback);
+					loadingPd = UIHelper.showProgress(CreatePhonebook.this, null, null, true);
+                    AppClient.createPhonebook(appContext, title, qunOfChoosing.id, qunOfChoosing.logo, content, privacy, custome, customeDisplay, "", "", clientCallback);
 				}
 				
 				@Override

@@ -1,63 +1,27 @@
 package config;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.crashlytics.android.Crashlytics;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BinaryHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
-import db.manager.WeFriendManager;
 import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import baidupush.Utils;
-import bean.ActivityCreateEntity;
-import bean.ActivityListEntity;
-import bean.ActivityViewEntity;
-import bean.AdsListEntity;
-import bean.CardIntroEntity;
-import bean.CardListEntity;
-import bean.ChatHistoryListEntity;
-import bean.ChatterEntity;
-import bean.CodeEntity;
-import bean.Entity;
-import bean.FamilyListEntity;
-import bean.FriendCardListEntity;
-import bean.KeyValue;
-import bean.MessageListEntity;
-import bean.MessageUnReadEntity;
-import bean.OpenidListEntity;
-import bean.PhoneListEntity;
-import bean.PhoneViewEntity;
-import bean.RecommendListEntity;
-import bean.RegUserEntity;
-import bean.Result;
-import bean.TopicListEntity;
-import bean.TopicOptionListEntity;
-import bean.Update;
-import bean.UserEntity;
-import bean.WebContent;
-import tools.AppException;
-import tools.AppManager;
-import tools.DecodeUtil;
-import tools.Logger;
-import tools.MD5Util;
-import tools.StringUtils;
-import ui.WeFriendCard;
+import bean.*;
+import com.crashlytics.android.Crashlytics;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import db.manager.WeFriendManager;
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+import tools.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AppClient {
 	
@@ -423,18 +387,18 @@ public class AppClient {
 			if (StringUtils.notEmpty(privacy)) {
 				params.add("privacy", privacy);
 			}
-			if (StringUtils.notEmpty(custom)) {
+//			if (StringUtils.notEmpty(custom)) {
 				params.add("custom", custom);
-			}
-			if (StringUtils.notEmpty(custom_display)) {
+//			}
+//			if (StringUtils.notEmpty(custom_display)) {
 				params.add("custom_display", custom_display);
-			}
-			if (StringUtils.notEmpty(required)) {
+//			}
+//			if (StringUtils.notEmpty(required)) {
 				params.add("required", required);
-			}
-			if (StringUtils.notEmpty(addfriend)) {
+//			}
+//			if (StringUtils.notEmpty(addfriend)) {
 				params.add("addfriend", addfriend);
-			}
+//			}
 			QYRestClient.post("phonebook/create"+"?_sign="+appContext.getLoginSign(), params, new AsyncHttpResponseHandler() {
 				@Override
 				public void onSuccess(int statusCode, Header[] headers, byte[] content) {
@@ -454,7 +418,7 @@ public class AppClient {
 				public void handleMessage(Message msg) {
 					switch (msg.what) {
 					case 1:
-						callback.onSuccess((ActivityCreateEntity)msg.obj);
+						callback.onSuccess((PhonebookCreateEntity)msg.obj);
 						break;
 
 					default:
@@ -472,8 +436,7 @@ public class AppClient {
 						String target = new String(content);
 						String decode = DecodeUtil.decode(target);
 						target = null;
-						Logger.i(decode);
-						ActivityCreateEntity data = ActivityCreateEntity.parse(decode);
+                        PhonebookCreateEntity data = PhonebookCreateEntity.parse(decode);
 						decode = null;
 						msg.what = 1;
 						msg.obj = data;

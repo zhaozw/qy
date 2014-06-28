@@ -168,6 +168,11 @@ public class WeFriendCardSearch  extends AppActivity implements OnScrollListener
 			searchDeleteButton.setVisibility(View.INVISIBLE);
 			closeInput();
 			break;
+
+        case R.id.btnCancel:
+            closeInput();
+            AppManager.getAppManager().finishActivity(this);
+            break;
 		}
 	}
 	
