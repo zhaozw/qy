@@ -2,6 +2,7 @@ package ui.adapter;
 
 import java.util.List;
 
+import tools.Logger;
 import tools.StringUtils;
 import ui.adapter.PhonebookAdapter.CellHolder;
 
@@ -98,8 +99,9 @@ public class HotTopicAdapter extends BaseAdapter{
 		convertView.setTag(cell);
 		TopicEntity model = datas.get(position);
 		cell.tvTitle.setText(model.title);
-		ImageLoader.getInstance().displayImage(StringUtils.notEmpty(model.thumb)?model.thumb:MyApplication.getInstance().getUserAvatar(), cell.imgThumb, displayImageOptions);
-		cell.tvTime.setText(model.pubdate);
+		ImageLoader.getInstance().displayImage(StringUtils.notEmpty(model.thumb)?model.thumb.replace("!64",""):MyApplication.getInstance().getUserAvatar(), cell.imgThumb, displayImageOptions);
+        Logger.i(model.thumb.replace("!64",""));
+        cell.tvTime.setText(model.pubdate);
 		cell.tvDes.setText(model.description);
 		return convertView;
 	}

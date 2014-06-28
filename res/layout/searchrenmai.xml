@@ -11,7 +11,7 @@
 	    android:layout_height="50dp" 
 	    >
 		 
-		    <EditText
+        <EditText
 	        android:id="@+id/searchEditView"
 	        android:layout_width="match_parent"
 	        android:layout_height="37dp"
@@ -66,7 +66,7 @@
 	        android:id="@+id/xrefresh"
 	        android:layout_width="match_parent"
 	   		android:layout_height="match_parent"
-	   		>
+	   	>
 			<ExpandableListView
 		        android:layout_below="@+id/navLayout"
 		        android:id="@+id/xlistview"
@@ -79,7 +79,8 @@
 		        android:fadingEdge="none"
 		        android:transcriptMode="disabled"
 		        android:cacheColorHint="#00000000"
-		        android:listSelector="#00000000" />
+		        android:listSelector="#00000000"
+            />
 		</android.support.v4.widget.SwipeRefreshLayout>
     	<TextView 
 	        android:layout_below="@+id/navbar"
@@ -91,6 +92,6 @@
 	        android:textSize="18dp"
 	        android:id="@+id/noting_view"
 	        android:visibility="gone"
-	        />
+	    />
 	
 </RelativeLayout>

@@ -28,7 +28,6 @@ public class TopicListEntity extends Entity{
 				JSONArray ownedArr = info.getJSONArray("list");
 				for (int i=0;i<ownedArr.length();i++) {
 					TopicEntity entity = new TopicEntity();
-					Logger.i(ownedArr.getJSONObject(i).toString());
 					entity.category_id = ownedArr.getJSONObject(i).getString("category_id");
 					entity.title = ownedArr.getJSONObject(i).getString("title");
 					entity.thumb = ownedArr.getJSONObject(i).getString("thumb");
