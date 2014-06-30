@@ -3,6 +3,7 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import tools.Logger;
 import tools.UIHelper;
 import ui.adapter.PhonebookAdapter;
@@ -36,14 +37,15 @@ import android.widget.Toast;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 
-public class ActivityFragment extends Fragment {
+public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
 	private Assistant activity;
-	
+    private int lvDataState;
 	private List<PhoneIntroEntity> myQuns = new ArrayList<PhoneIntroEntity>();
 	private List<PhoneIntroEntity> comQuns = new ArrayList<PhoneIntroEntity>();
 	private List<List<PhoneIntroEntity>> quns = new ArrayList<List<PhoneIntroEntity>>();
 	private PhonebookAdapter phoneAdapter;
+    private SwipeRefreshLayout swipeLayout;
 	
 	public static ActivityFragment newInstance() {
 		ActivityFragment fragment = new ActivityFragment();
@@ -100,7 +102,12 @@ public class ActivityFragment extends Fragment {
 				return true;
 			}
 		});
-    	
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.xrefresh);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         return view;
     }
     
@@ -170,6 +177,10 @@ public class ActivityFragment extends Fragment {
 		myQuns.addAll(entity.owned);
 		myQuns.addAll(entity.joined);
 		phoneAdapter.notifyDataSetChanged();
+        lvDataState = UIHelper.LISTVIEW_DATA_MORE;
+        if (null != swipeLayout) {
+            swipeLayout.setRefreshing(false);
+        }
 	}
 	
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -184,4 +195,15 @@ public class ActivityFragment extends Fragment {
 		}
 
 	};
+
+    @Override
+    public void onRefresh() {
+        if (lvDataState == UIHelper.LISTVIEW_DATA_MORE) {
+            lvDataState = UIHelper.LISTVIEW_DATA_LOADING;
+            getActivityList();
+        }
+        else {
+            swipeLayout.setRefreshing(false);
+        }
+    }
 }

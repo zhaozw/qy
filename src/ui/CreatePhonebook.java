@@ -186,7 +186,6 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 	}
 	
 	private void changeType() {
-		qunNameET.setText(qunOfChoosing.label);
 		richET.setText(qunOfChoosing.descriptions.get(0));
 	}
 	
@@ -195,7 +194,7 @@ public class CreatePhonebook extends AppActivity implements OnItemClickListener{
 		content = richET.getEditableText().toString();
         custome = edtCustome.getEditableText().toString();
         if (StringUtils.empty(title)) {
-        	WarningDialog("请填写通讯录标题");
+        	WarningDialog("请填写通讯录名字");
 			return;
 		}
         if (StringUtils.empty(content)) {

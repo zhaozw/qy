@@ -79,7 +79,7 @@
 		        android:paddingTop="5dp"
 		        android:paddingRight="5dp"
 		        android:paddingBottom="5dp"
-		        android:hint="为朋友搭建人脉，互相认识，携手合作，实现更伟大的 梦想，欢迎邀请更多好友加入~"
+		        android:hint="分享群话题，和群友一起讨论~"
                 android:cursorVisible="true"
 	       		>
 	    	</EditText>

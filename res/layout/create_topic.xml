@@ -59,7 +59,7 @@
 			android:onClick="ButtonClick"
 			android:background="#f5691d"
 			android:layout_margin="5dp"
-            />
+            android:paddingLeft="8dp"/>
     </RelativeLayout>
     
     <ScrollView

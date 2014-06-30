@@ -49,15 +49,17 @@
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:drawableLeft="@drawable/btn_add_normal"
-            android:background="@null"
             android:layout_centerVertical="true"
             android:text="发布"
             android:textColor="@color/white"
             android:textSize="@dimen/navbar_button_text_size"
-           	android:layout_alignParentRight="true"
-			android:paddingRight="12dp"
-			android:drawablePadding="8dp"
-			android:onClick="ButtonClick"
+            android:layout_alignParentRight="true"
+            android:paddingRight="12dp"
+            android:paddingLeft="8dp"
+            android:drawablePadding="8dp"
+            android:onClick="ButtonClick"
+            android:background="#f5691d"
+            android:layout_margin="5dp"
             />
     </RelativeLayout>
     
@@ -107,7 +109,7 @@
                 android:layout_marginRight="10dp"
                 android:textSize="@dimen/cell_subtitle_size"
                 android:textColor="@color/black"
-                android:text="通讯录主题"
+                android:text="通讯录名字"
 	            />
             <EditText
                 android:layout_marginTop="5dp"

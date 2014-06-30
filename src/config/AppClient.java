@@ -2008,7 +2008,9 @@ public class AppClient {
 	//资讯列表
 	public static void getTopicList(final MyApplication appContext, String id, String page, final ClientCallback callback) {
 		RequestParams params = new RequestParams();
-		params.add("id", id);
+        if (StringUtils.notEmpty(id)) {
+            params.add("id", id);
+        }
 		params.add("page", page);
 		QYRestClient.post("news/lists"+"?_sign="+appContext.getLoginSign(), params, new AsyncHttpResponseHandler() {
 			@Override

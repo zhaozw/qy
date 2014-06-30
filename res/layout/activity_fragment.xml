@@ -4,7 +4,13 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:orientation="vertical" >
-    
+
+    <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_below="@+id/navLayout"
+            android:id="@+id/xrefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
     <ExpandableListView
         android:layout_below="@+id/navLayout"
         android:id="@+id/xlistview"
@@ -18,5 +24,5 @@
         android:transcriptMode="disabled"
         android:cacheColorHint="#00000000"
         android:listSelector="#00000000" />
-
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
