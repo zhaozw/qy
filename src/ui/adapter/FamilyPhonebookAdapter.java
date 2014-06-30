@@ -90,7 +90,7 @@ public class FamilyPhonebookAdapter extends BaseAdapter {
 		}
 		final PhoneIntroEntity model = phones.get(position);
 		cell.titleView.setText(model.title);
-		String des = String.format("人数:%s 点击数:%s\n", model.member, model.hits);
+		String des = String.format("人数:%s 点击:%s\n", model.member, model.hits);
 		ImageLoader.getInstance().displayImage(model.logo, cell.avatarView, displayImageOptions);
 		cell.creatorView.setText(Html.fromHtml("由<font color=\"#088ec1\">"+model.creator+"</font>发起"));
 		cell.desView.setText(des);

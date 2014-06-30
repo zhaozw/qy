@@ -1097,7 +1097,7 @@ public class QYWebView extends AppActivity  {
 
 			case 1:
 				if (StringUtils.notEmpty(codeForUrl)) {
-					webView.loadUrl("http://qun.hk/index/assist/code/"+codeForUrl);
+					webView.loadUrl(CommonValue.BASE_URL+"/index/assist/code/"+codeForUrl +"?_sign="+appContext.getLoginSign());
 				}
 				else {
 					WarningDialog("请打开具体的通讯录");
@@ -1107,6 +1107,4 @@ public class QYWebView extends AppActivity  {
 			break;
 		}
 	}
-
-	
 }

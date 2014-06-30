@@ -85,25 +85,7 @@ public class Find extends AppActivity implements OnItemClickListener{
 		ViewPager adsViewPager = (ViewPager) findViewById(R.id.viewPager);
 		adsAdapter = new FindAdFragmentAdapter(getSupportFragmentManager(), ads);
 		adsViewPager.setAdapter(adsAdapter);
-		
-//		qunGridView = (GridView) findViewById(R.id.qunGridView);
-//		quns.add(new QunsEntity(R.drawable.qun_normal, "1", "群友微友"));
-//		quns.add(new QunsEntity(R.drawable.qun_school, "3", "同学校友"));
-//		quns.add(new QunsEntity(R.drawable.qun_business, "5", "行业联盟"));
-//		quns.add(new QunsEntity(R.drawable.qun_economy, "7", "商业协会"));
-//		quns.add(new QunsEntity(R.drawable.qun_meeting, "17", "活动会议"));
-//		quns.add(new QunsEntity(R.drawable.qun_collegue, "14", "公司同事"));
-//		qunAdapter = new QunGridViewAdapter(this, quns);
-//		qunGridView.setAdapter(qunAdapter);
-//		qunGridView.setOnItemClickListener(this);
-//		
-//		funsGridView = (GridView) findViewById(R.id.funsGridView);
-//		funs.addAll(FunsListEntity.parse(this).funs);
-//		funsAdapter = new FunsGridViewAdapter(this, funs);
-//		funsGridView.setAdapter(funsAdapter);
-//		funsGridView.setOnItemClickListener(this);
 		getAdsFromCache();
-		
 		tvMessage = (TextView) findViewById(R.id.messageView);
 		if (StringUtils.notEmpty(appContext.getNews())) {
 			try {

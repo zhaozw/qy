@@ -76,7 +76,12 @@ public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnR
         quns.add(myQuns);
         quns.add(comQuns);
 		phoneAdapter = new PhonebookAdapter(activity, quns);
-        getActivityListFromCache();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getActivityListFromCache();
+            }
+        }, 500);
     }
 
     @Override

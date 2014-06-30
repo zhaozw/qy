@@ -95,7 +95,7 @@ public class PhonebookAdapter extends BaseExpandableListAdapter{
 		final PhoneIntroEntity model = datas.get(groupPosition).get(childPosition);
 		cell.titleView.setTag(model);
 		cell.titleView.setText(model.title);
-		String des = String.format("浏览数:%s 人数:%s\n", model.hits, model.member);
+		String des = String.format("浏览:%s 人数:%s\n", model.hits, model.member);
 		ImageLoader.getInstance().displayImage(model.logo, cell.avatarView, displayImageOptions);
 		if (StringUtils.notEmpty(model.creator)) {
 			cell.creatorView.setText(Html.fromHtml("由<font color=\"#088ec1\">"+model.creator+"</font>发起"));

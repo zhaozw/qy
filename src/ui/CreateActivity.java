@@ -743,6 +743,7 @@ public class CreateActivity extends AppActivity implements OnSizeChangedListener
 		funsNameET.setText(fun.title);
 		richET.setText(fun.description);
 		if (StringUtils.notEmpty(fun.cover)) {
+            activityCover = fun.cover;
 			imageLoader.displayImage(fun.cover, imgActivityCover, CommonValue.DisplayOptions.default_options);
 		}
 	}

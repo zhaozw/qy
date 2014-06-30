@@ -89,8 +89,14 @@ public class Phonebook extends AppActivity implements SwipeRefreshLayout.OnRefre
 		asyncQuery = new MyAsyncQueryHandler(getContentResolver());
 		uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 		initUI();
-		getPhoneListFromCache();
-		getSquareListFromCache();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getPhoneListFromCache();
+                getSquareListFromCache();
+            }
+        }, 500);
+
 	}
 	
 	private void initUI() {

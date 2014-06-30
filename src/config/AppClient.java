@@ -747,6 +747,7 @@ public class AppClient {
 			params.add("custom_display", "1");
 			Logger.i(custom);
 		}
+        Logger.i(type);
 		QYRestClient.post("activity/save"+"?_sign="+appContext.getLoginSign(), params, new AsyncHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, byte[] content) {
