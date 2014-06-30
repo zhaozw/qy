@@ -221,6 +221,12 @@
             android:launchMode="singleTask"
             android:theme="@style/StyledIndicators" >
         </activity>
+
+        <activity
+                android:name="ui.TopicTypeAll"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden|adjustNothing">
+        </activity>
         
         <activity
             android:name="ui.MyTopic"

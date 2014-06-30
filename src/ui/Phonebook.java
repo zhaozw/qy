@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import tools.Logger;
 import tools.StringUtils;
 import tools.UIHelper;
@@ -47,9 +52,9 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.Toast;
 import android.widget.ExpandableListView.OnGroupClickListener;
 
-public class Phonebook extends AppActivity{
+public class Phonebook extends AppActivity implements SwipeRefreshLayout.OnRefreshListener{
 	
-	private ExpandableListView xlistView;
+	private ExpandableListView elvPhonebook;
 	private List<PhoneIntroEntity> myQuns = new ArrayList<PhoneIntroEntity>();
 	private List<PhoneIntroEntity> comQuns = new ArrayList<PhoneIntroEntity>();
 	private List<List<PhoneIntroEntity>> quns = new ArrayList<List<PhoneIntroEntity>>();
@@ -60,6 +65,12 @@ public class Phonebook extends AppActivity{
 	EditText editText;
 	
 	private int mobileNum = 0;
+
+    private SwipeRefreshLayout srlRefresh;
+    private int lvDataState;
+
+    private ImageView indicatorImageView;
+    private Animation indicatorAnimation;
 	
 	@Override
 	protected void onDestroy() {
@@ -85,23 +96,29 @@ public class Phonebook extends AppActivity{
 	private void initUI() {
 		editText = (EditText) findViewById(R.id.searchEditView);
 		editText.setHint("您共有"+appContext.getDeg2()+"位二度人脉可搜索");
-		xlistView = (ExpandableListView)findViewById(R.id.xlistview);
-        xlistView.setDividerHeight(0);
-        xlistView.setGroupIndicator(null);
+        srlRefresh = (SwipeRefreshLayout)findViewById(R.id.srlRefresh);
+        srlRefresh.setOnRefreshListener(this);
+        srlRefresh.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        elvPhonebook = (ExpandableListView)findViewById(R.id.elvPhonebook);
+        elvPhonebook.setDividerHeight(0);
+        elvPhonebook.setGroupIndicator(null);
         quns.add(myQuns);
         quns.add(comQuns);
 		phoneAdapter = new PhonebookAdapter(this, quns);
-		xlistView.setAdapter(phoneAdapter);
-		xlistView.expandGroup(0);
-		xlistView.expandGroup(1);
-		xlistView.setOnGroupClickListener(new OnGroupClickListener() {
+        elvPhonebook.setAdapter(phoneAdapter);
+        elvPhonebook.expandGroup(0);
+        elvPhonebook.expandGroup(1);
+        elvPhonebook.setOnGroupClickListener(new OnGroupClickListener() {
 			@Override
 			public boolean onGroupClick(ExpandableListView arg0, View arg1, int arg2,
 					long arg3) {
 				return true;
 			}
 		});
-		xlistView.setOnChildClickListener(new OnChildClickListener() {
+        elvPhonebook.setOnChildClickListener(new OnChildClickListener() {
 			
 			@Override
 			public boolean onChildClick(ExpandableListView arg0, View convertView, int groupPosition, int childPosition, long arg4) {
@@ -130,6 +147,16 @@ public class Phonebook extends AppActivity{
 				return true;
 			}
 		});
+        indicatorImageView = (ImageView) findViewById(R.id.xindicator);
+        indicatorAnimation = AnimationUtils.loadAnimation(this, R.anim.refresh_button_rotation);
+        indicatorAnimation.setDuration(500);
+        indicatorAnimation.setInterpolator(new Interpolator() {
+            private final int frameCount = 10;
+            @Override
+            public float getInterpolation(float input) {
+                return (float)Math.floor(input*frameCount)/frameCount;
+            }
+        });
 	}
 	
 	private void showMobile() {
@@ -230,13 +257,17 @@ public class Phonebook extends AppActivity{
 	}
 	
 	private void getPhoneList() {
-//		if (myQuns.isEmpty()) {
-			loadingPd = UIHelper.showProgress(this, null, null, true);
-//		}
+        if (null != indicatorImageView && myQuns.isEmpty()) {
+            indicatorImageView.setVisibility(View.VISIBLE);
+            indicatorImageView.startAnimation(indicatorAnimation);
+        }
 		AppClient.getPhoneList(appContext, new ClientCallback() {
 			@Override
 			public void onSuccess(Entity data) {
-				UIHelper.dismissProgress(loadingPd);
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
 				PhoneListEntity entity = (PhoneListEntity)data;
 				switch (entity.getError_code()) {
 				case Result.RESULT_OK:
@@ -246,19 +277,24 @@ public class Phonebook extends AppActivity{
 					forceLogout();
 					break;
 				default:
-//					UIHelper.ToastMessage(getApplicationContext(), entity.getMessage(), Toast.LENGTH_SHORT);
 					break;
 				}
 			}
 			
 			@Override
 			public void onFailure(String message) {
-				UIHelper.dismissProgress(loadingPd);
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
 				UIHelper.ToastMessage(getApplicationContext(), message, Toast.LENGTH_SHORT);
 			}
 			@Override
 			public void onError(Exception e) {
-				UIHelper.dismissProgress(loadingPd);
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
 				Crashlytics.logException(e);
 			}
 		});
@@ -270,6 +306,8 @@ public class Phonebook extends AppActivity{
 		myQuns.addAll(entity.owned);
 		myQuns.addAll(entity.joined);
 		phoneAdapter.notifyDataSetChanged();
+        srlRefresh.setRefreshing(false);
+        lvDataState = UIHelper.LISTVIEW_DATA_FULL;
 	}
 	
 	private void getSquareListFromCache() {
@@ -313,7 +351,18 @@ public class Phonebook extends AppActivity{
 //		}
 		phoneAdapter.notifyDataSetChanged();
 	}
-	
+
+    @Override
+    public void onRefresh() {
+        if (lvDataState != UIHelper.LISTVIEW_DATA_LOADING) {
+            lvDataState = UIHelper.LISTVIEW_DATA_LOADING;
+            getPhoneList();
+        }
+        else {
+            srlRefresh.setRefreshing(false);
+        }
+    }
+
 	private String[] projection = {Data.MIMETYPE, Phone.NUMBER, "display_name", "contact_id", "sort_key", "photo_thumb_uri"};
 	private final static int MIMETYPE_INDEX = 0;
 	private final static int NUMBER_INDEX = 1;
@@ -321,7 +370,8 @@ public class Phonebook extends AppActivity{
 	private final static int ID_INDEX = 3;
 	private final static int SORT_INDEX = 4;
 	private final static int PHOTO_INDEX = 5;
-	private class MyAsyncQueryHandler extends AsyncQueryHandler {
+
+    private class MyAsyncQueryHandler extends AsyncQueryHandler {
 
 		public MyAsyncQueryHandler(ContentResolver cr) {
 			super(cr);

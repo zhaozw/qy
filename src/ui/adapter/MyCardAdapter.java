@@ -125,12 +125,12 @@ public class MyCardAdapter extends BaseAdapter{
 				}
 			}
 		});
-		convertView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				((MyCard)context).showCardViewWeb(model);
-			}
-		});
+//		convertView.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//				((MyCard)context).showCardViewWeb(model);
+//			}
+//		});
 //		convertView.setOnLongClickListener(new OnLongClickListener() {
 //			@Override
 //			public boolean onLongClick(View arg0) {

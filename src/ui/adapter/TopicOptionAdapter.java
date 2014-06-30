@@ -2,9 +2,13 @@ package ui.adapter;
 
 import java.util.List;
 
+import android.graphics.Bitmap;
 import bean.TopicOptionEntity;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.vikaa.mycontact.R;
 
 import config.CommonValue;
@@ -13,26 +17,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import config.MyApplication;
+import tools.StringUtils;
 
 public class TopicOptionAdapter extends BaseAdapter {
 
 	private Context context;
 	private List<TopicOptionEntity> datas;
 	private LayoutInflater inflater;
-	
+    private DisplayImageOptions displayImageOptions;
 	public static class ViewHolder {
-		TextView topicNameTV;
-		ImageView topicCB;
-		ImageView topicIcon;
+        ImageView avatarView;
+        TextView titleView;
+        TextView desView;
+        TextView creatorView;
 	}
 	
 	public TopicOptionAdapter(Context context, List<TopicOptionEntity> datas) {
 		this.context = context;
 		this.datas = datas;
 		this.inflater = LayoutInflater.from(context);
+        this.displayImageOptions = new DisplayImageOptions.Builder()
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .showImageOnLoading(R.drawable.content_image_loading)
+                .showImageForEmptyUri(R.drawable.logo_120)
+                .showImageOnFail(R.drawable.logo_120)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .displayer(new RoundedBitmapDisplayer(10))
+                .build();
 	}
 	
 	@Override
@@ -53,25 +69,22 @@ public class TopicOptionAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup arg2) {
 		ViewHolder viewHolder;
-		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.topic_option_cell, null);
-			viewHolder = new ViewHolder();
-			viewHolder.topicIcon = (ImageView) convertView.findViewById(R.id.topicIcon); 
-			viewHolder.topicNameTV = (TextView) convertView.findViewById(R.id.topicNameTV);
-			viewHolder.topicCB = (ImageView) convertView.findViewById(R.id.topicCB);
-			convertView.setTag(viewHolder);
-		}
-		else {
-			viewHolder = (ViewHolder) convertView.getTag();
-		}
+        if (convertView == null) {
+            viewHolder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.index_phone_cell, null);
+            viewHolder.titleView = (TextView) convertView.findViewById(R.id.title);
+            viewHolder.desView = (TextView) convertView.findViewById(R.id.des);
+            viewHolder.avatarView = (ImageView) convertView.findViewById(R.id.avatarImageView);
+            viewHolder.creatorView = (TextView) convertView.findViewById(R.id.creator);
+            convertView.setTag(viewHolder);
+        }
+        else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 		TopicOptionEntity model = datas.get(position);
-		ImageLoader.getInstance().displayImage(model.thumb, viewHolder.topicIcon, CommonValue.DisplayOptions.default_options);
-		viewHolder.topicNameTV.setText(model.title);
-		if (model.isChosen) {
-			viewHolder.topicCB.setBackgroundResource(R.drawable.topic_option_selected);
-		} else {
-			viewHolder.topicCB.setBackgroundResource(R.drawable.topic_option_unselected);
-		}
+        viewHolder.titleView.setText(model.title);
+        ImageLoader.getInstance().displayImage(StringUtils.notEmpty(model.thumb)?model.thumb: MyApplication.getInstance().getUserAvatar(), viewHolder.avatarView, displayImageOptions);
+        viewHolder.creatorView.setText(model.subTitle);
 		return convertView;
 	}
 

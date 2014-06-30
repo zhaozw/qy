@@ -3,6 +3,7 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.widget.*;
 import tools.AppManager;
 import tools.Logger;
 import tools.UIHelper;
@@ -28,11 +29,8 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-public class MyCard extends AppActivity implements OnRefreshListener{
+public class MyCard extends AppActivity implements OnRefreshListener, AdapterView.OnItemClickListener{
 	private int lvDataState;
 	private List<CardIntroEntity> cards = new ArrayList<CardIntroEntity>();
 	private MyCardAdapter xAdapter;
@@ -92,6 +90,7 @@ public class MyCard extends AppActivity implements OnRefreshListener{
 		xListView = (ListView) findViewById(R.id.xlistview);
 		xAdapter = new MyCardAdapter(this, cards, imageLoader);
 		xListView.setAdapter(xAdapter);
+        xListView.setOnItemClickListener(this);
 		swipeLayout.setOnRefreshListener(this);
 	    swipeLayout.setColorScheme(android.R.color.holo_blue_bright, 
 	            android.R.color.holo_green_light, 
@@ -204,4 +203,11 @@ public class MyCard extends AppActivity implements OnRefreshListener{
 		}
 
 	};
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        Logger.i("a");
+        CardIntroEntity model = cards.get(position);
+        ((MyCard)context).showCardViewWeb(model);
+    }
 }

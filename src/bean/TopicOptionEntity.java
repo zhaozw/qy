@@ -12,17 +12,7 @@ public class TopicOptionEntity extends Entity{
 	public String display;
 	public String sort;
 	public String thumb;
+    public String subTitle;
 	
-	public TopicOptionEntity() {
-		super();
-	}
-	
-	public TopicOptionEntity(int icon, String name, boolean isChosen) {
-		super();
-		this.icon = icon;
-		this.name = name;
-		this.isChosen = isChosen;
-	}
-	
-	
+
 }

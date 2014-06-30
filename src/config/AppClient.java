@@ -2006,7 +2006,7 @@ public class AppClient {
 	}
 	
 	//资讯列表
-	public static void getTopicList(final MyApplication appContext, String id, String page, final ClientCallback callback) {
+	public static void getTopicList(final MyApplication appContext, final String id, final String page, final ClientCallback callback) {
 		RequestParams params = new RequestParams();
         if (StringUtils.notEmpty(id)) {
             params.add("id", id);
@@ -2015,7 +2015,7 @@ public class AppClient {
 		QYRestClient.post("news/lists"+"?_sign="+appContext.getLoginSign(), params, new AsyncHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, byte[] content) {
-				handleTopicList(content, callback, appContext);
+				handleTopicList(content, id, page, callback, appContext);
 			}
 			@Override
 			public void onFailure(int statusCode, Header[] headers, byte[] content, Throwable e) {
@@ -2025,7 +2025,7 @@ public class AppClient {
 			}
 		});
 	}
-	public static void handleTopicList(final byte[] content, final ClientCallback callback, final MyApplication appContext) {
+	public static void handleTopicList(final byte[] content, final String id, final String page, final ClientCallback callback, final MyApplication appContext) {
 		final Handler handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -2048,9 +2048,14 @@ public class AppClient {
 					String target = new String(content);
 					String decode = DecodeUtil.decode(target);
 					target = null;
-					Logger.i(decode);
 					TopicListEntity data = TopicListEntity.parse(decode);
-					saveCache(appContext, CommonValue.CacheKey.TopicLists, data);
+                    if (StringUtils.notEmpty(page) && page.equals("1")) {
+                        if (StringUtils.notEmpty(id)) {
+                            saveCache(appContext, CommonValue.CacheKey.TopicLists + id, data);
+                        } else {
+                            saveCache(appContext, CommonValue.CacheKey.TopicLists, data);
+                        }
+                    }
 					msg.what = 1;
 					msg.obj = data;
 					decode = null;

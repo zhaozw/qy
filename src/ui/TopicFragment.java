@@ -57,18 +57,11 @@ import android.widget.ListView;
 public class TopicFragment extends Fragment implements OnItemClickListener, OnScrollListener, OnClickListener{
 	private Assistant activity;
 	
-//	private ListView optionListView;
 	private ListView topicListView;
 	
 	private TopicOptionAdapter topicOptionAdapter;
 	private List<TopicOptionEntity> topicTypes = new ArrayList<TopicOptionEntity>();
 	
-	private int lvDataState;
-	private int currentPage;
-	private List<TopicEntity> topicList = new ArrayList<TopicEntity>();
-	private TopicListAdapter topicListAdapter;
-	private String ids;
-
     private ImageView indicatorImageView;
     private Animation indicatorAnimation;
 
@@ -86,26 +79,11 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        topicOptionAdapter = new TopicOptionAdapter(activity, topicTypes);
-        topicListAdapter = new TopicListAdapter(activity, topicList);
-//        String key = String.format("%s-%s", CommonValue.CacheKey.UserTopicOptions, activity.appContext.getLoginUid());
-//		TopicOptionListEntity entity = (TopicOptionListEntity) activity.appContext.readObject(key);
-//		if(entity != null){
-//			ids = "";
-//			for (TopicOptionEntity model : entity.options) {
-//				ids += "," + model.category_id;
-//			}
-//			ids = ids.substring(1, ids.length());
-//			Logger.i(ids);
-//			getTopicListFromCache(ids);
-//		}
-//		else {
-//		    getTopicTypesFromCache();
-//		}
+        topicOptionAdapter = new TopicOptionAdapter(activity, topicTypes);
         Handler jumpHandler = new Handler();
         jumpHandler.postDelayed(new Runnable() {
             public void run() {
-                getTopicListFromCache("");
+                getTopicTypesFromCache();
             }
         }, 1000);
     }
@@ -113,30 +91,6 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	View view = inflater.inflate(R.layout.topic_fragment, container, false);
-//    	optionListView = (ListView) view.findViewById(R.id.xlistview);
-//    	View header = inflater.inflate(R.layout.index_section, null);
-//    	optionListView.addHeaderView(header);
-//    	View footer = inflater.inflate(R.layout.topic_option_footer, null);
-//    	Button topicOKButton = (Button) footer.findViewById(R.id.topicOKButton);
-//    	topicOKButton.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View arg0) {
-//				submitTopicType();
-//			}
-//		});
-//    	optionListView.addFooterView(footer);
-//    	optionListView.setOnItemClickListener(new OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-//					long arg3) {
-//				if (position > 0) {
-//					TopicOptionEntity model = topicTypes.get(position-1);
-//					model.isChosen = !model.isChosen;
-//					topicOptionAdapter.notifyDataSetChanged();
-//				}
-//			}
-//		});
-//    	optionListView.setAdapter(topicOptionAdapter);
         indicatorImageView = (ImageView) view.findViewById(R.id.xindicator);
         indicatorAnimation = AnimationUtils.loadAnimation(activity, R.anim.refresh_button_rotation);
         indicatorAnimation.setDuration(500);
@@ -156,28 +110,9 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
     	btnMyTopic.setOnClickListener(this);
     	btnPubTopic.setOnClickListener(this);
     	topicListView.addHeaderView(listHeader);
-    	topicListView.setAdapter(topicListAdapter);
+    	topicListView.setAdapter(topicOptionAdapter);
     	topicListView.setOnScrollListener(this);
-    	topicListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-					long arg3) {
-				if (position > 0) {
-					TopicEntity model = topicList.get(position-1);
-					showTopic(model);
-				}
-			}
-		});
-//    	String key = String.format("%s-%s", CommonValue.CacheKey.UserTopicOptions, activity.appContext.getLoginUid());
-//		TopicOptionListEntity entity = (TopicOptionListEntity) activity.appContext.readObject(key);
-//		if(entity != null){
-			topicListView.setVisibility(View.VISIBLE);
-//			optionListView.setVisibility(View.INVISIBLE);
-//		}
-//		else {
-//			optionListView.setVisibility(View.INVISIBLE);
-//			optionListView.setVisibility(View.VISIBLE);
-//		}
+    	topicListView.setOnItemClickListener(this);
         return view;
     }
 	
@@ -187,12 +122,18 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
 		if(entity != null){
 			handleTopicTypes(entity);
 		}
-		activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
+        if (null != indicatorImageView && topicTypes.isEmpty()) {
+            indicatorImageView.setVisibility(View.VISIBLE);
+            indicatorImageView.startAnimation(indicatorAnimation);
+        }
 		AppClient.getTopicTypes(activity.appContext, new ClientCallback() {
 			
 			@Override
 			public void onSuccess(Entity data) {
-				UIHelper.dismissProgress(activity.loadingPd);
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
 				TopicOptionListEntity entity = (TopicOptionListEntity)data;
 				switch (entity.getError_code()) {
 				case Result.RESULT_OK:
@@ -205,12 +146,18 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
 			
 			@Override
 			public void onFailure(String message) {
-				UIHelper.dismissProgress(activity.loadingPd);
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
 			}
 			
 			@Override
 			public void onError(Exception e) {
-				UIHelper.dismissProgress(activity.loadingPd);
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
 				Crashlytics.logException(e);
 			}
 		});
@@ -222,147 +169,27 @@ public class TopicFragment extends Fragment implements OnItemClickListener, OnSc
 		topicOptionAdapter.notifyDataSetChanged();
 	}
 	
-	private void submitTopicType() {
-		TopicOptionListEntity types = new TopicOptionListEntity();
-		for (TopicOptionEntity model : topicTypes) {
-			if (model.isChosen) {
-				types.options.add(model);
-			}
-		}
-		if (types.options.isEmpty()) {
-			activity.WarningDialog("请至少选择一个话题");
-		}
-		else {
-			activity.appContext.saveObject(types, String.format("%s-%s", CommonValue.CacheKey.UserTopicOptions, activity.appContext.getLoginUid()));
-//			optionListView.setVisibility(View.INVISIBLE);
-			//显示topicListView
-			String ids = "";
-			for (TopicOptionEntity model : types.options) {
-				ids += "," + model.category_id;
-			}
-			ids = ids.substring(1, ids.length());
-			topicListView.setVisibility(View.VISIBLE);
-			currentPage = 1;
-			getTopicList(ids, currentPage+"", UIHelper.LISTVIEW_ACTION_INIT);
-		}
-	}
-	
-	private void getTopicListFromCache(String id) {
-		currentPage = 1;
-		String key = String.format("%s-%s", CommonValue.CacheKey.TopicLists, activity.appContext.getLoginUid());
-		TopicListEntity entity = (TopicListEntity) activity.appContext.readObject(key);
-		if(entity != null){
-			handleTopics(entity, UIHelper.LISTVIEW_ACTION_INIT);
-		}
-		getTopicList(id, currentPage+"", UIHelper.LISTVIEW_ACTION_INIT);
-	}
-	
-	private void getTopicList(String id, String page, final int action) {
-//		if (topicList.isEmpty()) {
-//			activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
-//		}
-        if (null != indicatorImageView) {
-            indicatorImageView.setVisibility(View.INVISIBLE);
-            indicatorImageView.clearAnimation();
-        }
-		AppClient.getTopicList(activity.appContext, id, page, new ClientCallback() {
-			
-			@Override
-			public void onSuccess(Entity data) {
-                indicatorImageView.setVisibility(View.INVISIBLE);
-                indicatorImageView.clearAnimation();
-//				UIHelper.dismissProgress(activity.loadingPd);
-				TopicListEntity entity = (TopicListEntity) data;
-				switch (entity.getError_code()) {
-				case Result.RESULT_OK:
-					handleTopics(entity, action);
-					break;
 
-				default:
-					break;
-				}
-				
-			}
-			
-			@Override
-			public void onFailure(String message) {
-                if (null != indicatorImageView) {
-                    indicatorImageView.setVisibility(View.INVISIBLE);
-                    indicatorImageView.clearAnimation();
-                }
-//                UIHelper.dismissProgress(activity.loadingPd);
-			}
-			
-			@Override
-			public void onError(Exception e) {
-                if (null != indicatorImageView) {
-                    indicatorImageView.setVisibility(View.INVISIBLE);
-                    indicatorImageView.clearAnimation();
-                }
-//				UIHelper.dismissProgress(activity.loadingPd);
-				Crashlytics.logException(e);
-			}
-		});
-	}
-	
-	private void handleTopics(TopicListEntity entity, int action) {
-		switch (action) {
-		case UIHelper.LISTVIEW_ACTION_INIT:
-		case UIHelper.LISTVIEW_ACTION_REFRESH:
-			topicList.clear();
-			topicList.addAll(entity.datas);
-			break;
-
-		default:
-			topicList.addAll(entity.datas);
-			break;
-		}
-		if(entity.next >= 1){					
-			lvDataState = UIHelper.LISTVIEW_DATA_MORE;
-		}
-		else if (entity.next == -1) {
-			lvDataState = UIHelper.LISTVIEW_DATA_FULL;
-		}
-		topicListAdapter.notifyDataSetChanged();
-	}
-	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View convertView, int position, long arg3) {
-		Logger.i("a"+ parent.getAdapter());
-//		if (parent.getAdapter() == topicOptionAdapter) {
-//			if (position > 0) {
-//				TopicOptionEntity model = topicTypes.get(position-1);
-//				model.isChosen = !model.isChosen;
-//				topicOptionAdapter.notifyDataSetChanged();
-//			}
-//		}
+        TopicOptionEntity entity = topicTypes.get(position-1);
+        showTopicType(entity);
 	}
 	
-	private void showTopic(TopicEntity entity) {
+	private void showTopicType(TopicOptionEntity entity) {
 		EasyTracker easyTracker = EasyTracker.getInstance(activity);
 		easyTracker.send(MapBuilder
 	      .createEvent("ui_action",     // Event category (required)
 	                   "button_press",  // Event action (required)
-	                   "查看话题："+entity.url,   // Event label
+	                   "查看话题："+entity.title,   // Event label
 	                   null)            // Event value
 	      .build()
 		);
-		Intent intent = new Intent(activity, QYWebView.class);
-		intent.putExtra(CommonValue.IndexIntentKeyValue.CreateView, entity.url);
-	    startActivityForResult(intent, CommonValue.PhonebookViewUrlRequest.editPhoneview);
+	    startActivity(new Intent(activity, TopicTypeAll.class).putExtra("catagory", entity.category_id));
 	}
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		if (lvDataState != UIHelper.LISTVIEW_DATA_MORE) {
-            return;
-        }
-        if (firstVisibleItem + visibleItemCount >= totalItemCount
-                && totalItemCount != 0) {
-        	lvDataState = UIHelper.LISTVIEW_DATA_LOADING;
-        	currentPage++;
-        	getTopicList(ids, currentPage+"", UIHelper.LISTVIEW_ACTION_SCROLL);
-        }
 	}
 
 	@Override

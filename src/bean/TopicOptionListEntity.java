@@ -29,6 +29,7 @@ public class TopicOptionListEntity extends Entity{
 					entity.title = ownedArr.getJSONObject(i).getString("title");
 					entity.sort = ownedArr.getJSONObject(i).getString("sort");
 					entity.thumb = ownedArr.getJSONObject(i).getString("thumb");
+                    entity.subTitle = ownedArr.getJSONObject(i).getString("news_title");
 					data.options.add(entity);
 				}
 			}

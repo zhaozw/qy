@@ -3,7 +3,12 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import tools.Logger;
 import tools.UIHelper;
 import ui.adapter.PhonebookAdapter;
@@ -46,7 +51,10 @@ public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private List<List<PhoneIntroEntity>> quns = new ArrayList<List<PhoneIntroEntity>>();
 	private PhonebookAdapter phoneAdapter;
     private SwipeRefreshLayout swipeLayout;
-	
+
+    private ImageView indicatorImageView;
+    private Animation indicatorAnimation;
+
 	public static ActivityFragment newInstance() {
 		ActivityFragment fragment = new ActivityFragment();
         return fragment;
@@ -74,6 +82,7 @@ public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	View view = inflater.inflate(R.layout.activity_fragment, container, false);
+        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.xrefresh);
     	ExpandableListView xlistView = (ExpandableListView) view.findViewById(R.id.xlistview);
         xlistView.setDividerHeight(0);
         xlistView.setGroupIndicator(null);
@@ -102,12 +111,21 @@ public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnR
 				return true;
 			}
 		});
-        swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.xrefresh);
         swipeLayout.setOnRefreshListener(this);
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        indicatorImageView = (ImageView) view.findViewById(R.id.xindicator);
+        indicatorAnimation = AnimationUtils.loadAnimation(activity, R.anim.refresh_button_rotation);
+        indicatorAnimation.setDuration(500);
+        indicatorAnimation.setInterpolator(new Interpolator() {
+            private final int frameCount = 10;
+            @Override
+            public float getInterpolation(float input) {
+                return (float)Math.floor(input*frameCount)/frameCount;
+            }
+        });
         return view;
     }
     
@@ -137,17 +155,30 @@ public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnR
 		if(entity != null){
 			handlerActivitySection(entity);
 		}
-		getActivityList();
+        Handler jumpHandler = new Handler();
+        jumpHandler.postDelayed(new Runnable() {
+            public void run() {
+                getActivityList();
+            }
+        }, 1000);
+
 	}
 	
 	private void getActivityList() {
 //		if (myQuns.isEmpty()) {
-			activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
+//			activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
 //		}
+        if (null != indicatorImageView && myQuns.isEmpty()) {
+            indicatorImageView.setVisibility(View.VISIBLE);
+            indicatorImageView.startAnimation(indicatorAnimation);
+        }
 		AppClient.getActivityList(activity.appContext, new ClientCallback() {
 			@Override
 			public void onSuccess(Entity data) {
-				UIHelper.dismissProgress(activity.loadingPd);
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
 				ActivityListEntity entity = (ActivityListEntity)data;
 				switch (entity.getError_code()) {
 				case Result.RESULT_OK:
@@ -161,12 +192,18 @@ public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 			@Override
 			public void onFailure(String message) {
-				UIHelper.dismissProgress(activity.loadingPd);
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
 				UIHelper.ToastMessage(activity, message, Toast.LENGTH_SHORT);
 			}
 			@Override
 			public void onError(Exception e) {
-				UIHelper.dismissProgress(activity.loadingPd);
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
 				Crashlytics.logException(e);
 			}
 		});

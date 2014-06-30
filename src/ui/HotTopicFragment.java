@@ -88,63 +88,19 @@ public class HotTopicFragment extends Fragment implements OnItemClickListener, O
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        topicOptionAdapter = new TopicOptionAdapter(activity, topicTypes);
         topicListAdapter = new HotTopicAdapter(activity, topicList);
-//        String key = String.format("%s-%s", CommonValue.CacheKey.UserTopicOptions, activity.appContext.getLoginUid());
-//		TopicOptionListEntity entity = (TopicOptionListEntity) activity.appContext.readObject(key);
-//		if(entity != null){
-//			ids = "";
-//			for (TopicOptionEntity model : entity.options) {
-//				ids += "," + model.category_id;
-//			}
-//			ids = ids.substring(1, ids.length());
-//			Logger.i(ids);
-//			getTopicListFromCache(ids);
-//		}
-//		else {
-//		    getTopicTypesFromCache();
-//		}
-//        new Handler().postDelayed(new Runnable(
-//            public void run() {
-//
-//            }
-//        ), 2000);
         Handler jumpHandler = new Handler();
         jumpHandler.postDelayed(new Runnable() {
             public void run() {
                 getTopicListFromCache("");
             }
-        }, 1000);
+        }, 500);
 
     }
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	View view = inflater.inflate(R.layout.topic_fragment, container, false);
-//    	optionListView = (ListView) view.findViewById(R.id.xlistview);
-//    	View header = inflater.inflate(R.layout.index_section, null);
-//    	optionListView.addHeaderView(header);
-//    	View footer = inflater.inflate(R.layout.topic_option_footer, null);
-//    	Button topicOKButton = (Button) footer.findViewById(R.id.topicOKButton);
-//    	topicOKButton.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View arg0) {
-//				submitTopicType();
-//			}
-//		});
-//    	optionListView.addFooterView(footer);
-//    	optionListView.setOnItemClickListener(new OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-//					long arg3) {
-//				if (position > 0) {
-//					TopicOptionEntity model = topicTypes.get(position-1);
-//					model.isChosen = !model.isChosen;
-//					topicOptionAdapter.notifyDataSetChanged();
-//				}
-//			}
-//		});
-//    	optionListView.setAdapter(topicOptionAdapter);
         indicatorImageView = (ImageView) view.findViewById(R.id.xindicator);
         indicatorAnimation = AnimationUtils.loadAnimation(activity, R.anim.refresh_button_rotation);
         indicatorAnimation.setDuration(500);
@@ -166,16 +122,7 @@ public class HotTopicFragment extends Fragment implements OnItemClickListener, O
             showTopic(model);
 			}
 		});
-//    	String key = String.format("%s-%s", CommonValue.CacheKey.UserTopicOptions, activity.appContext.getLoginUid());
-//		TopicOptionListEntity entity = (TopicOptionListEntity) activity.appContext.readObject(key);
-//		if(entity != null){
-			topicListView.setVisibility(View.VISIBLE);
-//			optionListView.setVisibility(View.INVISIBLE);
-//		}
-//		else {
-//			optionListView.setVisibility(View.INVISIBLE);
-//			optionListView.setVisibility(View.VISIBLE);
-//		}
+        topicListView.setVisibility(View.VISIBLE);
         return view;
     }
 	
@@ -256,15 +203,9 @@ public class HotTopicFragment extends Fragment implements OnItemClickListener, O
 	}
 	
 	private void getTopicList(String id, String page, final int action) {
-//		if (topicList.isEmpty()) {
-//			activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
-//		}
-        if (null != indicatorImageView) {
+        if (null != indicatorImageView && topicList.isEmpty()) {
             indicatorImageView.setVisibility(View.VISIBLE);
             indicatorImageView.startAnimation(indicatorAnimation);
-        }
-        else {
-
         }
 		AppClient.getTopicList(activity.appContext, id, page, new ClientCallback() {
 			
