@@ -224,7 +224,7 @@ public class AppClient {
 	public static void setAvatar(String code, String sign, String key, final ClientCallback callback) {
 		RequestParams param = new RequestParams();
 		param.put("code", code);
-		param.put("sign", sign);
+//		param.put("sign", sign);
 		param.put("key", key);
 		QYRestClient.post("card/setAvatar", param, new AsyncHttpResponseHandler() {
 			

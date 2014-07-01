@@ -333,7 +333,7 @@ public class UploadAvatar extends AppActivity{
 				}
 				else {
 					loadingPd = UIHelper.showProgress(UploadAvatar.this, null, null, true);
-					AppClient.cardVIP(code, sign, hash, clientCallback);
+					AppClient.setAvatar(code, sign, hash, clientCallback);
 				}
 			}
 
