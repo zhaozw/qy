@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="@drawable/w1_bg"
+    android:background="#f2f2f2"
     >
     
     
@@ -14,6 +14,6 @@
         android:src="@drawable/g2"
         android:layout_alignParentBottom="true"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:scaleType="centerInside"
         />
 </RelativeLayout>
