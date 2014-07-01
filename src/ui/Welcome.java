@@ -6,6 +6,7 @@ import bean.CardIntroEntity;
 
 import com.crashlytics.android.Crashlytics;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import service.AddMobileService;
 import tools.AppManager;
 import com.vikaa.wecontact.R;
@@ -27,7 +28,14 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 
 public class Welcome extends AppActivity {
-	@Override
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Crashlytics.start(this);
