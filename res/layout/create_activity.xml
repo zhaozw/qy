@@ -58,7 +58,7 @@
 			android:drawablePadding="8dp"
             android:paddingLeft="8dp"
 			android:onClick="ButtonClick"
-			android:background="#f5691d"
+			android:background="@color/wechat_color"
 			android:layout_margin="5dp"
             />
     </RelativeLayout>
