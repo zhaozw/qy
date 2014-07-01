@@ -298,70 +298,15 @@ public class JiaV extends AppActivity{
 	}
 	
 	private void upload(int type, String path) {
-//		String key = IO.UNDEFINED_KEY; 
-//		PutExtra extra = new PutExtra();
 		switch (type) {
 		case 0:
 			mingpianPath = path;
-//			mingpianTV.setVisibility(View.VISIBLE);
-//			mingpianTV.setText("0%");
-			this.imageLoader.displayImage("file://"+path, mingpianIV);
-//			extra.params = new HashMap<String, String>();
-//			Logger.i(uploadToken);
-//			IO.putFile(uploadToken, key, new File(path), extra, new JSONObjectRet() {
-//				@Override
-//				public void onProcess(long current, long total) {
-//					
-//					float percent = (float) (current*1.0/total)*100;
-//					if ((int)percent < 100) {
-//						mingpianTV.setText((int)percent+"%");
-//					}
-//				}
-//
-//				@Override
-//				public void onSuccess(JSONObject resp) {
-//					String hash = resp.optString("hash", "");
-//					mingpianFile = hash;
-//					Logger.i(hash);
-//					mingpianTV.setVisibility(View.INVISIBLE);
-//				}
-//
-//				@Override
-//				public void onFailure(Exception ex) {
-//					UIHelper.ToastMessage(JiaV.this, "上传失败", Toast.LENGTH_SHORT);
-//				}
-//			});
+			this.imageLoader.displayImage("file://"+path, mingpianIV, CommonValue.DisplayOptions.default_options);
 			break;
 
 		case 1:
 			idPath = path;
-			this.imageLoader.displayImage("file://"+path, idIV);
-//			idTV.setVisibility(View.VISIBLE);
-//			idTV.setText("0%");
-//			extra.params = new HashMap<String, String>();
-//			Logger.i(uploadToken);
-//			IO.putFile(uploadToken, key, new File(path), extra, new JSONObjectRet() {
-//				@Override
-//				public void onProcess(long current, long total) {
-//					
-//					float percent = (float) (current*1.0/total)*100;
-//					if ((int)percent < 100) {
-//						idTV.setText((int)percent+"%");
-//					}
-//				}
-//
-//				@Override
-//				public void onSuccess(JSONObject resp) {
-//					String hash = resp.optString("hash", "");
-//					idFile = hash;
-//					idTV.setVisibility(View.INVISIBLE);
-//				}
-//
-//				@Override
-//				public void onFailure(Exception ex) {
-//					UIHelper.ToastMessage(JiaV.this, "上传失败", Toast.LENGTH_SHORT);
-//				}
-//			});
+			this.imageLoader.displayImage("file://"+path, idIV, CommonValue.DisplayOptions.default_options);
 			break;
 		}
 	}

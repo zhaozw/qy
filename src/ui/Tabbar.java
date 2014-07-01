@@ -9,6 +9,7 @@ import cn.sharesdk.framework.ShareSDK;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.vikaa.wecontact.R;
 
 import config.AppClient;
@@ -50,8 +51,20 @@ public class Tabbar extends TabActivity implements OnCheckedChangeListener{
 	private final static String TAB_TAG_MORE = "tab_tag_more";
 	
 	private ProgressDialog loadingPd;
-	
-	@Override
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tabbar);
