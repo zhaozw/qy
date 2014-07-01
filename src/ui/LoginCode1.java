@@ -4,7 +4,7 @@ import bean.CodeEntity;
 import bean.Entity;
 import bean.Result;
 
-import com.vikaa.mycontact.R;
+import com.vikaa.wecontact.R;
 
 import config.AppClient;
 import config.AppClient.ClientCallback;

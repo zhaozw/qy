@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 
-import com.vikaa.mycontact.R;
+import com.vikaa.wecontact.R;
 
 import config.AppClient;
 import config.AppClient.ClientCallback;

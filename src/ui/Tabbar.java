@@ -9,7 +9,7 @@ import cn.sharesdk.framework.ShareSDK;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
-import com.vikaa.mycontact.R;
+import com.vikaa.wecontact.R;
 
 import config.AppClient;
 import config.CommonValue;

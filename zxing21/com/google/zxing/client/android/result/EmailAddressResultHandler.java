@@ -20,7 +20,7 @@ import android.app.Activity;
 
 import com.google.zxing.client.result.EmailAddressParsedResult;
 import com.google.zxing.client.result.ParsedResult;
-import com.vikaa.baseapp.R;
+import com.vikaa.wecontact.R;
 
 /**
  * Handles email addresses.

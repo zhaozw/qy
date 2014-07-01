@@ -9,7 +9,7 @@ import pomelo.PomeloClient;
 
 import com.loopj.android.http.PersistentCookieStore;
 import com.nostra13.universalimageloader.utils.L;
-import com.vikaa.mycontact.BuildConfig;
+import com.vikaa.wecontact.BuildConfig;
 
 import service.QYEnterService;
 import tools.AppContext;

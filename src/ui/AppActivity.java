@@ -14,7 +14,7 @@ import com.loopj.android.http.PersistentCookieStore;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.vikaa.mycontact.R;
+import com.vikaa.wecontact.R;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;

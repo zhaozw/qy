@@ -8,7 +8,7 @@ import com.crashlytics.android.Crashlytics;
 
 import service.AddMobileService;
 import tools.AppManager;
-import com.vikaa.mycontact.R;
+import com.vikaa.wecontact.R;
 
 import config.CommonValue;
 

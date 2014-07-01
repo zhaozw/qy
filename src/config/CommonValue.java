@@ -10,7 +10,7 @@ import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
-import com.vikaa.mycontact.R;
+import com.vikaa.wecontact.R;
 
 public class CommonValue {
 	public static final int USER_NOT_IN_ERROR = 1001;

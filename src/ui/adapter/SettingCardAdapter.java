@@ -5,7 +5,7 @@ import java.util.List;
 import ui.Index;
 import ui.Setting;
 
-import com.vikaa.mycontact.R;
+import com.vikaa.wecontact.R;
 
 import config.CommonValue;
 import bean.CardIntroEntity;

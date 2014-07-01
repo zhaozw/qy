@@ -2,7 +2,7 @@ package service;
 
 import java.util.ArrayList;
 
-import com.vikaa.mycontact.R;
+import com.vikaa.wecontact.R;
 
 import config.CommonValue;
 import config.MyApplication;

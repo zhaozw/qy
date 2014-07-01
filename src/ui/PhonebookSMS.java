@@ -22,7 +22,7 @@ import bean.SMSPersonList;
 import cn.sharesdk.framework.TitleLayout;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.vikaa.mycontact.R;
+import com.vikaa.wecontact.R;
 
 import config.AppClient;
 import config.CommonValue;
