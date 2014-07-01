@@ -224,40 +224,12 @@ public class UploadAvatar extends AppActivity{
 	.cacheOnDisc(true)
 	.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) 
 	.displayer(new RoundedBitmapDisplayer(ImageUtils.dip2px(AppManager.getAppManager().currentActivity(), 72)))
+    .considerExifParams(true)
 	.build();
 	
 	private void upload(String path) {
-//		String key = IO.UNDEFINED_KEY; 
-//		PutExtra extra = new PutExtra();
-//		avatarTV.setVisibility(View.VISIBLE);
-//		avatarTV.setText("0%");
 		this.imageLoader.displayImage("file://"+path, avatarIV, avatar_options);
 		theLarge = path;
-//		extra.params = new HashMap<String, String>();
-//		IO.putFile(uploadToken, key, new File(path), extra, new JSONObjectRet() {
-//			@Override
-//			public void onProcess(long current, long total) {
-//				
-//				float percent = (float) (current*1.0/total)*100;
-//				if ((int)percent < 100) {
-//					avatarTV.setText((int)percent+"%");
-//				}
-//				else if ((int)percent == 100) {
-//					avatarTV.setText("处理中...");
-//				}
-//			}
-//
-//			@Override
-//			public void onSuccess(JSONObject resp) {
-//				hash = resp.optString("key", "");
-//				avatarTV.setVisibility(View.INVISIBLE);
-//			}
-//
-//			@Override
-//			public void onFailure(Exception ex) {
-//				Logger.i(ex.toString());
-//			}
-//		});
 	}
 
 	private void submit() {
