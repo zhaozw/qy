@@ -318,7 +318,7 @@ public class CreateTopicFragment extends Fragment implements OnFocusChangeListen
 		}
         else {
         	activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
-        	AppClient.pubTopic(activity.appContext, title, content, clientCallback);
+        	AppClient.pubTopic(activity.appContext, title, HTMLUtil.htmlToUbb(content), clientCallback);
         }
 	}
 	

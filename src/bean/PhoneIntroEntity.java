@@ -2,6 +2,8 @@ package bean;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,7 +102,13 @@ public class PhoneIntroEntity extends Entity implements Comparable<PhoneIntroEnt
 				data.count = info.getString("count");
 			}
 			if (!info.isNull("logo")) {
-				data.logo = info.getString("logo");
+                String regex = "http://pbwc.qiniudn.com/qun-logo/(.*)";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher ma = pattern.matcher(info.getString("logo"));
+                Logger.i(info.getString("logo"));
+                if (!ma.find()) {
+                    data.logo = info.getString("logo");
+                }
 			}
 			if (!info.isNull("nickname")) {
 				data.creator = info.getString("nickname");

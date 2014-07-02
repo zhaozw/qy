@@ -336,7 +336,7 @@ public class CreateTopic extends AppActivity implements OnSizeChangedListener, O
 		}
         else {
         	loadingPd = UIHelper.showProgress(this, null, null, true);
-        	AppClient.pubTopic(appContext, title, content, clientCallback);
+        	AppClient.pubTopic(appContext, title, HTMLUtil.htmlToUbb(content), clientCallback);
         }
 	}
 	
