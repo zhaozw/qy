@@ -408,7 +408,7 @@
 			        android:singleLine="true"
 			        android:inputType="text"
 	      		    android:gravity="center_vertical|left"
-			        android:hint="如：第几届毕业，身份证号码等"
+			        android:hint="如：您是否确认出席？多少人参加？"
 			        android:maxLines="1"
 			        android:lines="1"
 			        android:imeOptions="actionDone"

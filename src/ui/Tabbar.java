@@ -15,10 +15,7 @@ import config.AppClient;
 import config.CommonValue;
 import config.AppClient.ClientCallback;
 import config.MyApplication;
-import tools.AppException;
-import tools.AppManager;
-import tools.UIHelper;
-import tools.UpdateManager;
+import tools.*;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
@@ -50,8 +47,8 @@ public class Tabbar extends TabActivity implements OnCheckedChangeListener{
 	private final static String TAB_TAG_MORE = "tab_tag_more";
 	
 	private ProgressDialog loadingPd;
-	
-	@Override
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tabbar);
@@ -75,21 +72,6 @@ public class Tabbar extends TabActivity implements OnCheckedChangeListener{
         checkLogin();
         UpdateManager.getUpdateManager().checkAppUpdate(this, false);
 	}
-	
-//	public static void setMessagePao(MessageUnReadEntity entity) {
-//		if(entity != null){
-////			messagePao.setVisibility(View.VISIBLE);
-////			int pao = Integer.valueOf(entity.news) + Integer.valueOf(entity.card);
-////			String num = pao>99?"99+":pao+"";
-////			messagePao.setText(num);
-////			if (pao == 0) {
-////				messagePao.setVisibility(View.INVISIBLE);
-////			}
-//		}
-//		else {
-////			messagePao.setVisibility(View.INVISIBLE);
-//		}
-//	}
 	
 	private void prepareIntent() {
 		homeIntent = new Intent(this, Find.class);
