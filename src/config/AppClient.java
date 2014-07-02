@@ -149,7 +149,6 @@ public class AppClient {
 			}
 			@Override
 			public void onFailure(int statusCode, Header[] headers, byte[] content, Throwable e) {
-				Logger.i(new String(content));
 				callback.onFailure("网络不给力，请重新尝试");
 			}
 		});
