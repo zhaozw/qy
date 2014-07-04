@@ -46,9 +46,9 @@ public class TopicListAdapter extends BaseAdapter{
 		this.inflater = LayoutInflater.from(context);
 		this.displayImageOptions = new DisplayImageOptions.Builder()
 		.bitmapConfig(Bitmap.Config.RGB_565)
-		.showImageOnLoading(R.drawable.content_image_loading)
-		.showImageForEmptyUri(R.drawable.logo_120)
-		.showImageOnFail(R.drawable.logo_120)
+		.showImageOnLoading(R.drawable.icon_topic)
+		.showImageForEmptyUri(R.drawable.icon_topic)
+		.showImageOnFail(R.drawable.icon_topic)
 		.cacheInMemory(true)
 		.cacheOnDisc(true)
 		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) 
@@ -88,7 +88,7 @@ public class TopicListAdapter extends BaseAdapter{
 		}
 		TopicEntity model = datas.get(position);
 		cell.titleView.setText(model.title);
-		ImageLoader.getInstance().displayImage(StringUtils.notEmpty(model.thumb)?model.thumb:MyApplication.getInstance().getUserAvatar(), cell.avatarView, displayImageOptions);
+		ImageLoader.getInstance().displayImage(model.thumb, cell.avatarView, displayImageOptions);
 		cell.creatorView.setText(model.pubdate + "  "+ model.from);
 		return convertView;
 	}

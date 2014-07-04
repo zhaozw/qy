@@ -13,6 +13,8 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.vikaa.mycontact.R;
 
 public class CommonValue {
+    public static final int UI_DELAY = 200;
+
 	public static final int USER_NOT_IN_ERROR = 1001;
 	
 	public static final String PackageName = "com.vikaa.mycontact";

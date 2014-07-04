@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 
+import com.crashlytics.android.Crashlytics;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;
@@ -254,7 +255,11 @@ public class UpdateManager {
 			}
 		});
 		noticeDialog = builder.create();
-		noticeDialog.show();
+        try {
+            noticeDialog.show();
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
 	}
 	
 	/**

@@ -229,7 +229,6 @@ public class AppClient {
 			
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-				Logger.i(DecodeUtil.decode(new String(responseBody)));
 				try {
 					JSONObject js = new JSONObject(DecodeUtil.decode(new String(responseBody)));
 					Result result = new Result();
@@ -249,7 +248,7 @@ public class AppClient {
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
 					byte[] responseBody, Throwable error) {
-				Logger.i(new String(responseBody));
+			    Crashlytics.logException(error);
 			}
 		});
 	}
@@ -1766,7 +1765,7 @@ public class AppClient {
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
 					byte[] responseBody, Throwable error) {
-				Logger.i(new String(responseBody));
+				Crashlytics.logException(error);
 			}
 		});
 	}

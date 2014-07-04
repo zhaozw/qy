@@ -81,7 +81,7 @@ public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnR
             public void run() {
                 getActivityListFromCache();
             }
-        }, 500);
+        }, CommonValue.UI_DELAY);
     }
 
     @Override
@@ -131,6 +131,10 @@ public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnR
                 return (float)Math.floor(input*frameCount)/frameCount;
             }
         });
+        if (null != indicatorImageView && myQuns.isEmpty()) {
+            indicatorImageView.setVisibility(View.VISIBLE);
+            indicatorImageView.startAnimation(indicatorAnimation);
+        }
         return view;
     }
     
@@ -222,6 +226,10 @@ public class ActivityFragment extends Fragment implements SwipeRefreshLayout.OnR
         lvDataState = UIHelper.LISTVIEW_DATA_MORE;
         if (null != swipeLayout) {
             swipeLayout.setRefreshing(false);
+        }
+        if (null != indicatorImageView ) {
+            indicatorImageView.setVisibility(View.INVISIBLE);
+            indicatorImageView.clearAnimation();
         }
 	}
 	

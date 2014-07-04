@@ -43,16 +43,6 @@
             android:textSize="@dimen/navbar_title_size"
             />
         
-        <ImageView
-            android:layout_centerVertical="true"
-            android:id="@+id/xindicator"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
-            android:layout_toRightOf="@+id/titleBarView"
-            android:layout_marginLeft="8dp"
-            android:visibility="invisible"
-            android:background="@drawable/round_1"/>
-        
         <!-- <Button
             android:id="@+id/rightBarButton"
             android:layout_width="90dp"
@@ -118,5 +108,15 @@
         android:textColor="@color/white"
         android:textSize="48dip"
         android:visibility="invisible" />
+
+    <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/xindicator"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            android:background="@drawable/round_1"/>
     
 </RelativeLayout>

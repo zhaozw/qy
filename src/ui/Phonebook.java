@@ -95,7 +95,7 @@ public class Phonebook extends AppActivity implements SwipeRefreshLayout.OnRefre
                 getPhoneListFromCache();
                 getSquareListFromCache();
             }
-        }, 500);
+        }, CommonValue.UI_DELAY);
 
 	}
 	
@@ -163,6 +163,10 @@ public class Phonebook extends AppActivity implements SwipeRefreshLayout.OnRefre
                 return (float)Math.floor(input*frameCount)/frameCount;
             }
         });
+        if (null != indicatorImageView) {
+            indicatorImageView.setVisibility(View.VISIBLE);
+            indicatorImageView.startAnimation(indicatorAnimation);
+        }
 	}
 	
 	private void showMobile() {
@@ -314,6 +318,10 @@ public class Phonebook extends AppActivity implements SwipeRefreshLayout.OnRefre
 		phoneAdapter.notifyDataSetChanged();
         srlRefresh.setRefreshing(false);
         lvDataState = UIHelper.LISTVIEW_DATA_FULL;
+        if (null != indicatorImageView) {
+            indicatorImageView.setVisibility(View.INVISIBLE);
+            indicatorImageView.clearAnimation();
+        }
 	}
 	
 	private void getSquareListFromCache() {

@@ -345,8 +345,7 @@ public class CreateTopicFragment extends Fragment implements OnFocusChangeListen
 			
 			@Override
 			public void onError(Exception e) {
-				// TODO Auto-generated method stub
-				
+				Crashlytics.logException(e);
 			}
 		});
 	}
@@ -377,9 +376,9 @@ public class CreateTopicFragment extends Fragment implements OnFocusChangeListen
 					AppClient.pubTopic(activity.appContext, title, HTMLUtil.htmlToUbb(content), clientCallback);
 				}
 			}
-
 			@Override
-			public void onFailure(Exception ex) {
+
+            public void onFailure(Exception ex) {
 				UIHelper.dismissProgress(activity.loadingPd);
 				//重新上传
 				activity.WarningDialog("上传图片失败，请重试", "确定", "取消", new DialogClickListener() {

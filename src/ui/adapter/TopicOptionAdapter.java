@@ -41,9 +41,9 @@ public class TopicOptionAdapter extends BaseAdapter {
 		this.inflater = LayoutInflater.from(context);
         this.displayImageOptions = new DisplayImageOptions.Builder()
                 .bitmapConfig(Bitmap.Config.RGB_565)
-                .showImageOnLoading(R.drawable.content_image_loading)
-                .showImageForEmptyUri(R.drawable.logo_120)
-                .showImageOnFail(R.drawable.logo_120)
+                .showImageOnLoading(R.drawable.icon_topic)
+                .showImageForEmptyUri(R.drawable.icon_topic)
+                .showImageOnFail(R.drawable.icon_topic)
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
@@ -83,7 +83,7 @@ public class TopicOptionAdapter extends BaseAdapter {
         }
 		TopicOptionEntity model = datas.get(position);
         viewHolder.titleView.setText(model.title);
-        ImageLoader.getInstance().displayImage(StringUtils.notEmpty(model.thumb)?model.thumb: MyApplication.getInstance().getUserAvatar(), viewHolder.avatarView, displayImageOptions);
+        ImageLoader.getInstance().displayImage(model.thumb, viewHolder.avatarView, displayImageOptions);
         viewHolder.creatorView.setText(model.subTitle);
 		return convertView;
 	}
