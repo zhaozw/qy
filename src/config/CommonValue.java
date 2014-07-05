@@ -13,6 +13,8 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.vikaa.wecontact.R;
 
 public class CommonValue {
+    public static final String APP_ID = "wxe0726da6ece79559";
+    public static final String SECRET = "e62df785b3030a27b634cc3d0b8967de";
 	public static final int USER_NOT_IN_ERROR = 1001;
 	
 	public static final String PackageName = "com.vikaa.mycontact";
