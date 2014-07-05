@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import config.CommonValue;
 import org.apache.http.client.CookieStore;
 
 import bean.CardIntroEntity;
@@ -54,13 +55,14 @@ public class AppActivity extends BaseActivity {
 	protected IWXAPI api;
 	protected int screeWidth;
 	protected int screeHeight;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		appContext =  (MyApplication)getApplication();
 		context = this;
-		api = WXAPIFactory.createWXAPI(this, "wx8b5b960fc0311f3e", false);
+		api = WXAPIFactory.createWXAPI(this, CommonValue.APP_ID, false);
+        api.registerApp(CommonValue.APP_ID);
 		screeWidth = ImageUtils.getDisplayWidth(context);
 		screeHeight = ImageUtils.getDisplayHeighth(context);
 	}

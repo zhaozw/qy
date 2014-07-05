@@ -13,6 +13,9 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.vikaa.mycontact.R;
 
 public class CommonValue {
+    public static final String APP_ID = "wx8b5b960fc0311f3e";
+    public static final String SECRET = "918774b3b42e14e42e84d67f54549a98";
+
     public static final int UI_DELAY = 200;
 
 	public static final int USER_NOT_IN_ERROR = 1001;
@@ -285,4 +288,7 @@ public class CommonValue {
 	public static final String ADS_TITLE = "【官方】为1000个组织俱乐部，免费建在线微信站，给有需要的朋友";
 	public static final String AD_LINK = "http://mp.weixin.qq.com/s?__biz=MzA4NzA4NzcxMw==&mid=200725411&idx=1&sn=32bc170189696378ec86b2b035bb8db4#rd";
 	public static final String AD_THUMB = "drawable://";
+
+    //wechat
+    public static final String ACTION_WECHAT_CODE = "ACTION_WECHAT_CODE";
 }

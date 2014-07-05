@@ -371,7 +371,7 @@
 		   android:windowSoftInputMode="stateHidden|adjustResize" />
         
         <activity
-            android:name="ui.WXEntryActivity"
+            android:name=".wxapi.WXEntryActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"

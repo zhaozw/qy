@@ -2124,4 +2124,21 @@ public class AppClient {
 			}
 		});
 	}
+
+
+    public static void getAccessToken(String code, String appId, String secret, final FileCallback callback) {
+        QYRestClient.get("https://api.weixin.qq.com/sns/oauth2/refresh_token?appid="+appId+"&refresh_token="+code+"&grant_type=refresh_token",
+                null,
+        new AsyncHttpResponseHandler(){
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                callback.onSuccess(new String(bytes));
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+
+            }
+        });
+    }
 }

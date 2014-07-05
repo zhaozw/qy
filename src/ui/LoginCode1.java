@@ -1,9 +1,13 @@
 package ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import bean.CodeEntity;
 import bean.Entity;
 import bean.Result;
 
+import com.tencent.mm.sdk.openapi.SendAuth;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;
@@ -58,11 +62,20 @@ public class LoginCode1 extends AppActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_code1);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(CommonValue.ACTION_WECHAT_CODE);
+        registerReceiver(receiver, filter);
 		initUI();
 		initData();
 	}
-	
-	private void initUI() {
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        super.onDestroy();
+    }
+
+    private void initUI() {
 		textView1 = (TextView) findViewById(R.id.textView1);
 		barTitle = (TextView) findViewById(R.id.barTitle);
 		regTV = (TextView) findViewById(R.id.textView2);
@@ -155,8 +168,11 @@ public class LoginCode1 extends AppActivity{
 	}
 	
 	private void wechat() {
-		Intent intent = new Intent(LoginCode1.this, LoginWechat.class);
-		startActivityForResult(intent, CommonValue.LoginRequest.LoginWechat);
+//		Intent intent = new Intent(LoginCode1.this, LoginWechat.class);
+//		startActivityForResult(intent, CommonValue.LoginRequest.LoginWechat);
+        SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        api.sendReq(req);
 	}
 	
 	private void register() {
@@ -189,4 +205,29 @@ public class LoginCode1 extends AppActivity{
 //			leftSeconds = (int) (millisUntilFinished/1000);
 //		}
 //	}
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (CommonValue.ACTION_WECHAT_CODE.equals(intent.getAction())) {
+                String code = intent.getStringExtra("code");
+                AppClient.getAccessToken(code, CommonValue.APP_ID, CommonValue.SECRET, new AppClient.FileCallback() {
+                    @Override
+                    public void onSuccess(String filePath) {
+                        WarningDialog(filePath);
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
+            }
+        }
+    };
 }
