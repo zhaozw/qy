@@ -16,43 +16,14 @@ import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
+import com.umeng.socialize.view.WXCallbackActivity;
+
 import config.CommonValue;
 import tools.AppManager;
 import ui.AppActivity;
 import ui.Index;
 
-/** 微信客户端回调activity示例 */
-public class WXEntryActivity extends AppActivity implements IWXAPIEventHandler{
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        api.handleIntent(getIntent(), this);
-    }
+public class WXEntryActivity extends WXCallbackActivity {
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        api.handleIntent(intent, this);
-    }
-
-    @Override
-    public void onReq(BaseReq baseReq) {
-
-    }
-
-    @Override
-    public void onResp(BaseResp baseResp) {
-        switch (baseResp.errCode) {
-            case BaseResp.ErrCode.ERR_OK:
-                sendBroadcast(new Intent(CommonValue.ACTION_WECHAT_CODE).putExtra("code", ((SendAuth.Resp) baseResp).code));
-                break;
-            case BaseResp.ErrCode.ERR_AUTH_DENIED:
-                break;
-            case BaseResp.ErrCode.ERR_USER_CANCEL:
-                break;
-        }
-        AppManager.getAppManager().finishActivity(this);
-    }
 }
