@@ -11,7 +11,6 @@ import bean.PhoneIntroEntity;
 import bean.PhoneListEntity;
 import bean.RecommendListEntity;
 import bean.Result;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -493,29 +492,29 @@ public class Index extends AppActivity implements OnScrollListener{
 	}
 	
 	public void oks(String title, String text, String link, String filePath) {
-		try {
-			final OnekeyShare oks = new OnekeyShare();
-			oks.setNotification(R.drawable.ic_launcher, getResources().getString(R.string.app_name));
-			oks.setTitle(title);
-			if (StringUtils.notEmpty(filePath)) {
-				oks.setImagePath(filePath);
-			}
-			else {
-				String cachePath = cn.sharesdk.framework.utils.R.getCachePath(this, null);
-				oks.setImagePath(cachePath + "logo.png");
-			}
-			oks.setText(text + "\n" + link);
-			oks.setUrl(link);
-			oks.setSiteUrl(link);
-			oks.setSite(link);
-			oks.setTitleUrl(link);
-			oks.setLatitude(23.056081f);
-			oks.setLongitude(113.385708f);
-			oks.setSilent(false);
-			oks.show(this);
-		} catch (Exception e) {
-			Logger.i(e);
-		}
+//		try {
+//			final OnekeyShare oks = new OnekeyShare();
+//			oks.setNotification(R.drawable.ic_launcher, getResources().getString(R.string.app_name));
+//			oks.setTitle(title);
+//			if (StringUtils.notEmpty(filePath)) {
+//				oks.setImagePath(filePath);
+//			}
+//			else {
+//				String cachePath = cn.sharesdk.framework.utils.R.getCachePath(this, null);
+//				oks.setImagePath(cachePath + "logo.png");
+//			}
+//			oks.setText(text + "\n" + link);
+//			oks.setUrl(link);
+//			oks.setSiteUrl(link);
+//			oks.setSite(link);
+//			oks.setTitleUrl(link);
+//			oks.setLatitude(23.056081f);
+//			oks.setLongitude(113.385708f);
+//			oks.setSilent(false);
+//			oks.show(this);
+//		} catch (Exception e) {
+//			Logger.i(e);
+//		}
 	}
 	
 	public void showShare(boolean silent, String platform, PhoneIntroEntity phoneIntro, String filePath) {

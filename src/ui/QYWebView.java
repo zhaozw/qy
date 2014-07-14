@@ -25,9 +25,21 @@ import bean.Entity;
 import bean.Result;
 import bean.UserEntity;
 import bean.WebContent;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.crashlytics.android.Crashlytics;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.controller.RequestType;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.media.CircleShareContent;
+import com.umeng.socialize.media.QQShareContent;
+import com.umeng.socialize.media.QZoneShareContent;
+import com.umeng.socialize.media.SinaShareContent;
+import com.umeng.socialize.media.TencentWbShareContent;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.WeiXinShareContent;
+import com.umeng.socialize.sso.QZoneSsoHandler;
+import com.umeng.socialize.sso.UMWXHandler;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;
@@ -842,72 +854,59 @@ public class QYWebView extends AppActivity  {
 	}
 	
 	private void showShare(final boolean silent, final String platform, final String desc, final String title, final String link, String TLImg, String MsgImg) {
-		String storageState = Environment.getExternalStorageState();	
-		Logger.i(TLImg);
-		if(storageState.equals(Environment.MEDIA_MOUNTED)){
-			String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/qy/" + MD5Util.getMD5String(TLImg) + ".png";
-			File file = new File(savePath);
-			if (file.exists()) {
-				okshare(silent, platform, desc, title, link, savePath);
-			}
-			else {
-				loadingPd = UIHelper.showProgress(QYWebView.this, null, null, false);
-				AppClient.downFile(this, appContext, TLImg, ".png", new FileCallback() {
-					@Override
-					public void onSuccess(String filePath) {
-						UIHelper.dismissProgress(loadingPd);
-						okshare(silent, platform, desc, title, link, filePath);
-					}
-					
-					@Override
-					public void onFailure(String message) {
-						UIHelper.dismissProgress(loadingPd);
-						okshare(silent, platform, desc, title, link, "");
-					}
-					
-					@Override
-					public void onError(Exception e) {
-						UIHelper.dismissProgress(loadingPd);
-						okshare(silent, platform, desc, title, link, "");
-					}
-				});
-			}
-		}
+		mController.setShareContent(desc);
+		UMImage mUMImgBitmap = new UMImage(getParent(), TLImg);
+		mController.setShareImage(mUMImgBitmap);
+		SinaShareContent sinaShareContent = new SinaShareContent();
+		sinaShareContent.setShareImage(mUMImgBitmap);
+		sinaShareContent.setTargetUrl(link);
+		sinaShareContent.setShareContent(desc + " " +link);
+		mController.setShareMedia(sinaShareContent);
+		
+		TencentWbShareContent tencentWbShareContent = new TencentWbShareContent();
+		tencentWbShareContent.setShareImage(mUMImgBitmap);
+		tencentWbShareContent.setTargetUrl(link);
+		tencentWbShareContent.setShareContent(desc + " " +link);
+		mController.setShareMedia(tencentWbShareContent);
+		
+		QQShareContent qqShareContent = new QQShareContent();
+		qqShareContent.setShareImage(mUMImgBitmap);
+		qqShareContent.setTargetUrl(link);
+		qqShareContent.setShareContent(desc);
+		mController.setShareMedia(qqShareContent);
+		
+		QZoneShareContent qZoneShareContent = new QZoneShareContent();
+		qZoneShareContent.setShareImage(mUMImgBitmap);
+		qZoneShareContent.setTargetUrl(link);
+		qZoneShareContent.setShareContent(desc);
+		mController.setShareMedia(qZoneShareContent);
+		
+		mController.getConfig().openQQZoneSso();
+		mController.getConfig().setSsoHandler(new QZoneSsoHandler(this, "100371282","aed9b0303e3ed1e27bae87c33761161d"));
+		mController.getConfig().supportQQPlatform(this, "100371282","aed9b0303e3ed1e27bae87c33761161d", link); 
+		UMWXHandler wxHandler = mController.getConfig().supportWXPlatform(this, CommonValue.APP_ID, link);
+		wxHandler.setWXTitle(desc);
+		UMWXHandler circleHandler = mController.getConfig().supportWXCirclePlatform(this, CommonValue.APP_ID, link) ;
+		circleHandler.setCircleTitle(desc);
+		mController.getConfig().supportWXPlatform(this, wxHandler);
+		mController.getConfig().supportWXPlatform(this, circleHandler);
+		
+		WeiXinShareContent weiXinShareContent = new WeiXinShareContent();
+		weiXinShareContent.setShareImage(mUMImgBitmap);
+		weiXinShareContent.setTargetUrl(link);
+		weiXinShareContent.setShareContent(desc);
+		mController.setShareMedia(weiXinShareContent);
+		
+		CircleShareContent circleShareContent = new CircleShareContent();
+		circleShareContent.setShareImage(mUMImgBitmap);
+		circleShareContent.setTargetUrl(link);
+		circleShareContent.setShareContent(desc);
+		mController.setShareMedia(circleShareContent);
+		
+		mController.getConfig().removePlatform(SHARE_MEDIA.RENREN, SHARE_MEDIA.DOUBAN);
+		mController.openShare(this, false);
 	}
-	
-	private void okshare(boolean silent, String platform, String desc, String title, String link, String filePath) {
-		try {
-			final OnekeyShare oks = new OnekeyShare();
-			oks.setNotification(R.drawable.ic_launcher, getResources().getString(R.string.app_name));
-			oks.setTitle(title);
-			oks.setText(desc + "\n" + link);
-			oks.setUrl(link);
-			if (StringUtils.notEmpty(filePath)) {
-				oks.setImagePath(filePath);
-			}
-			else {
-				Logger.i("default logo");
-				String cachePath = cn.sharesdk.framework.utils.R.getCachePath(this, null);
-				oks.setImagePath(cachePath + "logo.png");
-			}
-			if (StringUtils.notEmpty(link)) {
-				oks.setUrl(link);
-			}
-			oks.setSilent(silent);
-			if (platform != null) {
-				oks.setPlatform(platform);
-			}
-			oks.setSiteUrl(link);
-			oks.setSite(link);
-			oks.setTitleUrl(link);
-			oks.setLatitude(23.056081f);
-			oks.setLongitude(113.385708f);
-			oks.show(context);
-		} catch (Exception e) {
-			Logger.i(e);
-		}
-	}
-	
+
 	private void parsePhonebook(String res) {
 		try {
 			JSONObject js = new JSONObject(res);

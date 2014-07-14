@@ -5,10 +5,12 @@ import baidupush.Utils;
 import bean.Entity;
 import bean.Result;
 import bean.UserEntity;
-import cn.sharesdk.framework.ShareSDK;
+//import cn.sharesdk.framework.ShareSDK;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
+import com.umeng.socialize.controller.RequestType;
+import com.umeng.socialize.controller.UMServiceFactory;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;
@@ -48,11 +50,13 @@ public class Tabbar extends TabActivity implements OnCheckedChangeListener{
 	
 	private ProgressDialog loadingPd;
 
+	public static final String DESCRIPTOR = "com.umeng.share";
+	
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tabbar);
-		ShareSDK.initSDK(this);
+//		ShareSDK.initSDK(this);
         AppManager.getAppManager().addActivity(this);
         prepareIntent();
         setupIntent();
@@ -71,6 +75,7 @@ public class Tabbar extends TabActivity implements OnCheckedChangeListener{
     	}
         checkLogin();
         UpdateManager.getUpdateManager().checkAppUpdate(this, false);
+        UMServiceFactory.getUMSocialService(DESCRIPTOR, RequestType.SOCIAL).setGlobalConfig(SocializeConfigDemo.getSocialConfig(this));
 	}
 	
 	private void prepareIntent() {

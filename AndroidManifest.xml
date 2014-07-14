@@ -364,13 +364,6 @@
         </activity> 
         
         <activity
-		   android:name="cn.sharesdk.framework.ShareSDKUIShell"
-		   android:theme="@android:style/Theme.Translucent.NoTitleBar"
-		   android:configChanges="keyboardHidden|orientation"
-		   android:screenOrientation="portrait"
-		   android:windowSoftInputMode="stateHidden|adjustResize" />
-        
-        <activity
             android:name=".wxapi.WXEntryActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -446,10 +439,40 @@
                 <action android:name="tools.NetworkState.Service" /> 
             </intent-filter>
         </service>
+
+		<activity android:name="com.tencent.connect.common.AssistActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait" />
+        <activity
+                android:name="com.tencent.tauth.AuthActivity"
+                android:launchMode="singleTask"
+                android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID-->
+                <data android:scheme="tencent100371282" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
         
         <meta-data android:name="api_key" android:value="eXvZH3r0oZidynO2gl6l92uR" />
         <meta-data android:name="com.crashlytics.ApiKey" android:value="d6f3179ac695a7efd4c28c329ce8a5c04f2e0bc7"/>
         <meta-data android:name="com.amap.api.v2.apikey" android:value="839aa97d0d89257117fd6d5fc3883774" />
+        <meta-data
+                android:name="UMENG_APPKEY"
+                android:value="53c381d656240b0cad021be3" >
+        </meta-data>
     </application>
 
 </manifest>

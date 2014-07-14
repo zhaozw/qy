@@ -7,7 +7,7 @@ import bean.CodeEntity;
 import bean.Entity;
 import bean.Result;
 
-import com.tencent.mm.sdk.openapi.SendAuth;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;

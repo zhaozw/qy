@@ -1,5 +1,6 @@
 package ui;
 
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,13 +9,15 @@ import config.CommonValue;
 import org.apache.http.client.CookieStore;
 
 import bean.CardIntroEntity;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.crashlytics.android.Crashlytics;
 import com.loopj.android.http.PersistentCookieStore;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.umeng.socialize.controller.RequestType;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
 import com.vikaa.mycontact.R;
 
 import android.app.ActivityManager;
@@ -55,7 +58,8 @@ public class AppActivity extends BaseActivity {
 	protected IWXAPI api;
 	protected int screeWidth;
 	protected int screeHeight;
-
+	protected UMSocialService mController = null; 
+	public static final String DESCRIPTOR = "com.umeng.share";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,6 +69,8 @@ public class AppActivity extends BaseActivity {
         api.registerApp(CommonValue.APP_ID);
 		screeWidth = ImageUtils.getDisplayWidth(context);
 		screeHeight = ImageUtils.getDisplayHeighth(context);
+		mController = UMServiceFactory.getUMSocialService(DESCRIPTOR,
+                RequestType.SOCIAL);
 	}
 	
 	public boolean isServiceRunning() {
@@ -197,29 +203,29 @@ public class AppActivity extends BaseActivity {
 	
 	//card share
 	public void oks(String title, String text, String link, String filePath) {
-		try {
-			final OnekeyShare oks = new OnekeyShare();
-			oks.setNotification(R.drawable.ic_launcher, getResources().getString(R.string.app_name));
-			oks.setTitle(title);
-			if (StringUtils.notEmpty(filePath)) {
-				oks.setImagePath(filePath);
-			}
-			else {
-				String cachePath = cn.sharesdk.framework.utils.R.getCachePath(this, null);
-				oks.setImagePath(cachePath + "logo.png");
-			}
-			oks.setText(text + "\n" + link);
-			oks.setUrl(link);
-			oks.setSiteUrl(link);
-			oks.setSite(link);
-			oks.setTitleUrl(link);
-			oks.setLatitude(23.056081f);
-			oks.setLongitude(113.385708f);
-			oks.setSilent(false);
-			oks.show(this);
-		} catch (Exception e) {
-			Logger.i(e);
-		}
+//		try {
+//			final OnekeyShare oks = new OnekeyShare();
+//			oks.setNotification(R.drawable.ic_launcher, getResources().getString(R.string.app_name));
+//			oks.setTitle(title);
+//			if (StringUtils.notEmpty(filePath)) {
+//				oks.setImagePath(filePath);
+//			}
+//			else {
+//				String cachePath = cn.sharesdk.framework.utils.R.getCachePath(this, null);
+//				oks.setImagePath(cachePath + "logo.png");
+//			}
+//			oks.setText(text + "\n" + link);
+//			oks.setUrl(link);
+//			oks.setSiteUrl(link);
+//			oks.setSite(link);
+//			oks.setTitleUrl(link);
+//			oks.setLatitude(23.056081f);
+//			oks.setLongitude(113.385708f);
+//			oks.setSilent(false);
+//			oks.show(this);
+//		} catch (Exception e) {
+//			Logger.i(e);
+//		}
 	}
 	public void cardShare(boolean silent, String platform, CardIntroEntity card, String filePath) {
 		try {

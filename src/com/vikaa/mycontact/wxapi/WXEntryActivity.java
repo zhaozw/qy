@@ -11,13 +11,11 @@ package com.vikaa.mycontact.wxapi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-import cn.sharesdk.wechat.utils.WXAppExtendObject;
-import cn.sharesdk.wechat.utils.WXMediaMessage;
-import cn.sharesdk.wechat.utils.WechatHandlerActivity;
-import com.tencent.mm.sdk.openapi.BaseReq;
-import com.tencent.mm.sdk.openapi.BaseResp;
+
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
-import com.tencent.mm.sdk.openapi.SendAuth;
 import config.CommonValue;
 import tools.AppManager;
 import ui.AppActivity;
@@ -48,7 +46,7 @@ public class WXEntryActivity extends AppActivity implements IWXAPIEventHandler{
     public void onResp(BaseResp baseResp) {
         switch (baseResp.errCode) {
             case BaseResp.ErrCode.ERR_OK:
-                sendBroadcast(new Intent(CommonValue.ACTION_WECHAT_CODE).putExtra("code", ((SendAuth.Resp) baseResp).token));
+                sendBroadcast(new Intent(CommonValue.ACTION_WECHAT_CODE).putExtra("code", ((SendAuth.Resp) baseResp).code));
                 break;
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
                 break;
