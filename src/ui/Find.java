@@ -4,6 +4,10 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import qiniu.conf.Conf;
+import qiniu.utils.Config;
+import qiniu.utils.Mac;
+import qiniu.utils.PutPolicy;
 import tools.Logger;
 import tools.StringUtils;
 import tools.UIHelper;

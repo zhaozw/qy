@@ -1574,7 +1574,7 @@ public class AppClient {
 						
 					}
 					FileOutputStream FOS = new FileOutputStream(tmpFile); 
-
+                    Logger.i(conn.getContentLength()+"");
 					byte buf[] = new byte[1024];
 					// downLoadFilePosition = 0;
 					int numread;

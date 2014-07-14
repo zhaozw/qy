@@ -851,7 +851,7 @@ public class QYWebView extends AppActivity  {
 				okshare(silent, platform, desc, title, link, savePath);
 			}
 			else {
-				loadingPd = UIHelper.showProgress(QYWebView.this, null, null, true);
+				loadingPd = UIHelper.showProgress(QYWebView.this, null, null, false);
 				AppClient.downFile(this, appContext, TLImg, ".png", new FileCallback() {
 					@Override
 					public void onSuccess(String filePath) {
