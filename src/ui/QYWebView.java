@@ -851,53 +851,53 @@ public class QYWebView extends AppActivity  {
 	}
 	
 	private void showShare(final boolean silent, final String platform, final String desc, final String title, final String link, String TLImg, String MsgImg) {
-		mController.setShareContent(desc);
+		mController.setShareContent(title);
 		UMImage mUMImgBitmap = new UMImage(getParent(), TLImg);
 		mController.setShareImage(mUMImgBitmap);
 		SinaShareContent sinaShareContent = new SinaShareContent();
 		sinaShareContent.setShareImage(mUMImgBitmap);
 		sinaShareContent.setTargetUrl(link);
-		sinaShareContent.setShareContent(desc + " " +link);
+		sinaShareContent.setShareContent(title + " " +link);
 		mController.setShareMedia(sinaShareContent);
 
 		TencentWbShareContent tencentWbShareContent = new TencentWbShareContent();
 		tencentWbShareContent.setShareImage(mUMImgBitmap);
 		tencentWbShareContent.setTargetUrl(link);
-		tencentWbShareContent.setShareContent(desc + " " +link);
+		tencentWbShareContent.setShareContent(title + " " +link);
 		mController.setShareMedia(tencentWbShareContent);
 
 		QQShareContent qqShareContent = new QQShareContent();
 		qqShareContent.setShareImage(mUMImgBitmap);
 		qqShareContent.setTargetUrl(link);
-		qqShareContent.setShareContent(desc);
+		qqShareContent.setShareContent(title);
 		mController.setShareMedia(qqShareContent);
 
 		QZoneShareContent qZoneShareContent = new QZoneShareContent();
 		qZoneShareContent.setShareImage(mUMImgBitmap);
 		qZoneShareContent.setTargetUrl(link);
-		qZoneShareContent.setShareContent(desc);
+		qZoneShareContent.setShareContent(title);
 		mController.setShareMedia(qZoneShareContent);
 
 		mController.getConfig().openQQZoneSso();
 		mController.getConfig().setSsoHandler(new QZoneSsoHandler(this, "100371282","aed9b0303e3ed1e27bae87c33761161d"));
 		mController.getConfig().supportQQPlatform(this, "100371282","aed9b0303e3ed1e27bae87c33761161d", link); 
 		UMWXHandler wxHandler = mController.getConfig().supportWXPlatform(this, CommonValue.APP_ID, link);
-		wxHandler.setWXTitle(desc);
+		wxHandler.setWXTitle(title);
 		UMWXHandler circleHandler = mController.getConfig().supportWXCirclePlatform(this, CommonValue.APP_ID, link) ;
-		circleHandler.setCircleTitle(desc);
+		circleHandler.setCircleTitle(title);
 		mController.getConfig().supportWXPlatform(this, wxHandler);
 		mController.getConfig().supportWXPlatform(this, circleHandler);
 
 		WeiXinShareContent weiXinShareContent = new WeiXinShareContent();
 		weiXinShareContent.setShareImage(mUMImgBitmap);
 		weiXinShareContent.setTargetUrl(link);
-		weiXinShareContent.setShareContent(desc);
+		weiXinShareContent.setShareContent(title);
 		mController.setShareMedia(weiXinShareContent);
 
 		CircleShareContent circleShareContent = new CircleShareContent();
 		circleShareContent.setShareImage(mUMImgBitmap);
 		circleShareContent.setTargetUrl(link);
-		circleShareContent.setShareContent(desc);
+		circleShareContent.setShareContent(title);
 		mController.setShareMedia(circleShareContent);
 
 		mController.getConfig().removePlatform(SHARE_MEDIA.RENREN, SHARE_MEDIA.DOUBAN);
@@ -905,7 +905,7 @@ public class QYWebView extends AppActivity  {
 		
 	}
 	
-	private void okshare(boolean silent, String platform, String desc, String title, String link, String filePath) {
+	private void okhare(boolean silent, String platform, String desc, String title, String link, String filePath) {
 	}
 	
 	private void parsePhonebook(String res) {

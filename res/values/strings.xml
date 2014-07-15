@@ -39,7 +39,7 @@
     <string name="permission_not_granted">Unable to perform selected action because permissions were not granted.</string>
     
     
-    <string name="app_name">微信通讯录</string>
+    <string name="app_name">群友微信通讯录</string>
 	
 	<string name="wechat_login"><u>使用微信登录</u></string>
 	<string name="register">手机号码注册</string>
