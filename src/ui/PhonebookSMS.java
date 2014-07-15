@@ -19,7 +19,6 @@ import bean.PhoneViewEntity;
 import bean.Result;
 import bean.SMSPersonList;
 
-import cn.sharesdk.framework.TitleLayout;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.vikaa.wecontact.R;

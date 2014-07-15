@@ -8,13 +8,25 @@ import config.CommonValue;
 import org.apache.http.client.CookieStore;
 
 import bean.CardIntroEntity;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.crashlytics.android.Crashlytics;
 import com.loopj.android.http.PersistentCookieStore;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.controller.RequestType;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.media.CircleShareContent;
+import com.umeng.socialize.media.QQShareContent;
+import com.umeng.socialize.media.QZoneShareContent;
+import com.umeng.socialize.media.SinaShareContent;
+import com.umeng.socialize.media.TencentWbShareContent;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.WeiXinShareContent;
+import com.umeng.socialize.sso.QZoneSsoHandler;
+import com.umeng.socialize.sso.UMWXHandler;
 import com.vikaa.wecontact.R;
 
 import android.app.ActivityManager;
@@ -55,6 +67,8 @@ public class AppActivity extends BaseActivity {
 	protected IWXAPI api;
 	protected int screeWidth;
 	protected int screeHeight;
+	protected UMSocialService mController = null; 
+	public static final String DESCRIPTOR = "com.umeng.share";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +79,8 @@ public class AppActivity extends BaseActivity {
         api.registerApp(CommonValue.APP_ID);
 		screeWidth = ImageUtils.getDisplayWidth(context);
 		screeHeight = ImageUtils.getDisplayHeighth(context);
+		mController = UMServiceFactory.getUMSocialService(DESCRIPTOR,
+                RequestType.SOCIAL);
 	}
 	
 	public boolean isServiceRunning() {
@@ -197,29 +213,6 @@ public class AppActivity extends BaseActivity {
 	
 	//card share
 	public void oks(String title, String text, String link, String filePath) {
-		try {
-			final OnekeyShare oks = new OnekeyShare();
-			oks.setNotification(R.drawable.ic_launcher, getResources().getString(R.string.app_name));
-			oks.setTitle(title);
-			if (StringUtils.notEmpty(filePath)) {
-				oks.setImagePath(filePath);
-			}
-			else {
-				String cachePath = cn.sharesdk.framework.utils.R.getCachePath(this, null);
-				oks.setImagePath(cachePath + "logo.png");
-			}
-			oks.setText(text + "\n" + link);
-			oks.setUrl(link);
-			oks.setSiteUrl(link);
-			oks.setSite(link);
-			oks.setTitleUrl(link);
-			oks.setLatitude(23.056081f);
-			oks.setLongitude(113.385708f);
-			oks.setSilent(false);
-			oks.show(this);
-		} catch (Exception e) {
-			Logger.i(e);
-		}
 	}
 	public void cardShare(boolean silent, String platform, CardIntroEntity card, String filePath) {
 		try {
@@ -230,45 +223,57 @@ public class AppActivity extends BaseActivity {
 		}
 	}
 	public void cardSharePre(final boolean silent, final String platform, final CardIntroEntity card) {
-		if (StringUtils.empty(card.avatar)) {
-			cardShare(silent, platform, card, "");
-			return;
-		}
-		File file1 = DiscCacheUtil.findInCache(card.avatar, imageLoader.getDiscCache());
-		if (file1 != null) {
-			cardShare(silent, platform, card, file1.getAbsolutePath());
-			return;
-		}
-		String storageState = Environment.getExternalStorageState();	
-		if(storageState.equals(Environment.MEDIA_MOUNTED)){
-			String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/qy/" + MD5Util.getMD5String(appContext.getLoginInfo().headimgurl) + ".png";
-			File file = new File(savePath);
-			if (file.exists()) {
-				cardShare(silent, platform, card, savePath);
-			}
-			else {
-				loadingPd = UIHelper.showProgress(this, null, null, true);
-				AppClient.downFile(this, appContext, card.avatar, ".png", new FileCallback() {
-					@Override
-					public void onSuccess(String filePath) {
-						UIHelper.dismissProgress(loadingPd);
-						cardShare(silent, platform, card, filePath);
-					}
+		mController.setShareContent(card.intro);
+        UMImage mUMImgBitmap = new UMImage(getParent(), card.avatar);
+        mController.setShareImage(mUMImgBitmap);
+        SinaShareContent sinaShareContent = new SinaShareContent();
+        sinaShareContent.setShareImage(mUMImgBitmap);
+        sinaShareContent.setTargetUrl(card.link);
+        sinaShareContent.setShareContent(card.intro + " " +card.link);
+        mController.setShareMedia(sinaShareContent);
 
-					@Override
-					public void onFailure(String message) {
-						UIHelper.dismissProgress(loadingPd);
-						cardShare(silent, platform, card, "");
-					}
+        TencentWbShareContent tencentWbShareContent = new TencentWbShareContent();
+        tencentWbShareContent.setShareImage(mUMImgBitmap);
+        tencentWbShareContent.setTargetUrl(card.link);
+        tencentWbShareContent.setShareContent(card.intro + " " +card.link);
+        mController.setShareMedia(tencentWbShareContent);
 
-					@Override
-					public void onError(Exception e) {
-						UIHelper.dismissProgress(loadingPd);
-						cardShare(silent, platform, card, "");
-					}
-				});
-			}
-		}
+        QQShareContent qqShareContent = new QQShareContent();
+        qqShareContent.setShareImage(mUMImgBitmap);
+        qqShareContent.setTargetUrl(card.link);
+        qqShareContent.setShareContent(card.intro);
+        mController.setShareMedia(qqShareContent);
+
+        QZoneShareContent qZoneShareContent = new QZoneShareContent();
+        qZoneShareContent.setShareImage(mUMImgBitmap);
+        qZoneShareContent.setTargetUrl(card.link);
+        qZoneShareContent.setShareContent(card.intro);
+        mController.setShareMedia(qZoneShareContent);
+
+        mController.getConfig().openQQZoneSso();
+        mController.getConfig().setSsoHandler(new QZoneSsoHandler(this, "100371282","aed9b0303e3ed1e27bae87c33761161d"));
+        mController.getConfig().supportQQPlatform(this, "100371282","aed9b0303e3ed1e27bae87c33761161d", card.link);
+        UMWXHandler wxHandler = mController.getConfig().supportWXPlatform(this, CommonValue.APP_ID, card.link);
+        wxHandler.setWXTitle(card.intro);
+        UMWXHandler circleHandler = mController.getConfig().supportWXCirclePlatform(this, CommonValue.APP_ID, card.link) ;
+        circleHandler.setCircleTitle(card.intro);
+        mController.getConfig().supportWXPlatform(this, wxHandler);
+        mController.getConfig().supportWXPlatform(this, circleHandler);
+
+        WeiXinShareContent weiXinShareContent = new WeiXinShareContent();
+        weiXinShareContent.setShareImage(mUMImgBitmap);
+        weiXinShareContent.setTargetUrl(card.link);
+        weiXinShareContent.setShareContent(card.intro);
+        mController.setShareMedia(weiXinShareContent);
+
+        CircleShareContent circleShareContent = new CircleShareContent();
+        circleShareContent.setShareImage(mUMImgBitmap);
+        circleShareContent.setTargetUrl(card.link);
+        circleShareContent.setShareContent(card.intro);
+        mController.setShareMedia(circleShareContent);
+
+        mController.getConfig().removePlatform(SHARE_MEDIA.RENREN, SHARE_MEDIA.DOUBAN);
+        mController.openShare(this, false);
 	}
 	
 	//call and send text message

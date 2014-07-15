@@ -96,20 +96,5 @@ public class Welcome extends AppActivity {
 	}
 	
 	private void initImagePath() {
-		try {
-			String cachePath = cn.sharesdk.framework.utils.R.getCachePath(this, null);
-			String TEST_IMAGE = cachePath + "logo.png";
-			File file = new File(TEST_IMAGE);
-			if (!file.exists()) {
-				file.createNewFile();
-				Bitmap pic = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-				FileOutputStream fos = new FileOutputStream(file);
-				pic.compress(CompressFormat.JPEG, 100, fos);
-				fos.flush();
-				fos.close();
-			}
-		} catch(Throwable t) {
-			t.printStackTrace();
-		}
 	} 
 }

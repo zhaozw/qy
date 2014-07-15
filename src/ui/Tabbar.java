@@ -5,7 +5,6 @@ import baidupush.Utils;
 import bean.Entity;
 import bean.Result;
 import bean.UserEntity;
-import cn.sharesdk.framework.ShareSDK;
 
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
@@ -68,7 +67,6 @@ public class Tabbar extends TabActivity implements OnCheckedChangeListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tabbar);
-		ShareSDK.initSDK(this);
         AppManager.getAppManager().addActivity(this);
         prepareIntent();
         setupIntent();
