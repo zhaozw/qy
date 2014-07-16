@@ -206,40 +206,43 @@ public class AppActivity extends BaseActivity {
 	}
 	
 	public void cardSharePre(final boolean silent, final String platform, final CardIntroEntity card) {
-        mController.setShareContent(card.intro);
         UMImage mUMImgBitmap = new UMImage(getParent(), card.avatar);
-        mController.setShareImage(mUMImgBitmap);
+
         SinaShareContent sinaShareContent = new SinaShareContent();
         sinaShareContent.setShareImage(mUMImgBitmap);
         sinaShareContent.setTargetUrl(card.link);
-        sinaShareContent.setShareContent(card.intro + " " +card.link);
+        sinaShareContent.setShareContent(card.realname + " " +card.link);
+        sinaShareContent.setTitle(card.realname);
         mController.setShareMedia(sinaShareContent);
 
         TencentWbShareContent tencentWbShareContent = new TencentWbShareContent();
         tencentWbShareContent.setShareImage(mUMImgBitmap);
         tencentWbShareContent.setTargetUrl(card.link);
-        tencentWbShareContent.setShareContent(card.intro + " " +card.link);
+        tencentWbShareContent.setShareContent(card.realname + " " +card.link);
+        tencentWbShareContent.setTitle(card.realname);
         mController.setShareMedia(tencentWbShareContent);
 
         QQShareContent qqShareContent = new QQShareContent();
         qqShareContent.setShareImage(mUMImgBitmap);
         qqShareContent.setTargetUrl(card.link);
         qqShareContent.setShareContent(card.intro);
+        qqShareContent.setTitle(card.realname);
         mController.setShareMedia(qqShareContent);
 
         QZoneShareContent qZoneShareContent = new QZoneShareContent();
         qZoneShareContent.setShareImage(mUMImgBitmap);
         qZoneShareContent.setTargetUrl(card.link);
         qZoneShareContent.setShareContent(card.intro);
+        qZoneShareContent.setTitle(card.realname);
         mController.setShareMedia(qZoneShareContent);
 
         mController.getConfig().openQQZoneSso();
         mController.getConfig().setSsoHandler(new QZoneSsoHandler(this, "100371282","aed9b0303e3ed1e27bae87c33761161d"));
         mController.getConfig().supportQQPlatform(this, "100371282","aed9b0303e3ed1e27bae87c33761161d", card.link);
         UMWXHandler wxHandler = mController.getConfig().supportWXPlatform(this, CommonValue.APP_ID, card.link);
-        wxHandler.setWXTitle(card.intro);
+        wxHandler.setWXTitle(card.realname);
         UMWXHandler circleHandler = mController.getConfig().supportWXCirclePlatform(this, CommonValue.APP_ID, card.link) ;
-        circleHandler.setCircleTitle(card.intro);
+        circleHandler.setCircleTitle(card.realname);
         mController.getConfig().supportWXPlatform(this, wxHandler);
         mController.getConfig().supportWXPlatform(this, circleHandler);
 
@@ -247,12 +250,14 @@ public class AppActivity extends BaseActivity {
         weiXinShareContent.setShareImage(mUMImgBitmap);
         weiXinShareContent.setTargetUrl(card.link);
         weiXinShareContent.setShareContent(card.intro);
+        weiXinShareContent.setTitle(card.realname);
         mController.setShareMedia(weiXinShareContent);
 
         CircleShareContent circleShareContent = new CircleShareContent();
         circleShareContent.setShareImage(mUMImgBitmap);
         circleShareContent.setTargetUrl(card.link);
         circleShareContent.setShareContent(card.intro);
+        circleShareContent.setTitle(card.realname);
         mController.setShareMedia(circleShareContent);
 
         mController.getConfig().removePlatform(SHARE_MEDIA.RENREN, SHARE_MEDIA.DOUBAN);

@@ -105,7 +105,6 @@ public class PhoneIntroEntity extends Entity implements Comparable<PhoneIntroEnt
 				String regex = "http://pbwc.qiniudn.com/qun-logo/(.*)";
                 Pattern pattern = Pattern.compile(regex);
                 Matcher ma = pattern.matcher(info.getString("logo"));
-                Logger.i(info.getString("logo"));
                 if (!ma.find()) {
                     data.logo = info.getString("logo");
                 }

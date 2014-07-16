@@ -854,31 +854,36 @@ public class QYWebView extends AppActivity  {
 	}
 	
 	private void showShare(final boolean silent, final String platform, final String desc, final String title, final String link, String TLImg, String MsgImg) {
-		mController.setShareContent(title);
+        Logger.i(title);
+//		mController.setShareContent(title);
 		UMImage mUMImgBitmap = new UMImage(getParent(), TLImg);
-		mController.setShareImage(mUMImgBitmap);
+//		mController.setShareImage(mUMImgBitmap);
 		SinaShareContent sinaShareContent = new SinaShareContent();
 		sinaShareContent.setShareImage(mUMImgBitmap);
 		sinaShareContent.setTargetUrl(link);
-		sinaShareContent.setShareContent(title + " " +link);
+		sinaShareContent.setShareContent(desc + " " +link);
+        sinaShareContent.setTitle(title);
 		mController.setShareMedia(sinaShareContent);
 		
 		TencentWbShareContent tencentWbShareContent = new TencentWbShareContent();
 		tencentWbShareContent.setShareImage(mUMImgBitmap);
 		tencentWbShareContent.setTargetUrl(link);
-		tencentWbShareContent.setShareContent(title + " " +link);
+		tencentWbShareContent.setShareContent(desc + " " +link);
+        tencentWbShareContent.setTitle(title);
 		mController.setShareMedia(tencentWbShareContent);
 		
 		QQShareContent qqShareContent = new QQShareContent();
 		qqShareContent.setShareImage(mUMImgBitmap);
 		qqShareContent.setTargetUrl(link);
-		qqShareContent.setShareContent(title);
+		qqShareContent.setShareContent(desc);
+        qqShareContent.setTitle(title);
 		mController.setShareMedia(qqShareContent);
 		
 		QZoneShareContent qZoneShareContent = new QZoneShareContent();
 		qZoneShareContent.setShareImage(mUMImgBitmap);
 		qZoneShareContent.setTargetUrl(link);
-		qZoneShareContent.setShareContent(title);
+		qZoneShareContent.setShareContent(desc);
+        qZoneShareContent.setTitle(title);
 		mController.setShareMedia(qZoneShareContent);
 		
 		mController.getConfig().openQQZoneSso();
@@ -890,17 +895,19 @@ public class QYWebView extends AppActivity  {
 		circleHandler.setCircleTitle(title);
 		mController.getConfig().supportWXPlatform(this, wxHandler);
 		mController.getConfig().supportWXPlatform(this, circleHandler);
-		
-		WeiXinShareContent weiXinShareContent = new WeiXinShareContent();
-		weiXinShareContent.setShareImage(mUMImgBitmap);
-		weiXinShareContent.setTargetUrl(link);
-		weiXinShareContent.setShareContent(title);
+
+        WeiXinShareContent weiXinShareContent = new WeiXinShareContent();
+        weiXinShareContent.setTitle(title);
+        weiXinShareContent.setShareContent(desc);
+        weiXinShareContent.setShareImage(mUMImgBitmap);
+        weiXinShareContent.setTargetUrl(link);
 		mController.setShareMedia(weiXinShareContent);
-		
+
 		CircleShareContent circleShareContent = new CircleShareContent();
 		circleShareContent.setShareImage(mUMImgBitmap);
 		circleShareContent.setTargetUrl(link);
-		circleShareContent.setShareContent(title);
+		circleShareContent.setShareContent(desc);
+        circleShareContent.setTitle(title);
 		mController.setShareMedia(circleShareContent);
 		
 		mController.getConfig().removePlatform(SHARE_MEDIA.RENREN, SHARE_MEDIA.DOUBAN);
