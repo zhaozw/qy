@@ -206,58 +206,61 @@ public class AppActivity extends BaseActivity {
 	}
 	
 	public void cardSharePre(final boolean silent, final String platform, final CardIntroEntity card) {
+        String title = card.realname;
+        String content = StringUtils.empty(card.intro)?"这是我的名片，欢迎交换名片，与我互动交流":card.intro;
+
         UMImage mUMImgBitmap = new UMImage(getParent(), card.avatar);
 
         SinaShareContent sinaShareContent = new SinaShareContent();
         sinaShareContent.setShareImage(mUMImgBitmap);
         sinaShareContent.setTargetUrl(card.link);
-        sinaShareContent.setShareContent(card.realname + " " +card.link);
-        sinaShareContent.setTitle(card.realname);
+        sinaShareContent.setShareContent(title + "" + content + " " +card.link);
+        sinaShareContent.setTitle(title);
         mController.setShareMedia(sinaShareContent);
 
         TencentWbShareContent tencentWbShareContent = new TencentWbShareContent();
         tencentWbShareContent.setShareImage(mUMImgBitmap);
         tencentWbShareContent.setTargetUrl(card.link);
-        tencentWbShareContent.setShareContent(card.realname + " " +card.link);
-        tencentWbShareContent.setTitle(card.realname);
+        tencentWbShareContent.setShareContent(title + "" + content + " " +card.link);
+        tencentWbShareContent.setTitle(title);
         mController.setShareMedia(tencentWbShareContent);
 
         QQShareContent qqShareContent = new QQShareContent();
         qqShareContent.setShareImage(mUMImgBitmap);
         qqShareContent.setTargetUrl(card.link);
-        qqShareContent.setShareContent(card.intro);
-        qqShareContent.setTitle(card.realname);
+        qqShareContent.setShareContent(content);
+        qqShareContent.setTitle(title);
         mController.setShareMedia(qqShareContent);
 
         QZoneShareContent qZoneShareContent = new QZoneShareContent();
         qZoneShareContent.setShareImage(mUMImgBitmap);
         qZoneShareContent.setTargetUrl(card.link);
-        qZoneShareContent.setShareContent(card.intro);
-        qZoneShareContent.setTitle(card.realname);
+        qZoneShareContent.setShareContent(content);
+        qZoneShareContent.setTitle(title);
         mController.setShareMedia(qZoneShareContent);
 
         mController.getConfig().openQQZoneSso();
         mController.getConfig().setSsoHandler(new QZoneSsoHandler(this, "100371282","aed9b0303e3ed1e27bae87c33761161d"));
         mController.getConfig().supportQQPlatform(this, "100371282","aed9b0303e3ed1e27bae87c33761161d", card.link);
         UMWXHandler wxHandler = mController.getConfig().supportWXPlatform(this, CommonValue.APP_ID, card.link);
-        wxHandler.setWXTitle(card.realname);
+        wxHandler.setWXTitle(title);
         UMWXHandler circleHandler = mController.getConfig().supportWXCirclePlatform(this, CommonValue.APP_ID, card.link) ;
-        circleHandler.setCircleTitle(card.realname);
+        circleHandler.setCircleTitle(title);
         mController.getConfig().supportWXPlatform(this, wxHandler);
         mController.getConfig().supportWXPlatform(this, circleHandler);
 
         WeiXinShareContent weiXinShareContent = new WeiXinShareContent();
         weiXinShareContent.setShareImage(mUMImgBitmap);
         weiXinShareContent.setTargetUrl(card.link);
-        weiXinShareContent.setShareContent(card.intro);
-        weiXinShareContent.setTitle(card.realname);
+        weiXinShareContent.setShareContent(content);
+        weiXinShareContent.setTitle(title);
         mController.setShareMedia(weiXinShareContent);
 
         CircleShareContent circleShareContent = new CircleShareContent();
         circleShareContent.setShareImage(mUMImgBitmap);
         circleShareContent.setTargetUrl(card.link);
-        circleShareContent.setShareContent(card.intro);
-        circleShareContent.setTitle(card.realname);
+        circleShareContent.setShareContent(content);
+        circleShareContent.setTitle(title);
         mController.setShareMedia(circleShareContent);
 
         mController.getConfig().removePlatform(SHARE_MEDIA.RENREN, SHARE_MEDIA.DOUBAN);
