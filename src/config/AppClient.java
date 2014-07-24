@@ -2127,7 +2127,7 @@ public class AppClient {
 
 
     public static void getAccessToken(String code, String appId, String secret, final FileCallback callback) {
-        QYRestClient.get("https://api.weixin.qq.com/sns/oauth2/refresh_token?appid="+appId+"&refresh_token="+code+"&grant_type=refresh_token",
+        QYRestClient.get("https://api.weixin.qq.com/sns/oauth2/access_token?appid="+appId+"&secret="+secret+"&code="+code+"&grant_type=authorization_code",
                 null,
         new AsyncHttpResponseHandler(){
             @Override
@@ -2138,6 +2138,31 @@ public class AppClient {
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
+            }
+        });
+    }
+
+    public static void loginByWechat(final MyApplication appContext, String openid, String accessToken, final ClientCallback callback) {
+        RequestParams params = new RequestParams();
+        params.add("client_browser", "android");
+        try {
+            params.add("client_version", AppManager.getAppManager().currentActivity().getPackageManager().getPackageInfo(AppManager.getAppManager().currentActivity().getPackageName(), 0).versionCode+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        params.add("client_push", "android");
+        params.add("push_device_type", "3");
+        params.add("openid", openid);
+        params.add("access_token", accessToken);
+        params.add("code", MD5Util.getMD5String(openid+"Fj34&^%$d"));
+        QYRestClient.post("user/loginByOpenId", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] content) {
+                handleVertifiedCode(content, callback);
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] content, Throwable e) {
+                callback.onFailure("网络不给力，请重新尝试");
             }
         });
     }

@@ -12,10 +12,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.umeng.socialize.view.WXCallbackActivity;
 
 import config.CommonValue;
@@ -24,6 +27,48 @@ import ui.AppActivity;
 import ui.Index;
 
 
-public class WXEntryActivity extends WXCallbackActivity {
+public class WXEntryActivity extends WXCallbackActivity implements  IWXAPIEventHandler{
+
+    private IWXAPI api;
+
+    @Override
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        api = WXAPIFactory.createWXAPI(this, CommonValue.APP_ID, false);
+        api.handleIntent(getIntent(), this);
+    }
+
+    @Override
+    public void onReq(BaseReq req) {
+    }
+
+    @Override
+    public void onResp(BaseResp resp) {
+        switch (resp.getType()){
+            case ConstantsAPI.COMMAND_SENDAUTH:
+                switch (resp.errCode) {
+                    case BaseResp.ErrCode.ERR_OK:
+                        SendAuth.Resp resp1 = (SendAuth.Resp)resp;
+                        Intent intent = new Intent(CommonValue.ACTION_WECHAT_CODE);
+                        intent.putExtra("code", resp1.code);
+                        sendBroadcast(intent);
+                        WXEntryActivity.this.finish();
+                        break;
+                    case BaseResp.ErrCode.ERR_USER_CANCEL:
+                        WXEntryActivity.this.finish();
+                        break;
+                    case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                        WXEntryActivity.this.finish();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                WXEntryActivity.this.finish();
+                break;
+        }
+
+    }
 
 }

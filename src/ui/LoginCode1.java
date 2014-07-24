@@ -7,6 +7,8 @@ import bean.CodeEntity;
 import bean.Entity;
 import bean.Result;
 
+import bean.UserEntity;
+import com.crashlytics.android.Crashlytics;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.vikaa.mycontact.R;
 
@@ -26,11 +28,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.json.JSONObject;
 import tools.AppException;
 import tools.AppManager;
 import tools.Logger;
 import tools.StringUtils;
 import tools.UIHelper;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoginCode1 extends AppActivity{
 	private EditText mobileET;
@@ -170,6 +176,10 @@ public class LoginCode1 extends AppActivity{
 	private void wechat() {
 //		Intent intent = new Intent(LoginCode1.this, LoginWechat.class);
 //		startActivityForResult(intent, CommonValue.LoginRequest.LoginWechat);
+        if (!api.isWXAppInstalled()){
+            WarningDialog("本机没有安装微信");
+            return;
+        }
         SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
         api.sendReq(req);
@@ -214,7 +224,15 @@ public class LoginCode1 extends AppActivity{
                 AppClient.getAccessToken(code, CommonValue.APP_ID, CommonValue.SECRET, new AppClient.FileCallback() {
                     @Override
                     public void onSuccess(String filePath) {
-                        WarningDialog(filePath);
+                        try {
+                            JSONObject json = new JSONObject(filePath);
+                            String openid = json.getString("openid");
+                            String accessToken = json.getString("access_token");
+                            loginByWechat(openid, accessToken);
+                        }
+                        catch (Exception e) {
+                            Crashlytics.logException(e);
+                        }
                     }
 
                     @Override
@@ -230,4 +248,56 @@ public class LoginCode1 extends AppActivity{
             }
         }
     };
+
+    private void loginByWechat(String openid, String accessToken) {
+        loadingPd = UIHelper.showProgress(this, null, null, true);
+        AppClient.loginByWechat(appContext, openid, accessToken, new ClientCallback() {
+            @Override
+            public void onSuccess(Entity data) {
+                UIHelper.dismissProgress(loadingPd);
+                UserEntity user = (UserEntity) data;
+                switch (user.getError_code()) {
+                    case Result.RESULT_OK:
+                        appContext.saveLoginInfo(user);
+                        enterIndex(user);
+                        break;
+                    default:
+                        UIHelper.ToastMessage(LoginCode1.this, user.getMessage(), Toast.LENGTH_SHORT);
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                UIHelper.dismissProgress(loadingPd);
+                UIHelper.ToastMessage(LoginCode1.this, message, Toast.LENGTH_SHORT);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                UIHelper.dismissProgress(loadingPd);
+                Logger.i(e);
+            }
+        });
+    }
+
+    private void enterIndex(UserEntity user) {
+        String reg = "手机用户.*";
+        Pattern p = Pattern.compile(reg);
+        Matcher m = p.matcher(user.nickname);
+        if (m.matches()) {
+            Intent intent = new Intent(this, Register.class);
+            intent.putExtra("mobile", user.username);
+            intent.putExtra("jump", true);
+            startActivity(intent);
+            setResult(RESULT_OK);
+            AppManager.getAppManager().finishActivity(this);
+        }
+        else {
+            Intent intent = new Intent(this, Tabbar.class);
+            startActivity(intent);
+            setResult(RESULT_OK);
+            AppManager.getAppManager().finishActivity(this);
+        }
+    }
 }
