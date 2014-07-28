@@ -2125,7 +2125,7 @@ public class AppClient {
 		});
 	}
 
-
+    //wechat token
     public static void getAccessToken(String code, String appId, String secret, final FileCallback callback) {
         QYRestClient.get("https://api.weixin.qq.com/sns/oauth2/access_token?appid="+appId+"&secret="+secret+"&code="+code+"&grant_type=authorization_code",
                 null,
@@ -2142,6 +2142,7 @@ public class AppClient {
         });
     }
 
+    //wechat login
     public static void loginByWechat(final MyApplication appContext, String openid, String accessToken, final ClientCallback callback) {
         RequestParams params = new RequestParams();
         params.add("client_browser", "android");
@@ -2163,6 +2164,136 @@ public class AppClient {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] content, Throwable e) {
                 callback.onFailure("网络不给力，请重新尝试");
+            }
+        });
+    }
+
+    //usercheck
+    public static void userCheck(final MyApplication appContext, String phone, final ClientCallback callback) {
+        RequestParams params = new RequestParams();
+        params.add("phone", phone);
+        QYRestClient.post("user/check", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] content) {
+                handleUserCheck(content, callback);
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] content, Throwable e) {
+                callback.onFailure("网络不给力，请重新尝试");
+            }
+        });
+    }
+    public static void handleUserCheck(final byte[] content, final ClientCallback callback) {
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 1:
+                        callback.onSuccess((UserEntity)msg.obj);
+                        break;
+                    default:
+                        callback.onError((Exception)msg.obj);
+                        break;
+                }
+            }
+        };
+        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+        singleThreadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Message msg = new Message();
+                try {
+                    String target = new String(content);
+                    String decode = DecodeUtil.decode(target);
+                    target = null;
+                    UserEntity data = UserEntity.userCheckParse(decode);
+                    decode = null;
+                    msg.obj = data;
+                    msg.what = 1;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    msg.obj = e;
+                    msg.what = -1;
+                }
+                handler.sendMessage(msg);
+            }
+        });
+    }
+
+    //login password
+    public static void loginByPassword(final MyApplication appContext, String phone, String password, final ClientCallback callback) {
+        RequestParams params = new RequestParams();
+        params.add("client_browser", "android");
+        try {
+            params.add("client_version", AppManager.getAppManager().currentActivity().getPackageManager().getPackageInfo(AppManager.getAppManager().currentActivity().getPackageName(), 0).versionCode+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        params.add("client_push", "android");
+        params.add("push_device_type", "3");
+        params.add("phone", phone);
+        params.add("password", password);
+        QYRestClient.post("user/loginByPassword", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] content) {
+                handleVertifiedCode(content, callback);
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] content, Throwable e) {
+                callback.onFailure("网络不给力，请重新尝试");
+            }
+        });
+    }
+
+    //set password
+    public static void setPassword(final MyApplication appContext, String phone, String password, final ClientCallback callback) {
+        RequestParams params = new RequestParams();
+        params.add("phone", phone);
+        params.add("password", password);
+        QYRestClient.post("user/setPassword", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] content) {
+                handleSetPassword(content, callback);
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] content, Throwable e) {
+                callback.onFailure("网络不给力，请重新尝试");
+            }
+        });
+    }
+    public static void handleSetPassword(final byte[] content, final ClientCallback callback) {
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 1:
+                        callback.onSuccess((UserEntity)msg.obj);
+                        break;
+                    default:
+                        callback.onError((Exception)msg.obj);
+                        break;
+                }
+            }
+        };
+        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+        singleThreadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Message msg = new Message();
+                try {
+                    String target = new String(content);
+                    String decode = DecodeUtil.decode(target);
+                    target = null;
+                    UserEntity data = UserEntity.userCheckParse(decode);
+                    decode = null;
+                    msg.obj = data;
+                    msg.what = 1;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    msg.obj = e;
+                    msg.what = -1;
+                }
+                handler.sendMessage(msg);
             }
         });
     }

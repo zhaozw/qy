@@ -85,6 +85,14 @@ public class Setting extends AppActivity{
 	
 	
 	private void addCardOp() {
+        List<CardIntroEntity> ops2 = new ArrayList<CardIntroEntity>();
+        CardIntroEntity op21 = new CardIntroEntity();
+        op21.realname = "设置密码";
+        op21.position = "";
+        op21.cardSectionType = CommonValue.CardSectionType .SettingsSectionType;
+        ops2.add(op21);
+        cards.add(ops2);
+
 		List<CardIntroEntity> ops3 = new ArrayList<CardIntroEntity>();
 		CardIntroEntity op31 = new CardIntroEntity();
 		op31.realname = "功能消息免打扰";
@@ -101,7 +109,10 @@ public class Setting extends AppActivity{
 		ops4.add(op41);
 		cards.add(ops4);
 	}
-	
+
+    public void setPassword() {
+        startActivity(new Intent(Setting.this, SetPassword.class));
+    }
 	
 	public void logout() {
 		new AlertDialog.Builder(this).setTitle("确定注销本账号吗?")

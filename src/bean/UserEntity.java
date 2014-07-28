@@ -66,4 +66,25 @@ public class UserEntity extends Entity{
 		}
 		return data;
 	}
+
+    public static UserEntity userCheckParse(String res) throws IOException, AppException {
+        UserEntity data = new UserEntity();
+        try {
+            JSONObject js = new JSONObject(res);
+            if (js.getInt("status") == 1) {
+                data.error_code = Result.RESULT_OK;
+            }
+            else {
+                if (!js.isNull("error_code")) {
+                    data.error_code = js.getInt("error_code");
+                }
+                data.message = js.getString("info");
+            }
+
+        } catch (JSONException e) {
+            Logger.i(res);
+            throw AppException.json(e);
+        }
+        return data;
+    }
 }

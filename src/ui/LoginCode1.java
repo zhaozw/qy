@@ -55,6 +55,7 @@ public class LoginCode1 extends AppActivity{
 		}
 		switch (requestCode) {
 		case CommonValue.LoginRequest.LoginMobile:
+        case CommonValue.LoginRequest.LoginByPassword:
 			AppManager.getAppManager().finishActivity(this);
 			break;
 		case CommonValue.LoginRequest.LoginWechat:
@@ -155,7 +156,7 @@ public class LoginCode1 extends AppActivity{
 	private void getVertifyCode() {
 		if (StringUtils.isMobileNO(mobileET.getText().toString())) {
 			if (canVertify) {
-				getVertifyCode(mobileET.getText().toString());
+                userCheck(mobileET.getText().toString());
 			}
 			else {
 				UIHelper.ToastMessage(getApplicationContext(), String.format("还需要%d秒获取验证码", leftSeconds), Toast.LENGTH_SHORT);
@@ -165,6 +166,39 @@ public class LoginCode1 extends AppActivity{
 			WarningDialog("请输入正确的手机号码");
 		}
 	}
+
+    private void userCheck(final String phone) {
+        appContext.saveLoginPhone(phone);
+        AppClient.userCheck(appContext, phone, new ClientCallback() {
+            @Override
+            public void onSuccess(Entity data) {
+                UIHelper.dismissProgress(loadingPd);
+                UserEntity user = (UserEntity) data;
+                switch (user.getError_code()) {
+                    case Result.RESULT_OK:
+                        appContext.saveNeedSetPassword(false);
+                        startActivityForResult(new Intent(LoginCode1.this, LoginbyPassword.class), CommonValue.LoginRequest.LoginByPassword);
+                        break;
+                    case 1010:
+                        appContext.saveNeedSetPassword(true);
+                        getVertifyCode(phone);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+    }
 	
 	private void step2(String content) {
 		Intent intent = new Intent(LoginCode1.this, LoginCode2.class);
@@ -220,10 +254,13 @@ public class LoginCode1 extends AppActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             if (CommonValue.ACTION_WECHAT_CODE.equals(intent.getAction())) {
+                closeInput();
                 String code = intent.getStringExtra("code");
+                loadingPd = UIHelper.showProgress(LoginCode1.this, null, null, true);
                 AppClient.getAccessToken(code, CommonValue.APP_ID, CommonValue.SECRET, new AppClient.FileCallback() {
                     @Override
                     public void onSuccess(String filePath) {
+                        UIHelper.dismissProgress(loadingPd);
                         try {
                             JSONObject json = new JSONObject(filePath);
                             String openid = json.getString("openid");
@@ -237,12 +274,12 @@ public class LoginCode1 extends AppActivity{
 
                     @Override
                     public void onFailure(String message) {
-
+                        UIHelper.dismissProgress(loadingPd);
                     }
 
                     @Override
                     public void onError(Exception e) {
-
+                        UIHelper.dismissProgress(loadingPd);
                     }
                 });
             }

@@ -100,10 +100,44 @@ public class MyApplication extends AppContext {
 		return login;
 	}
 
+    public void saveNeedSetPassword(final boolean need) {
+        setProperties(new Properties(){
+            {
+                setProperty("password.set",need?"1":"0");
+            }
+        });
+    }
+
+    public boolean getNeedSetPassword() {
+        boolean need = true;
+        try {
+            String needStr = getProperty("password.set");
+            if (StringUtils.empty(needStr)) {
+                need = false;
+            }
+            else {
+                need = (needStr.equals("1")) ? true : false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return need;
+    }
+
+    public void saveLoginPhone(final String phone) {
+        setProperties(new Properties(){
+            {
+                setProperty("login.phone",phone);
+            }
+        });
+    }
+
+    public String getLoginPhone() {
+        return (getProperty("login.phone"));
+    }
+
 	/**
 	 * 保存登录信息
-	 * @param username
-	 * @param pwd
 	 */
 	@SuppressWarnings("serial")
 	public void saveLoginInfo(final UserEntity user) {

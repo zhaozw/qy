@@ -81,6 +81,7 @@ public class CommonValue {
 		int LoginMobile = 1;
 		int LoginWechat = 2;
 		int Register = 3;
+        int LoginByPassword = 4;
 	}
 	
 	// options
