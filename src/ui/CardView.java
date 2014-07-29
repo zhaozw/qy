@@ -194,10 +194,13 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 			summarys.add(value);
 		}
 		if (StringUtils.notEmpty(entity.birthday)) {
-			KeyValue value = new KeyValue();
-			value.key = "生日";
-			value.value = entity.birthday;
-			summarys.add(value);
+            Logger.i(entity.birthday);
+            if (!entity.birthday.equals("0") && !entity.birthday.equals("1970-01-01")) {
+                KeyValue value = new KeyValue();
+                value.key = "生日";
+                value.value = entity.birthday;
+                summarys.add(value);
+            }
 		}
 		if (StringUtils.notEmpty(entity.address)) {
 			KeyValue value = new KeyValue();

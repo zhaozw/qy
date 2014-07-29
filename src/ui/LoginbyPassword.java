@@ -52,6 +52,10 @@ public class LoginbyPassword extends AppActivity{
                 closeInput();
                 loginByPassword();
                 break;
+            case R.id.btnSms:
+                setResult(RESULT_FIRST_USER);
+                AppManager.getAppManager().finishActivity(this);
+                break;
         }
     }
 
