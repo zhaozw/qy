@@ -200,12 +200,12 @@ public class LoginCode1 extends AppActivity{
 
             @Override
             public void onFailure(String message) {
-
+                UIHelper.dismissProgress(loadingPd);
             }
 
             @Override
             public void onError(Exception e) {
-
+                UIHelper.dismissProgress(loadingPd);
             }
         });
     }

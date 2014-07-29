@@ -62,6 +62,11 @@ public class MyCard extends AppActivity implements OnRefreshListener, AdapterVie
 			AppManager.getAppManager().finishActivity(this);
 			break;
 
+            case R.id.rightBarButton:
+                startActivityForResult(new Intent(this, QYWebView.class).
+                                putExtra(CommonValue.IndexIntentKeyValue.CreateView, CommonValue.CreateViewUrlAndRequest.CardCreateUrl),
+                        CommonValue.CreateViewUrlAndRequest.CardCreat);
+                break;
 		default:
 			startActivityForResult(new Intent(this, QYWebView.class).
 					putExtra(CommonValue.IndexIntentKeyValue.CreateView, CommonValue.CreateViewUrlAndRequest.CardCreateUrl), 

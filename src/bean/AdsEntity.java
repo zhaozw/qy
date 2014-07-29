@@ -25,6 +25,7 @@ public class AdsEntity extends Entity{
 
 
 	public static AdsEntity parse(JSONObject info) throws AppException {
+
 		AdsEntity data = new AdsEntity();
 		try {
 			data.title = info.getString("title");

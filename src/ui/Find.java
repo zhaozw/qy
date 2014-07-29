@@ -55,14 +55,6 @@ public class Find extends AppActivity implements OnItemClickListener{
 	private List<AdsEntity> ads = new ArrayList<AdsEntity>();
 	private FindAdFragmentAdapter adsAdapter;
 	
-//	private GridView qunGridView;
-//	private List<QunsEntity> quns = new ArrayList<QunsEntity>();
-//	private QunGridViewAdapter qunAdapter;
-//	
-//	private GridView funsGridView;
-//	private List<FunsEntity> funs = new ArrayList<FunsEntity>();
-//	private FunsGridViewAdapter funsAdapter;
-	
 	private TextView tvMessage;
 	@Override
 	protected void onPause() {
@@ -134,8 +126,7 @@ public class Find extends AppActivity implements OnItemClickListener{
 			startActivity(new Intent(this, QunTopic.class));
 			break;
 		case R.id.btnCard:
-			startActivity(new Intent(this, QYWebView.class)
-			.putExtra(CommonValue.IndexIntentKeyValue.CreateView, CreateViewUrlAndRequest.CardCreateUrl1));
+            showMyCard();
 			break;
 		case R.id.btnPC:
 			startActivity(new Intent(this, PCTIP.class));
@@ -144,6 +135,19 @@ public class Find extends AppActivity implements OnItemClickListener{
 			break;
 		}
 	}
+
+    public void showMyCard() {
+        EasyTracker easyTracker = EasyTracker.getInstance(this);
+        easyTracker.send(MapBuilder
+                        .createEvent("ui_action",     // Event category (required)
+                                "button_press",  // Event action (required)
+                                "查看我的名片",   // Event label
+                                null)            // Event value
+                        .build()
+        );
+        Intent intent = new Intent(this, MyCard.class);
+        startActivity(intent);
+    }
 	
 	public void showNotification() {
 		EasyTracker easyTracker = EasyTracker.getInstance(this);

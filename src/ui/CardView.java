@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import android.widget.*;
+import bean.*;
 import service.AddMobileService;
 import tools.AppException;
 import tools.AppManager;
@@ -15,11 +17,6 @@ import tools.Logger;
 import tools.StringUtils;
 import tools.UIHelper;
 import ui.adapter.CardViewAdapter;
-import bean.CardIntroEntity;
-import bean.Entity;
-import bean.KeyValue;
-import bean.RelationshipEntity;
-import bean.Result;
 
 import com.crashlytics.android.Crashlytics;
 import com.vikaa.mycontact.R;
@@ -43,13 +40,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class CardView extends AppActivity implements OnItemClickListener  {
 	private CardIntroEntity card;
@@ -64,7 +55,8 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 	
 	private Button callMobileButton;
 	private Button saveMobileButton;
-	private Button editMyMobileButton;
+//	private Button editMyMobileButton;
+    private LinearLayout layoutSelf;
 	private Button exchangeButton;
 	private TextView exchangeView;
 	
@@ -115,7 +107,8 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 		View footer = inflater.inflate(R.layout.card_view_footer, null);
 		callMobileButton = (Button) footer.findViewById(R.id.callContactButton);
 		saveMobileButton = (Button) footer.findViewById(R.id.saveContactButton);
-		editMyMobileButton = (Button) footer.findViewById(R.id.editMyMobile);
+//		editMyMobileButton = (Button) footer.findViewById(R.id.editMyMobile);
+        layoutSelf = (LinearLayout) footer.findViewById(R.id.selfLayout);
 		exchangeButton = (Button) footer.findViewById(R.id.exchangeMobile); 
 		exchangeView = (TextView) footer.findViewById(R.id.exchangeView);
 		mListView = (ListView) findViewById(R.id.listView);
@@ -320,10 +313,10 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 		if (StringUtils.notEmpty(entity.openid)) {
 			if (entity.openid.equals(appContext.getLoginUid())) {
 				saveMobileButton.setVisibility(View.GONE);
-				editMyMobileButton.setVisibility(View.VISIBLE);
+				layoutSelf.setVisibility(View.VISIBLE);
 			}
 			else {
-				editMyMobileButton.setVisibility(View.GONE);
+                layoutSelf.setVisibility(View.GONE);
 				if (StringUtils.notEmpty(entity.isfriend)) {
 					if (entity.isfriend.equals(CommonValue.PhonebookLimitRight.Friend_No)) {
 						exchangeButton.setVisibility(View.VISIBLE);
@@ -363,6 +356,9 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 			String url1 = String.format("%s/card/setting/id/%s", CommonValue.BASE_URL, card.code);
 			showCreate(url1, CommonValue.CardViewUrlRequest.editCard);
 			break;
+        case R.id.deleteMyMobile:
+            deleteMycard();
+            break;
 		case R.id.exchangeMobile:
 			exchangeCard(card);
 			break;
@@ -375,7 +371,41 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 			break;
 		}
 	}
-	
+
+    private void deleteMycard() {
+        loadingPd = UIHelper.showProgress(this, null, null, true);
+        AppClient.deleteCard(appContext, card.code, new ClientCallback() {
+            @Override
+            public void onSuccess(Entity data) {
+                UIHelper.dismissProgress(loadingPd);
+                UserEntity user = (UserEntity) data;
+                switch (user.getError_code()) {
+                    case Result.RESULT_OK:
+                        UIHelper.ToastMessage(CardView.this, "删除成功", Toast.LENGTH_SHORT);
+                        Intent intent = new Intent();
+                        intent.setAction(CommonValue.CARD_CREATE_ACTION);
+                        intent.setAction(CommonValue.CARD_DELETE_ACTION);
+                        sendBroadcast(intent);
+                        AppManager.getAppManager().finishActivity(CardView.this);
+                        break;
+                    default:
+                        UIHelper.ToastMessage(CardView.this, user.getMessage(), Toast.LENGTH_SHORT);
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                UIHelper.dismissProgress(loadingPd);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                UIHelper.dismissProgress(loadingPd);
+            }
+        });
+    }
+
 	private void deleteAndSaveRelationships(final List<RelationshipEntity> list) {
 		ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 		singleThreadExecutor.execute(new Runnable() {
