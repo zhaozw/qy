@@ -11,16 +11,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
+import bean.*;
 import tools.Logger;
 import tools.StringUtils;
 import tools.UIHelper;
 import ui.adapter.PhonebookAdapter;
-import bean.CardIntroEntity;
-import bean.Entity;
-import bean.PhoneIntroEntity;
-import bean.PhoneListEntity;
-import bean.RecommendListEntity;
-import bean.Result;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.analytics.tracking.android.EasyTracker;
@@ -323,6 +318,70 @@ public class Phonebook extends AppActivity implements SwipeRefreshLayout.OnRefre
             indicatorImageView.clearAnimation();
         }
 	}
+
+    private void getActivityListFromCache() {
+        String key = String.format("%s-%s", CommonValue.CacheKey.ActivityList, appContext.getLoginUid());
+        ActivityListEntity entity = (ActivityListEntity) appContext.readObject(key);
+        if(entity != null){
+            handlerActivitySection(entity);
+        }
+        Handler jumpHandler = new Handler();
+        jumpHandler.postDelayed(new Runnable() {
+            public void run() {
+                getActivityList();
+            }
+        }, 1000);
+
+    }
+
+    private void getActivityList() {
+//		if (myQuns.isEmpty()) {
+//			activity.loadingPd = UIHelper.showProgress(activity, null, null, true);
+//		}
+//        if (null != indicatorImageView && myQuns.isEmpty()) {
+//            indicatorImageView.setVisibility(View.VISIBLE);
+//            indicatorImageView.startAnimation(indicatorAnimation);
+//        }
+        AppClient.getActivityList(appContext, new ClientCallback() {
+            @Override
+            public void onSuccess(Entity data) {
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
+                ActivityListEntity entity = (ActivityListEntity)data;
+                switch (entity.getError_code()) {
+                    case Result.RESULT_OK:
+                        handlerActivitySection(entity);
+                        break;
+                    default:
+                        UIHelper.ToastMessage(Phonebook.this, entity.getMessage(), Toast.LENGTH_SHORT);
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
+                UIHelper.ToastMessage(Phonebook.this, message, Toast.LENGTH_SHORT);
+            }
+            @Override
+            public void onError(Exception e) {
+                if (null != indicatorImageView) {
+                    indicatorImageView.setVisibility(View.INVISIBLE);
+                    indicatorImageView.clearAnimation();
+                }
+                Crashlytics.logException(e);
+            }
+        });
+    }
+
+    private void handlerActivitySection(ActivityListEntity entity) {
+
+    }
 	
 	private void getSquareListFromCache() {
 		String key = String.format("%s-%s", CommonValue.CacheKey.SquareList, appContext.getLoginUid());

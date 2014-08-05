@@ -229,20 +229,6 @@ public class Me extends AppActivity{
 		});
 	}
 	
-	public void showCardViewWeb(CardIntroEntity entity) {
-		EasyTracker easyTracker = EasyTracker.getInstance(this);
-		easyTracker.send(MapBuilder
-	      .createEvent("ui_action",     // Event category (required)
-	                   "button_press",  // Event action (required)
-	                   "查看名片："+entity.link,   // Event label
-	                   null)            // Event value
-	      .build()
-		);
-		Intent intent = new Intent(this, QYWebView.class);
-		intent.putExtra(CommonValue.IndexIntentKeyValue.CreateView, entity.link);
-		startActivityForResult(intent, CommonValue.CardViewUrlRequest.editCard);
-	}
-	
 	public void showMyCard() {
 		EasyTracker easyTracker = EasyTracker.getInstance(this);
 		easyTracker.send(MapBuilder

@@ -115,7 +115,6 @@ public class Find extends AppActivity implements OnItemClickListener{
 			showNotification();
 			tvMessage.setVisibility(View.INVISIBLE);
 			break;
-
 		case R.id.btnQun:
 			startActivity(new Intent(this, CreatePhonebook.class));
 			break;

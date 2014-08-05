@@ -109,7 +109,7 @@
                 android:layout_marginRight="10dp"
                 android:textSize="@dimen/cell_subtitle_size"
                 android:textColor="@color/black"
-                android:text="通讯录名字"
+                android:text="群名字"
 	            />
             <EditText
                 android:layout_marginTop="5dp"
@@ -122,7 +122,7 @@
 		        android:singleLine="true"
 		        android:inputType="text"
       		    android:gravity="center_vertical|left"
-		        android:hint="通讯录主题"
+		        android:hint="群名字"
 		        android:maxLines="1"
 		        android:lines="1"
 		        android:imeOptions="actionNext"
@@ -141,7 +141,7 @@
                 android:layout_marginRight="10dp"
                 android:textSize="@dimen/cell_subtitle_size"
                 android:textColor="@color/black"
-                android:text="通讯录说明"
+                android:text="群说明"
 	            />
 	        <EditText
 		        android:layout_marginTop="5dp"
@@ -160,7 +160,7 @@
 		        android:paddingTop="5dp"
 		        android:paddingRight="5dp"
 		        android:paddingBottom="5dp"
-		        android:hint="通讯录说明"
+		        android:hint="群说明"
 	       		>
 	    	</EditText>
 		    <LinearLayout 
@@ -193,7 +193,7 @@
                 android:layout_marginRight="10dp"
                 android:textSize="@dimen/cell_subtitle_size"
                 android:textColor="@color/black"
-                android:text="通讯录隐私保护（查看通讯录权限）"
+                android:text="群隐私保护（查看群权限）"
 	            />
 		    <Spinner 
 		        android:id="@+id/privacySP"

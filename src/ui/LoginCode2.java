@@ -156,13 +156,13 @@ public class LoginCode2 extends AppActivity{
 	}
 	
 	private void vertifiedCode() {
-		Pattern regex = Pattern.compile("^([0-9]{4})$");
+		Pattern regex = Pattern.compile("^([0-9]{6})$");
 		Matcher matcher = regex.matcher(codeET.getText().toString());
 		if (matcher.find()) {
 			vertifiedCode(matcher.group(1));
 		}
 		else {
-			UIHelper.ToastMessage(getApplicationContext(), "请输入4位验证码", Toast.LENGTH_SHORT);
+			UIHelper.ToastMessage(getApplicationContext(), "请输入6位验证码", Toast.LENGTH_SHORT);
 		}
 	}
 	
