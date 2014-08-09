@@ -1,15 +1,20 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 
+import bean.CardIntroEntity;
 import bean.Entity;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 
 import config.AppClient;
+import config.CommonValue;
 import config.AppClient.ClientCallback;
 import config.MyApplication;
 import contact.AddressBean;
@@ -24,10 +29,15 @@ import contact.UrlBean;
 import tools.AppException;
 import tools.DecodeUtil;
 import tools.Logger;
+import tools.StringUtils;
 import android.app.IntentService;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.provider.Contacts;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.Im;
@@ -38,11 +48,14 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
 import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.RawContacts;
 
 public class MobileSynService extends IntentService{
 	public static String			MOBILESYN_CLIENT = "pw.mobile.service";
 	private static final String ACTION_START_PAY = MOBILESYN_CLIENT + ".START.PAY";
 	private static final String	ACTION_STOP = MOBILESYN_CLIENT + ".STOP";
+	
+	private static final String ACTION_START_Down = MOBILESYN_CLIENT + ".START.DOWN";
 	private MyApplication appContext ;
 	public MobileSynService() {
 		super(MOBILESYN_CLIENT);
@@ -67,24 +80,135 @@ public class MobileSynService extends IntentService{
 			e.printStackTrace();
 		}
 	}
+	
+	private MobileSynListBean mobileNewOne;
+	public static void actionStartDown(Context ctx, MobileSynListBean mobileSever) {
+		try{
+			Intent i = new Intent(ctx, MobileSynService.class);
+			i.putExtra("mobileSever", mobileSever);
+			i.setAction(ACTION_START_Down);
+			ctx.startService(i);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (intent.getAction().equals(ACTION_START_PAY) == true) {
 			appContext = MyApplication.getInstance();
 			try {
-				getContactInfo();
+				updateMobiles(getContactInfo());
 			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else if (intent.getAction().equals(ACTION_START_Down) == true) {
+			try {
+				this.mobileNewOne = (MobileSynListBean) intent.getSerializableExtra("mobileSever");
+				MobileSynListBean persons = getContactInfo();
+				Map<String, MobileSynBean> map = new HashMap<String, MobileSynBean>();
+				for (MobileSynBean mb : persons.data) {
+					String prefix = mb.prefix;
+			        String suffix = mb.suffix;
+			        String firstname = mb.firstname;
+			        String middlename = mb.middlename;
+			        String lastname = mb.lastname;
+			        String mobileKey = prefix+suffix+firstname+middlename+lastname;
+					map.put(mobileKey, mb);
+				}
+				Boolean needRefresh = false;
+				for (MobileSynBean newMB : mobileNewOne.data) {
+					String prefix = newMB.prefix;
+			        String suffix = newMB.suffix;
+			        String firstname = newMB.firstname;
+			        String middlename = newMB.middlename;
+			        String lastname = newMB.lastname;
+			        String mobileKey = prefix+suffix+firstname+middlename+lastname;
+			        MobileSynBean mapMB = map.get(mobileKey);
+			        if (mapMB == null) {
+						insert(newMB);
+						needRefresh = true;
+					}
+				}
+				Intent intent1 = new Intent();
+				intent1.putExtra("refresh", needRefresh);
+				intent1.setAction("refresh");
+				sendBroadcast(intent1);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (AppException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	//	private List<Contacts> list;
-//	private Context context;
+	private void insert(MobileSynBean newMB) {
+		try {
+			String name = newMB.firstname;
+			ContentValues values = new ContentValues();
+			values.put(Data.DISPLAY_NAME, name);
+	        Uri rawContactUri = this.getContentResolver().insert(RawContacts.CONTENT_URI, values);
+	        if (StringUtils.empty(rawContactUri)) {
+	        	return;
+			}
+	        long rawContactId = -1l;
+	        try {
+	        	rawContactId = ContentUris.parseId(rawContactUri);
+	        } catch (Exception e ) {
+	        	rawContactId = -1l;
+	        	Crashlytics.logException(e);
+	        }
+	        values.clear();
+	        values.put(Data.RAW_CONTACT_ID, rawContactId);
+	        values.put(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE);
+	        values.put(StructuredName.GIVEN_NAME, newMB.lastname);
+	        values.put(StructuredName.FAMILY_NAME, newMB.firstname);
+	        values.put(StructuredName.MIDDLE_NAME, newMB.middlename);
+	        values.put(StructuredName.PREFIX, newMB.prefix);
+	        values.put(StructuredName.SUFFIX, newMB.suffix);
+	        this.getContentResolver().insert(
+	                android.provider.ContactsContract.Data.CONTENT_URI, values);
+	        
+	        values.clear();
+	        values.put(android.provider.ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId);
+	        values.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+	        values.put(Phone.NUMBER, newMB.phone.get(0).phone);
+	        values.put(Phone.TYPE, Phone.TYPE_MOBILE);
+	        this.getContentResolver().insert(
+	                android.provider.ContactsContract.Data.CONTENT_URI, values);
+
+	        if (newMB.email.size()>0) {
+	            values.clear();
+	            values.put(android.provider.ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId);
+	            values.put(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE);
+	            values.put(Email.DATA, newMB.email.get(0).email);
+	            values.put(Email.TYPE, Email.TYPE_WORK);
+	            this.getContentResolver().insert(
+	                    android.provider.ContactsContract.Data.CONTENT_URI, values);
+			}
+	        
+	            values.clear();
+	            values.put(android.provider.ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId);
+	            values.put(Data.MIMETYPE, Organization.CONTENT_ITEM_TYPE);
+	            if (StringUtils.notEmpty( newMB.organization)) {
+	            	values.put(Organization.COMPANY, newMB.organization);
+				}
+	            values.put(Organization.TITLE, newMB.jobtitle);  
+	            values.put(Organization.TYPE, Organization.TYPE_WORK);  
+	            this.getContentResolver().insert(
+	                    android.provider.ContactsContract.Data.CONTENT_URI, values);
+
+		} catch (Exception e) {
+			Crashlytics.logException(e);
+		}
+	}
 	
 	private MobileSynBean person;
-	public void getContactInfo() throws JSONException, AppException {
+	public MobileSynListBean getContactInfo() throws JSONException, AppException {
 		// 获得通讯录信息 ，URI是ContactsContract.Contacts.CONTENT_URI
 		MobileSynListBean allPerson = new MobileSynListBean();
 		List<MobileSynBean> persons = new ArrayList<MobileSynBean>();
@@ -360,7 +484,7 @@ public class MobileSynService extends IntentService{
 		   }   
 	   }
 	  cursor.close();
-	  updateMobiles(allPerson);
+	  return allPerson;
 	}
 	
 	private void updateMobiles(MobileSynListBean model) {

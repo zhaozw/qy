@@ -16,17 +16,20 @@ public class CommonValue {
     public static final String APP_ID = "wx8b5b960fc0311f3e";
     public static final String SECRET = "918774b3b42e14e42e84d67f54549a98";
 
+    public static final String WMAppID = "1-20178-d86ca85fa3bf8db970f11a9fb89f49af";
+    public static final String WMSECRET = "e468cf291e106ac6c9460395b8b105ab";
+    
     public static final int UI_DELAY = 200;
 
 	public static final int USER_NOT_IN_ERROR = 1001;
 	
 	public static final String PackageName = "com.vikaa.mycontact";
 	
-	public static String BASE_API = "http://qun.hk/api/";
-	public static String BASE_URL = "http://qun.hk";
+//	public static String BASE_API = "http://qun.hk/api/";
+//	public static String BASE_URL = "http://qun.hk";
 	
-//	public static String BASE_API = "http://pb.wcl.m0.hk/api/";
-//	public static String BASE_URL = "http://pb.wcl.m0.hk";
+	public static String BASE_API = "http://pb.wcl.m0.hk/api/";
+	public static String BASE_URL = "http://pb.wcl.m0.hk";
 	
 	public static final String KEY_GUIDE_SHOWN = "preferences_guide_shown";
 	

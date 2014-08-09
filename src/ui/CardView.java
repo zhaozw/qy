@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.widget.*;
+import baidupush.Utils;
 import bean.*;
 import service.AddMobileService;
 import tools.AppException;
@@ -19,6 +20,7 @@ import tools.UIHelper;
 import ui.adapter.CardViewAdapter;
 
 import com.crashlytics.android.Crashlytics;
+import com.kuyue.openchat.api.WmOpenChatSdk;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;
@@ -69,6 +71,8 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 	
 	private String INTRO_TEXT ;
 	
+	private String wmid;
+	
 	@Override
 	protected void onDestroy() {
 //		EasyTracker.getInstance(this).activityStop(this);
@@ -85,6 +89,34 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 		registerGetReceiver();
 		initUI();
 		initData();
+	}
+	
+	private void getWMId(String openid) {
+		AppClient.queryWMIdByOpenid(appContext, openid, new ClientCallback() {
+			
+			@Override
+			public void onSuccess(Entity data) {
+				UserEntity user = (UserEntity)data;
+				switch (user.getError_code()) {
+				case Result.RESULT_OK:
+					Logger.i(user.openid);
+					wmid = user.openid;
+					break;
+				default:
+					break;
+				}
+			}
+			
+			@Override
+			public void onFailure(String message) {
+				
+			}
+			
+			@Override
+			public void onError(Exception e) {
+				
+			}
+		});
 	}
 	
 	private void initUI() {
@@ -122,6 +154,7 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 	
 	private void initData() {
 		card = (CardIntroEntity) getIntent().getSerializableExtra(CommonValue.CardViewIntentKeyValue.CardView);
+		getWMId(card.openid);
 		CardIntroEntity data = WeFriendManager.getInstance(this).getCardByOpenid(card.openid);
 		if ( data != null ) {
 			data.re.addAll(RelationshipManager.getInstance(this).getRelationships(card.openid));
@@ -363,7 +396,8 @@ public class CardView extends AppActivity implements OnItemClickListener  {
 			exchangeCard(card);
 			break;
 		case R.id.callContactButton:
-			callMobile(card.phone);
+//			callMobile(card.phone);
+			WmOpenChatSdk.getInstance().gotoChatPage(wmid, this);
 			break;
 		case R.id.lookupContactButton:
 			String url2 = String.format("%s/card/%s", CommonValue.BASE_URL, card.code);

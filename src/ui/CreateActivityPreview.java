@@ -35,7 +35,6 @@ import bean.FunsPhotoEntity;
 import bean.QiniuPutPolicy;
 
 import com.crashlytics.android.Crashlytics;
-import com.dropbox.core.util.StringUtil;
 import com.google.gson.Gson;
 import com.google.zxing.common.StringUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;

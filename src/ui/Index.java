@@ -14,7 +14,6 @@ import bean.Result;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;
@@ -46,7 +45,6 @@ import tools.UIHelper;
 import ui.adapter.IndexPagerAdapter;
 import ui.adapter.IndexPhoneAdapter;
 import ui.adapter.IndexSquareAdapter;
-import widget.BaseAnimationAdapter;
 
 public class Index extends AppActivity implements OnScrollListener{
 	private ImageView indicatorImageView;

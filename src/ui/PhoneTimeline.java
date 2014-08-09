@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import tools.AppManager;
-import tools.BaseActivity;
 import widget.ActionItem;
 import widget.TitlePopup;
 
-public class PhoneTimeline extends BaseActivity {
+public class PhoneTimeline extends AppActivity {
 	private TitlePopup titlePopup;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

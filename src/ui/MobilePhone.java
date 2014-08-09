@@ -12,9 +12,12 @@ import java.util.regex.Pattern;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.AsyncQueryHandler;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.net.Uri;
@@ -46,13 +49,18 @@ import bean.UserEntity;
 import com.crashlytics.android.Crashlytics;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.gson.Gson;
 import com.vikaa.mycontact.R;
 
 import config.AppClient;
 import config.CommonValue;
 import config.AppClient.ClientCallback;
 import config.CommonValue.LianXiRenType;
+import contact.MobileSynListBean;
+import service.MobileSynService;
+import tools.AppException;
 import tools.AppManager;
+import tools.DecodeUtil;
 import tools.Logger;
 import tools.StringUtils;
 import tools.UIHelper;
@@ -92,22 +100,138 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		letterListView.setVisibility(View.VISIBLE);
+		if (resultCode != RESULT_OK) {
+			return;
+		}
+		switch (requestCode) {
+		default:
+			int position = data.getExtras().getInt("position");
+			switch (position) {
+			case 0:
+				uploadMobile();
+				break;
+
+			case 1:
+				downMobiles();
+				break;
+			}
+			break;
+		}
 	}
 	  
+	private void uploadMobile() {
+		loadingPd = UIHelper.showProgress(context, "请稍后...", "正在统计联系人信息", true);
+		MobileSynService.actionStartPAY(this);
+	}
+	
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action.equals("update")) {
+				UIHelper.dismissProgress(loadingPd);
+				MobileSynListBean model = (MobileSynListBean) intent.getExtras().getSerializable("mobile");
+				Gson gson = new Gson();
+				String json = gson.toJson(model.data);
+				try {
+					String encodeJson = DecodeUtil.encodeContact(json);
+					syncMobile(encodeJson);
+				} catch (AppException e) {
+					Logger.i(e);
+				}
+			}
+			else if (action.equals("refresh")) {
+				UIHelper.dismissProgress(loadingPd);
+				boolean needRefresh = intent.getExtras().getBoolean("refresh");
+				if (needRefresh) {
+					getAllFriend();
+				}
+			}
+		}
+
+	};
+	
+	private void syncMobile(String encodeJson) {
+		loadingPd = UIHelper.showProgress(context, "请稍后...", "正在上传联系人信息到服务器", true);
+		AppClient.syncContact(appContext, encodeJson, new ClientCallback() {
+			@Override
+			public void onSuccess(Entity data) {
+				UIHelper.dismissProgress(loadingPd);
+			}
+			
+			@Override
+			public void onFailure(String message) {
+				UIHelper.dismissProgress(loadingPd);
+			}
+			
+			@Override
+			public void onError(Exception e) {
+				Logger.i(e.toString());
+				UIHelper.dismissProgress(loadingPd);
+			}
+	  });
+	}
+	
+	private void downMobiles() {
+		loadingPd = UIHelper.showProgress(context, "请稍后...", "正在从服务器下载联系人信息", true);
+		AppClient.downContact(appContext, new ClientCallback() {
+			@Override
+			public void onSuccess(Entity data) {
+				UIHelper.dismissProgress(loadingPd);
+				final MobileSynListBean mo = (MobileSynListBean)data;
+				if (mo.data.size()>0) {
+					WarningDialog("此操作会覆盖您的手机通讯录且不能还原，确定覆盖吗？", "覆盖", "取消", new DialogClickListener() {
+						
+						@Override
+						public void ok() {
+							loadingPd = UIHelper.showProgress(context, "请稍后...", "正在对联系人进行备份操作");
+							MobileSynService.actionStartDown(context, mo);
+						}
+						
+						@Override
+						public void cancel() {
+							
+						}
+					});
+					
+				}
+				else {
+					
+				}
+			}
+			
+			@Override
+			public void onFailure(String message) {
+				UIHelper.dismissProgress(loadingPd);
+			}
+			
+			@Override
+			public void onError(Exception e) {
+				UIHelper.dismissProgress(loadingPd);
+			}
+		});
+	}
+	
 	@Override
 	protected void onDestroy() {
+		unregisterReceiver(receiver);
 		super.onDestroy();
 	}
-	  
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.wefriendcard);
+		setContentView(R.layout.mobilephone);
 		asyncQuery = new MyAsyncQueryHandler(getContentResolver());
 		uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 		initUI();
 //		editText.setHint("你共有"+appContext.getDeg2()+"位二度好友");
 		getAllFriend();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("update");
+		filter.addAction("refresh");
+		registerReceiver(receiver, filter);
 	}
 	
 	private void initUI() {
@@ -228,7 +352,7 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 //			searchDeleteButton.setVisibility(View.INVISIBLE);
 //			break;
 		case R.id.rightBarButton:
-			
+			startActivityForResult(new Intent(this, MobilePhoneMore.class), 1);
 			break;
 		}
 	}
@@ -397,4 +521,6 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 		intent.putExtra(CommonValue.CardViewIntentKeyValue.CardView, entity);
 		startActivity(intent);
 	}
+	
+	
 }

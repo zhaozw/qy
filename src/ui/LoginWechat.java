@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import tools.AppException;
 import tools.AppManager;
-import tools.BaseActivity;
 import tools.Logger;
 import tools.UIHelper;
 

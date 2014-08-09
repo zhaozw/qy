@@ -16,6 +16,7 @@ import bean.CardIntroEntity;
 
 import com.crashlytics.android.Crashlytics;
 import com.loopj.android.http.PersistentCookieStore;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.DiscCacheUtil;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -43,12 +44,12 @@ import android.os.Handler;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import config.AppClient;
+import config.BaseActivity;
 import config.MyApplication;
 import config.AppClient.FileCallback;
 import service.IPolemoService;
 import tools.AppContext;
 import tools.AppManager;
-import tools.BaseActivity;
 import tools.ImageUtils;
 import tools.Logger;
 import tools.MD5Util;
@@ -64,6 +65,9 @@ public class AppActivity extends BaseActivity {
 	protected int screeHeight;
 	protected UMSocialService mController = null; 
 	public static final String DESCRIPTOR = "com.umeng.share";
+	
+	protected ImageLoader imageLoader = ImageLoader.getInstance();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
