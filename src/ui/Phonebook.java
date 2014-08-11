@@ -80,6 +80,7 @@ public class Phonebook extends AppActivity implements SwipeRefreshLayout.OnRefre
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(CommonValue.PHONEBOOK_CREATE_ACTION);
 		filter.addAction(CommonValue.PHONEBOOK_DELETE_ACTION);
+		filter.addAction("mobileCountUpdate");
 		registerReceiver(receiver, filter);
 		asyncQuery = new MyAsyncQueryHandler(getContentResolver());
 		uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
@@ -472,6 +473,13 @@ public class Phonebook extends AppActivity implements SwipeRefreshLayout.OnRefre
 			if (CommonValue.PHONEBOOK_CREATE_ACTION.equals(action) 
 					|| CommonValue.PHONEBOOK_DELETE_ACTION.equals(action)) {
 				getPhoneList();
+			}
+			else if (action.equals("mobileCountUpdate")) {
+				int count = intent.getExtras().getInt("mobileCount");
+				myQuns.get(0).subtitle = "共"+count+"位好友";
+				phoneAdapter.notifyDataSetChanged();
+				mobileNum = count;
+				editText.setHint("您共有"+(Integer.valueOf(appContext.getDeg2()) + count)+"位二度人脉可搜索");
 			}
 		}
 

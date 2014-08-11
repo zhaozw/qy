@@ -25,8 +25,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.Data;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -96,6 +96,8 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 	private List<String> contactids;
 	
 	private static final int count = 200;
+	
+	private boolean isMobileAuthority= true;
 	  
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -149,7 +151,6 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 				}
 			}
 		}
-
 	};
 	
 	private void syncMobile(String encodeJson) {
@@ -158,6 +159,7 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 			@Override
 			public void onSuccess(Entity data) {
 				UIHelper.dismissProgress(loadingPd);
+				WarningDialog("联系人信息安全备份成功");
 			}
 			
 			@Override
@@ -261,7 +263,7 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 	}
 	
 	private void getFriendCardFromCache() {
-		asyncQuery.startQuery(0, null, uri, projection, null, null, "sort_key COLLATE LOCALIZED asc"); 
+		asyncQuery.startQuery(0, null, uri, null, null, null, "sort_key COLLATE LOCALIZED asc"); 
 	}
 	
 	private void checkLogin() {
@@ -333,7 +335,7 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 //	}
 	
 	private void getAllFriend() {
-		asyncQuery.startQuery(0, null, uri, projection, null, null, "sort_key COLLATE LOCALIZED asc");
+		asyncQuery.startQuery(0, null, uri, null, null, null, "sort_key COLLATE LOCALIZED asc");
 	}
 	
 	public void ButtonClick(View v) {
@@ -341,29 +343,23 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 		case R.id.leftBarButton:
 			AppManager.getAppManager().finishActivity(this);
 			break;
-//		case R.id.searchEditView:
-//			letterListView.setVisibility(View.INVISIBLE);
-//			Intent intent = new Intent(WeFriendCard.this, WeFriendCardSearch.class);
-//            startActivityForResult(intent, 12);
-//			break;
-//		case R.id.searchDeleteButton:
-//			editText.setText("");
-//			editText.setCursorVisible(false);
-//			searchDeleteButton.setVisibility(View.INVISIBLE);
-//			break;
 		case R.id.rightBarButton:
+			if (!isMobileAuthority) {
+				WarningDialog();
+				return;
+			}
 			startActivityForResult(new Intent(this, MobilePhoneMore.class), 1);
 			break;
 		}
 	}
 	
-	private String[] projection = {Data.MIMETYPE, Phone.NUMBER, "display_name", "contact_id", "sort_key", "photo_thumb_uri"};
-	private final static int MIMETYPE_INDEX = 0;
-	private final static int NUMBER_INDEX = 1;
-	private final static int NAME_INDEX = 2;
-	private final static int ID_INDEX = 3;
-	private final static int SORT_INDEX = 4;
-	private final static int PHOTO_INDEX = 5;
+//	private String[] projection = {Data.MIMETYPE, Phone.NUMBER, "display_name", "contact_id", "sort_key", "photo_thumb_uri"};
+//	private final static int MIMETYPE_INDEX = 0;
+//	private final static int NUMBER_INDEX = 1;
+//	private final static int NAME_INDEX = 2;
+//	private final static int ID_INDEX = 3;
+//	private final static int SORT_INDEX = 4;
+//	private final static int PHOTO_INDEX = 5;
 	private class MyAsyncQueryHandler extends AsyncQueryHandler {
 
 		public MyAsyncQueryHandler(ContentResolver cr) {
@@ -380,18 +376,28 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 		final Handler handler1 = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				indicatorImageView.clearAnimation();
-				indicatorImageView.setVisibility(View.INVISIBLE);
-				contactors.addAll(mobiles);
-				try {
-					Collections.sort(contactors);
-				} 
-				catch(Exception e) {
-					Crashlytics.logException(e);
+				if (msg.what == 1) {
+					isMobileAuthority = true;
+					indicatorImageView.clearAnimation();
+					indicatorImageView.setVisibility(View.INVISIBLE);
+					contactors.addAll(mobiles);
+					try {
+						Collections.sort(contactors);
+					} 
+					catch(Exception e) {
+						Crashlytics.logException(e);
+					}
+					mBilateralAdapter.notifyDataSetChanged();
+					sortPY();
+					letterListView.setVisibility(View.VISIBLE);
 				}
-				mBilateralAdapter.notifyDataSetChanged();
-				sortPY();
-				letterListView.setVisibility(View.VISIBLE);
+				else {
+					isMobileAuthority = false;
+					indicatorImageView.clearAnimation();
+					indicatorImageView.setVisibility(View.INVISIBLE);
+					WarningDialog();
+				}
+				updateMobileNum();
 			}
 		};
 		indicatorImageView.setVisibility(View.VISIBLE);
@@ -400,20 +406,24 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 		singleThreadExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
+				if (cursor.getColumnCount() == 1) {
+					handler1.sendEmptyMessage(-1);
+					return;
+				}
 				if (cursor != null && cursor.getCount() > 0) {
 					cursor.moveToFirst();
 					contactids = new ArrayList<String>();
 					for (int i = 0; i < cursor.getCount(); i++) {
 						cursor.moveToPosition(i);
-						String mimetype = cursor.getString(MIMETYPE_INDEX);
+						String mimetype = cursor.getString(cursor.getColumnIndex(Data.MIMETYPE));
 						if (Phone.CONTENT_ITEM_TYPE.equals(mimetype)) {
 							CardIntroEntity ce = new CardIntroEntity();
-							ce.realname = cursor.getString(NAME_INDEX);
-							ce.phone = cursor.getString(NUMBER_INDEX);
-							ce.code = ""+cursor.getInt(ID_INDEX);
-							ce.pinyin = cursor.getString(SORT_INDEX);
+							ce.realname = cursor.getString(cursor.getColumnIndex("display_name"));
+							ce.phone = cursor.getString(cursor.getColumnIndex(Phone.NUMBER));
+							ce.code = ""+cursor.getInt(cursor.getColumnIndex("contact_id"));
+							ce.pinyin = cursor.getString(cursor.getColumnIndex("sort_key"));
 							ce.cardSectionType = LianXiRenType.mobile;
-							ce.avatar = cursor.getString(PHOTO_INDEX);
+							ce.avatar = cursor.getString(cursor.getColumnIndex("photo_thumb_uri"));
 							ce.department = "来自手机通讯录";
 							ce.position = "";
 							ce.py = StringUtils.getAlpha(ce.pinyin);
@@ -423,8 +433,8 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 							}
 						}
 					}
+					handler1.sendEmptyMessage(1);
 				}
-				handler1.sendEmptyMessage(1);
 			}
 		});
 	}
@@ -522,5 +532,10 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 		startActivity(intent);
 	}
 	
-	
+	private void updateMobileNum() {
+		Intent intent = new Intent();
+		intent.putExtra("mobileCount", contactors.size());
+		intent.setAction("mobileCountUpdate");
+		sendBroadcast(intent);
+	}
 }

@@ -173,24 +173,26 @@ public class MobileSynService extends IntentService{
 	        this.getContentResolver().insert(
 	                android.provider.ContactsContract.Data.CONTENT_URI, values);
 	        
-	        values.clear();
-	        values.put(android.provider.ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId);
-	        values.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
-	        values.put(Phone.NUMBER, newMB.phone.get(0).phone);
-	        values.put(Phone.TYPE, Phone.TYPE_MOBILE);
-	        this.getContentResolver().insert(
-	                android.provider.ContactsContract.Data.CONTENT_URI, values);
-
-	        if (newMB.email.size()>0) {
-	            values.clear();
+	        for (int i=0;i<newMB.phone.size();i++) {
+	        	PhoneBean phoneBean =  newMB.phone.get(i);
+	        	values.clear();
+		        values.put(android.provider.ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId);
+		        values.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+		        values.put(Phone.NUMBER, phoneBean.phone);
+		        values.put(Phone.TYPE, Phone.TYPE_MOBILE);
+		        this.getContentResolver().insert(
+		                android.provider.ContactsContract.Data.CONTENT_URI, values);
+			}
+	        
+	        for (int j = 0; j < newMB.email.size(); j++) {
+	        	values.clear();
 	            values.put(android.provider.ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId);
 	            values.put(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE);
-	            values.put(Email.DATA, newMB.email.get(0).email);
+	            values.put(Email.DATA, newMB.email.get(j).email);
 	            values.put(Email.TYPE, Email.TYPE_WORK);
 	            this.getContentResolver().insert(
 	                    android.provider.ContactsContract.Data.CONTENT_URI, values);
 			}
-	        
 	            values.clear();
 	            values.put(android.provider.ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId);
 	            values.put(Data.MIMETYPE, Organization.CONTENT_ITEM_TYPE);

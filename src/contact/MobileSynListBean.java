@@ -31,9 +31,15 @@ public class MobileSynListBean extends Entity{
 					m.firstname = p.getString("firstname");
 					m.middlename = p.getString("middlename");
 					m.lastname = p.getString("lastname");
-					m.organization = p.getString("organization");
-					m.department = p.getString("department");
-					m.jobtitle = p.getString("jobtitle");
+					if (!p.isNull("organization")) {
+						m.organization = p.getString("organization");
+					}
+					if (!p.isNull("department")) {
+						m.department = p.getString("department");
+					}
+					if (!p.isNull("jobtitle")) {
+						m.jobtitle = p.getString("jobtitle");
+					}
 					JSONArray phoneArr = p.getJSONArray("phone");
 					for (int j = 0; j < phoneArr.length(); j++) {
 						if (phoneArr.get(j) instanceof JSONObject) {
