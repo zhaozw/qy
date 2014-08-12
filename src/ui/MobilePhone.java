@@ -199,7 +199,7 @@ public class MobilePhone extends AppActivity implements OnItemClickListener {
 					
 				}
 				else {
-					
+					WarningDialog("请先备份联系人信息");
 				}
 			}
 			
